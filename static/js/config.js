@@ -11,13 +11,9 @@ firebase.initializeApp(config);
 
 // Makes sure to get the REFERENCE of the Firebase
 
-try {
-    const database = firebase.database();
-    const ref = database.ref();
-    const mapRef = ref.child(`devices`);
-} catch (e) {
-    
-}
+const database = firebase.database();
+const ref = database.ref();
+const mapRef = ref.child(`devices`);
 
 
 
