@@ -1,0 +1,84 @@
+html {
+    background-color: #f8ffb2;
+}
+
+body {
+    background-color: #ffffff;
+}
+
+.bearimg {
+    max-height: 50px;
+    max-width: 50px;
+}
+
+footer {
+    background-color: #f8ffb2;
+    height: 50px;
+}
+
+.center {
+    display:flex;
+    justify-content:space-around;
+}
+
+#friend {
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    color: black;
+}
+
+.button {
+    height: 25px;
+    width: 100px;
+}
+
+#hello {
+    text-align: left;
+    font-size: 18px;
+}
+
+#buttons {
+    text-align: right;
+}
+
+#logout {
+    margin-right: 50px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+#title {
+    margin-top: 0px;
+    margin-bottom: -50px;
+    font-style: normal;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+#map {
+    width: 90%;
+    height: 75%;
+    background-color: #ffffff;
+}
+
+#cover {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top:0;
+    left: 0;
+    background: #000;
+    z-index:9999;
+}
+
+.deviceinfo {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-style: solid;
+    border-radius: 1px;
+    background-color: #f8ffb2;
+    border-color: #f8ffb2;
+
+}
