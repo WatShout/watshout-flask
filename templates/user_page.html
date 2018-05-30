@@ -1,12 +1,30 @@
-<!doctype html>
+<html>
 
-<title>Hello from Flask</title>
+    <head>
 
+        <!-- The order in which these load is important -->
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
 
-{% if email %}
-  <h1>Hello {{ email }}!</h1>
-{% endif %}
+        <script defer src="/static/js/config.js"></script>
+        <script defer src="/static/js/profilePage.js"></script>
 
-{% if name %}
-  <h2>Hello {{ name  }}</h2>
-{% endif %}
+        <title>Hello from Flask</title>
+
+    </head>
+
+    <body>
+
+        {% if name %}
+        <h1>Profile page for: {{ name }}!</h1>
+        {% endif %}
+
+        {% if email %}
+        <h3>Email address is: {{ email }}</h3>
+        {% endif %}
+
+        <input type="button" value="Go back" onclick="goBack()">
+
+    </body>
+
+</html>

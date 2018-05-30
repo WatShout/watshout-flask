@@ -78,7 +78,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                 // Add email to list of 'accepted friends'
                 //document.getElementById(`accepted`).innerHTML += email + "<br />";
 
-                document.getElementById(`accepted`).innerHTML += `<a href="/users/` + theirID + `">` + email + `</a>`;
+                document.getElementById(`accepted`).innerHTML += `<a href="/users/` + theirID + `">` + email + `</a><br />`;
 
                 document.getElementById(`past` + theirID).onclick = function () {
 

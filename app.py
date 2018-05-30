@@ -20,23 +20,18 @@ firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
 
+@app.route('/')
+def main_map():
+    return app.send_static_file('index.html')
+
+
 @app.route('/login')
 def log_in():
     return app.send_static_file('login/index.html')
 
 
-@app.route('/maps')
-def main_app():
-    return app.send_static_file('index.html')
-
-
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
-
-
 @app.route('/users/<uid>')
-def hello(uid=None):
+def user_page(uid=None):
 
     email = db.child("users").child(uid).get().val()['email']
     name = db.child("users").child(uid).get().val()['name']
