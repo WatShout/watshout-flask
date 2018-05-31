@@ -33,14 +33,13 @@ def log_in():
 @app.route('/users/<uid>')
 def user_page(uid=None):
 
-    db_values = db.child("uses").child(uid).get().val()
+    try:
+        email = db.child("users").child(uid).get().val()['email']
+        name = db.child("users").child(uid).get().val()['name']
 
-    if db_values is not None:
-        email = db_values['email']
-        name = db_values['name']
         return render_template('user_page.html', email=email, name=name, uid=uid)
 
-    else:
+    except TypeError:
         return render_template('user_doesnt_exist.html', uid=uid)
 
 
