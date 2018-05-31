@@ -20,17 +20,17 @@ firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
 
-@app.route('/test')
+@app.route('/test', methods=['GET', 'POST'])
 def test():
     return "hello"
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def main_map():
     return app.send_static_file('index.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def log_in():
     return app.send_static_file('login/index.html')
 
