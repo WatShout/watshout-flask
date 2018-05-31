@@ -4,7 +4,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     if (user) {
 
-        // User is authenticated
+
 
     } else {
 

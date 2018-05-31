@@ -9,21 +9,39 @@
         <script defer src="/static/js/config.js"></script>
         <script defer src="/static/js/profilePage.js"></script>
 
+         <link rel="stylesheet" href="/static/css/pills.min.css">
+
         <title>Hello from Flask</title>
 
     </head>
 
     <body>
 
-        {% if name %}
-        <h1>Profile page for: {{ name }}!</h1>
-        {% endif %}
+        <div class="row">
 
-        {% if email %}
-        <h3>Email address is: {{ email }}</h3>
-        {% endif %}
+            <div class="two columns">
 
-        <input type="button" value="Go back" onclick="goBack()">
+            </div>
+
+            <div class="eight columns">
+
+                   {% if name %}
+                    <h1>Profile page for: {{ name }}!</h1>
+                    {% endif %}
+
+                    {% if email %}
+                    <h3>Email address is: {{ email }}</h3>
+                    {% endif %}
+
+                    <input type="button" value="Go back" onclick="goBack()">
+
+            </div>
+
+            <div class="two columns">
+
+            </div>
+
+        </div>
 
     </body>
 
