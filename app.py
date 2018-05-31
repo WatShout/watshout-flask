@@ -37,3 +37,7 @@ def user_page(uid=None):
     name = db.child("users").child(uid).get().val()['name']
 
     return render_template('user_page.html', email=email, name=name)
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80)
