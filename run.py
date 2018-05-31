@@ -25,7 +25,7 @@ def main_map():
     return app.send_static_file('index.html')
 
 
-@app.route('/login')
+@app.route('/login/')
 def log_in():
     return app.send_static_file('login/index.html')
 
@@ -36,7 +36,9 @@ def user_page(uid=None):
     email = db.child("users").child(uid).get().val()['email']
     name = db.child("users").child(uid).get().val()['name']
 
-    return render_template('user_page.html', email=email, name=name)
+    uid = str(uid)
+
+    return render_template('user_page.html', email=email, name=name, uid=uid)
 
 
 if __name__ == '__main__':

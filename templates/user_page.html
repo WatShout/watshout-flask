@@ -5,17 +5,22 @@
         <!-- The order in which these load is important -->
         <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
         <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
 
         <script defer src="/static/js/config.js"></script>
         <script defer src="/static/js/profilePage.js"></script>
 
-         <link rel="stylesheet" href="/static/css/pills.min.css">
+        <link rel="stylesheet" href="/static/css/pills.min.css">
 
         <title>Hello from Flask</title>
 
     </head>
 
     <body>
+
+        {% if uid %}
+        <meta id="uid" content="{{ uid }}">
+        {% endif %}
 
         <div class="row">
 
