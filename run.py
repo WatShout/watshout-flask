@@ -20,6 +20,11 @@ firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
 
+@app.route('/test')
+def test():
+    return "hello"
+
+
 @app.route('/')
 def main_map():
     return app.send_static_file('index.html')
