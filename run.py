@@ -36,8 +36,9 @@ def user_page(uid=None):
     try:
         email = db.child("users").child(uid).get().val()['email']
         name = db.child("users").child(uid).get().val()['name']
+        age = db.child("users").child(uid).get().val()['age']
 
-        return render_template('user_page.html', email=email, name=name, uid=uid)
+        return render_template('user_page.html', email=email, name=name, age=age, uid=uid)
 
     except TypeError:
         return render_template('user_doesnt_exist.html', uid=uid)
