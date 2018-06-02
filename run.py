@@ -40,6 +40,7 @@ def user_page(uid=None):
 
         return render_template('user_page.html', email=email, name=name, age=age, uid=uid)
 
+    # If user isn't found in the database we assume they don't exist
     except TypeError:
         return render_template('user_doesnt_exist.html', uid=uid)
 
