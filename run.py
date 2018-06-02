@@ -33,6 +33,7 @@ def log_in():
 @app.route('/users/<uid>')
 def user_page(uid=None):
 
+    # Try to display a simple page with user info
     try:
         email = db.child("users").child(uid).get().val()['email']
         name = db.child("users").child(uid).get().val()['name']
