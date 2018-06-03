@@ -76,7 +76,7 @@ db = firebase.database()
 # Note: this will eventually redirect to the 'main' page
 @app.route('/')
 def redirect_to_app():
-    return redirect('app', code=302)
+    return "This will eventually be the home of the main web page"
 
 
 @app.route('/app/')
