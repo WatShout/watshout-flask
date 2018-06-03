@@ -1,11 +1,18 @@
 from flask import Flask
 from flask import render_template
-from flask_sslify import SSLify
+from flask_talisman import Talisman
 
 import pyrebase
 
+csp = {
+    'default-src': '*',
+    'script-src': '*',
+    'style-src': '*',
+    'connect-src': '*'
+}
+
 app = Flask(__name__, static_url_path="/static")
-sslify = SSLify(app, subdomains=True)
+Talisman(app, content_security_policy=csp)
 
 # Note: Everything is authenticated because of the service account
 config = {
