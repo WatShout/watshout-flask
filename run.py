@@ -33,7 +33,8 @@ csp = {
     'img-src': [
         '*.gstatic.com',
         '*.watshout-app.appspot.com',
-        '*.googleapis.com'
+        '*.googleapis.com',
+        '*.watshout-flask.herokuapp.com'
     ],
     'font-src': [
         '*.gstatic.com'
