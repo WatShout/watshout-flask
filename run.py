@@ -55,7 +55,7 @@ app = Flask(__name__, static_url_path="/static")
 
 # Note: make sure content_security_policy=csp when deploying to production
 # if testing locally you can take it out
-#Talisman(app, content_security_policy=csp)
+Talisman(app, content_security_policy=csp)
 
 # Note: Everything is authenticated because of the service account
 config = {
