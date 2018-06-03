@@ -20,11 +20,6 @@ firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
 
-@app.route('/.well-known/acme-challenge/je1rCfY2eTAJb8GNcbZ24uL5IH9-LQ9YAqVS0j8wFxE')
-def confirm_cert():
-    return "je1rCfY2eTAJb8GNcbZ24uL5IH9-LQ9YAqVS0j8wFxE.rk7PjoeepIFbDbZFhICZ34Lf1jFVyX0Cra8p-MWUeOw"
-
-
 @app.route('/')
 def main_map():
     return app.send_static_file('index.html')
