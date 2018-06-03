@@ -37,7 +37,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     } else {
         console.log('logged out');
-        window.location.replace(`/login`);
+        window.location.replace(`/login/`);
     }
 
     ref.child(`friend_requests`).child(userID).on("child_added", function(snapshot) {
@@ -51,16 +51,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 
                 let htmlLink = `<a id="friend` + theirID + `" onclick=confirmFriend("` + theirID + `") href="#">` + snapshot.val() + `</a><br />`;
 
-                let confirmLink = document.createElement("a");
-                let linkText = document.createTextNode(theirID);
-                confirmLink.appendChild(linkText);
-                confirmLink.title = "Test";
-                confirmLink.href = "#";
-                confirmLink.onclick = function() {
-                    confirmFriend(theirID);
-                }
-
-                document.body.appendChild(confirmLink);
                 document.getElementById(`pending`).innerHTML += htmlLink;
 
             });
@@ -87,7 +77,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                 };
 
                 // Add friend's location to sidebar (if not already there)
-                if (document.getElementById(`devices`).innerHTML == ``){
+                if (document.getElementById(`devices`).innerHTML === ``){
 
                     let deviceHTML = createHTMLEntry(theirID);
                     document.getElementById(`devices`).innerHTML += deviceHTML;
@@ -124,7 +114,7 @@ let searchByEmail = (query) => {
                 {
                     "request_type": "received"
                 }
-            )
+            );
 
             ref.child(`friends`).child(userID).child(theirID).set(
                 {
@@ -164,10 +154,10 @@ let askFriend = () => {
             let theirID = Object.keys(snapshot.val())[0];
 
             ref.child(`friend_requests`).child(theirID).child(userID)
-            .set({"request_type": "received"})
+            .set({"request_type": "received"});
 
             ref.child(`friend_requests`).child(userID).child(theirID)
-            .set({"request_type": "sent"})
+            .set({"request_type": "sent"});
 
         } else {
             console.log("Invalid email");
@@ -175,7 +165,7 @@ let askFriend = () => {
 
     });
 
-}
+};
 
 let confirmFriend = (theirID) => {
 
@@ -196,4 +186,4 @@ let confirmFriend = (theirID) => {
     let element = document.getElementById(`friend` + theirID);
     element.parentNode.removeChild(element);
 
-}
+};

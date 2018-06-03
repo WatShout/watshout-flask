@@ -1,7 +1,7 @@
 
 // FirebaseUI config.
 let uiConfig = {
-    signInSuccessUrl: `/`,
+    signInSuccessUrl: `/app/`,
     signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -9,7 +9,7 @@ let uiConfig = {
     ],
     // Terms of service url.
     // TODO: Fix this
-    tosUrl: '../tos'
+    tosUrl: ''
 };
 
 // Initialize the FirebaseUI Widget using Firebase.
@@ -27,11 +27,11 @@ let initApp = () => {
 
             // User is signed in (signInSuccessUrl is used)
 
-            window.location.replace(`/`);
+            window.location.replace(`/app/`);
 
         }
     });
-}
+};
 
 window.onload = function() {
     initApp();

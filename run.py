@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template, redirect
 from flask_talisman import Talisman
 
 import pyrebase
@@ -74,12 +73,13 @@ firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
 
-@app.route('/test/')
-def test():
-    return "this is a test"
-
-
+# Note: this will eventually redirect to the 'main' page
 @app.route('/')
+def redirect_to_app():
+    return redirect('app', code=302)
+
+
+@app.route('/app/')
 def main_map():
     return app.send_static_file('index.html')
 

@@ -1,4 +1,4 @@
-let goBack = () => window.location.replace(`/`);
+let goBack = () => window.location.replace(`/app/`);
 
 firebase.auth().onAuthStateChanged(function(user) {
 
@@ -23,7 +23,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     } else {
 
-        window.location.replace(`/login`);
+        window.location.replace(`/login/`);
 
     }
 });
