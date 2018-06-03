@@ -5,10 +5,50 @@ from flask_talisman import Talisman
 import pyrebase
 
 csp = {
-    'default-src': '*',
-    'script-src': '*',
-    'style-src': '*',
-    'connect-src': '*'
+    'default-src': [
+        '*.gstatic.com',
+        '*.googleapis.com',
+        '*.firebase.com',
+        '*watshout-app.appspot.com',
+        '\'self\'',
+        '*.firebaseio.com'
+    ],
+    'script-src': [
+        '*.gstatic.com',
+        '*.googleapis.com',
+        '*.firebase.com',
+        '*watshout-app.appspot.com',
+        '\'self\'',
+        '*.firebaseio.com',
+        '*.google.com',
+        '\'unsafe-inline\''
+
+    ],
+    'style-src': [
+        '\'self\'',
+        '*.firebase.com',
+        '*.googleapis.com',
+        '\'unsafe-inline\''
+    ],
+    'img-src': [
+        '*.gstatic.com',
+        '*watshout-app.appspot.com',
+        '*.googleapis.com'
+    ],
+    'font-src': [
+        '*.gstatic.com'
+    ],
+    'connect-src': [
+        '*.firebaseio.com',
+        '*.googleapis.com',
+        'wss://s-usc1c-nss-238.firebaseio.com'
+    ],
+    'frame-src': [
+        '*.accountchooser.com',
+        '*.firebaseio.com',
+        '*.firebaseapp.com'
+    ]
+
 }
 
 app = Flask(__name__, static_url_path="/static")
@@ -57,4 +97,4 @@ def user_page(uid=None):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='127.0.0.1', port=80, debug=True)
