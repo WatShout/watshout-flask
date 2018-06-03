@@ -22,7 +22,7 @@ db = firebase.database()
 
 @app.route('/.well-known/acme-challenge/koYjKKUnaPjKQ14vwY2d6dgsqtbxFV9S-gPDrVekPG8/')
 def confirm_cert():
-    return "koYjKKUnaPjKQ14vwY2d6dgsqtbxFV9S-gPDrVekPG8.rk7PjoeepIFbDbZFhICZ34Lf1jFVyX0Cra8p-MWUeOw"
+    return "je1rCfY2eTAJb8GNcbZ24uL5IH9-LQ9YAqVS0j8wFxE.rk7PjoeepIFbDbZFhICZ34Lf1jFVyX0Cra8p-MWUeOw"
 
 
 @app.route('/')
