@@ -20,7 +20,7 @@ firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
 
-@app.route('/.well-known/acme-challenge/koYjKKUnaPjKQ14vwY2d6dgsqtbxFV9S-gPDrVekPG8/')
+@app.route('/.well-known/acme-challenge/je1rCfY2eTAJb8GNcbZ24uL5IH9-LQ9YAqVS0j8wFxE')
 def confirm_cert():
     return "je1rCfY2eTAJb8GNcbZ24uL5IH9-LQ9YAqVS0j8wFxE.rk7PjoeepIFbDbZFhICZ34Lf1jFVyX0Cra8p-MWUeOw"
 

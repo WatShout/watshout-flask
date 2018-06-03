@@ -2,6 +2,9 @@ entrypoint: gunicorn run:app
 env: flex
 runtime: python
 
+url: .*
+secure: always
+
 runtime_config:
   python_version: 3
 
