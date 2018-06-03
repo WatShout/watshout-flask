@@ -2,8 +2,7 @@ entrypoint: gunicorn run:app
 env: flex
 runtime: python
 
-url: .*
-secure: always
+Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 runtime_config:
   python_version: 3
