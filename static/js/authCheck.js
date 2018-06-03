@@ -5,7 +5,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     } else {
 
         alert(`You must be signed in to view this content`);
-        window.location.replace(`/login`);
+        window.location.replace(`/login/`);
 
     }
 });
