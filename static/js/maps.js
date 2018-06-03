@@ -25,42 +25,64 @@ ref.child(`friend_data`).child(userID).once(`value`).then(function(snapshot) {
 
     for(let i = 0; i < keys.length; i++){
 
-        let currentID = String(keys[i]);
+        let theirID = keys[i];
 
-        deviceDict[currentID] = [];
+        ref.child('users').child(theirID).once('value', function(snapshot) {
 
-        let deviceHTML = createHTMLEntry(currentID);
+            // Get values from friend DB entry
+            let device = snapshot.val()['device'];
 
-        document.getElementById(`devices`).innerHTML += deviceHTML;
+            // This will only complete if there is a 'box' for friend's device
+            try {
+                document.getElementById(`past` + theirID).onclick = function () {
 
-        let thisRef = ref.child(`users`).child(currentID).child(`device`).child(`current`);
+                    getPast(theirID);
 
-        // Loads points that were made before page load
-        thisRef.on(`child_added`, function (snapshot) {
+                }
+            } catch(TypeError){
+                // Do nothing
+            }
 
-            addPoint(snapshot, currentID, map);
+            // Important check. If the friend has no 'device' entry, there is no need to make a box for them
+            if (device != null){
+
+                document.getElementById(`devices`).innerHTML += createHTMLEntry(theirID);
+
+                deviceDict[theirID] = [];
+
+                let thisRef = ref.child(`users`).child(theirID).child(`device`).child(`current`);
+
+                // Loads points that were made before page load
+                thisRef.on(`child_added`, function (snapshot) {
+
+                    addPoint(snapshot, theirID, map);
+
+                });
+
+                // Loads real-time points
+                thisRef.on(`child_changed`, function (snapshot) {
+
+                    addPoint(snapshot, theirID, map);
+
+                });
+
+                thisRef.on(`child_removed`, function (snapshot) {
+
+                    document.getElementById(theirID).innerHTML = ``;
+
+                    let length = deviceDict[theirID].length;
+
+                    deviceDict[theirID][length - 1].setMap(null);
+
+                    deviceDict[theirID] = [];
+
+                })
+
+            }
 
         });
 
-        // Loads real-time points
-        thisRef.on(`child_changed`, function (snapshot) {
-
-            addPoint(snapshot, currentID, map);
-
-        });
-
-        thisRef.on(`child_removed`, function (snapshot) {
-
-            document.getElementById(currentID).innerHTML = ``;
-
-            let length = deviceDict[currentID].length;
-
-            deviceDict[currentID][length - 1].setMap(null);
-
-            deviceDict[currentID] = [];
-
-        })
-    }
+        }
 
     });
 };
@@ -91,11 +113,11 @@ let updateHTML = (id, values, map) => {
 
     document.getElementById(`click` + id).onclick = function () {
         map.panTo({lat: values["lat"], lng: values["lon"]});
-    }
+    };
 
     document.getElementById(`past` + id).onclick = function () {
         getPast(id);
-    }
+    };
 
 };
 
@@ -116,7 +138,7 @@ let getPast = (id) => {
 
         })
     });
-}
+};
 
 let addPoint = (snapshot, currentID, map) => {
 
@@ -137,7 +159,7 @@ let addPoint = (snapshot, currentID, map) => {
     let length = deviceDict[currentID].length;
 
     // If list only has one object, then previous is the same as current
-    if (length != 0) {
+    if (length !== 0) {
         deviceDict[currentID][length - 1].setVisible(false);
     }
 
@@ -150,7 +172,7 @@ let addPoint = (snapshot, currentID, map) => {
 
 let createLine = (markers, map) => {
 
-    let currentPath = []
+    let currentPath = [];
 
     for (let i = 0; i < markers.length; i++){
 
@@ -228,9 +250,9 @@ let round = (value, decimals) => {
 let signOut = () => {
     firebase.auth().signOut().then(function() {
 
-        window.location.replace(`/login`);
+        window.location.replace(`/login/`);
 
     }, function(error) {
       // An error happened.
     });
-}
+};

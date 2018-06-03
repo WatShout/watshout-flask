@@ -61,38 +61,27 @@ firebase.auth().onAuthStateChanged(function(user) {
 
             let theirID = snapshot.key;
 
-            ref.child('users').child(theirID).child(`email`).once('value', function(snapshot) {
+            ref.child('users').child(theirID).once('value', function(snapshot) {
 
-                let email = snapshot.val();
+                // Get values from friend DB entry
+                let email = snapshot.val()['email'];
+                let device = snapshot.val()['device'];
 
-                // Add email to list of 'accepted friends'
-                //document.getElementById(`accepted`).innerHTML += email + "<br />";
-
+                // This assumes 'email' will never be null
                 document.getElementById(`accepted`).innerHTML += `<a href="/users/` + theirID + `">` + email + `</a><br />`;
 
-                document.getElementById(`past` + theirID).onclick = function () {
+                // This will only complete if there is a 'box' for friend's device
+                try {
+                    document.getElementById(`past` + theirID).onclick = function () {
 
-                    getPast(theirID);
+                        getPast(theirID);
 
-                };
-
-                // Add friend's location to sidebar (if not already there)
-                if (document.getElementById(`devices`).innerHTML === ``){
-
-                    let deviceHTML = createHTMLEntry(theirID);
-                    document.getElementById(`devices`).innerHTML += deviceHTML;
-
+                    }
+                } catch(TypeError){
+                    // Do nothing
                 }
 
-                // If a new friend is added and is currently tracking their location,
-                // this will add it all to the map
-                deviceDict[theirID] = [];
-                let thisRef = ref.child(`users`).child(theirID).child(`device`).child(`current`);
-                thisRef.on(`child_added`, function (snapshot) {
-
-                    addPoint(snapshot, theirID, map);
-
-                });
+                // TODO: Need to show live-updates if a device/friend is added while web page is active
 
             });
 
