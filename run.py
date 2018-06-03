@@ -9,7 +9,7 @@ csp = {
         '*.gstatic.com',
         '*.googleapis.com',
         '*.firebase.com',
-        '*watshout-app.appspot.com',
+        '*.watshout-app.appspot.com',
         '\'self\'',
         '*.firebaseio.com'
     ],
@@ -17,7 +17,7 @@ csp = {
         '*.gstatic.com',
         '*.googleapis.com',
         '*.firebase.com',
-        '*watshout-app.appspot.com',
+        '*.watshout-app.appspot.com',
         '\'self\'',
         '*.firebaseio.com',
         '*.google.com',
@@ -32,7 +32,7 @@ csp = {
     ],
     'img-src': [
         '*.gstatic.com',
-        '*watshout-app.appspot.com',
+        '*.watshout-app.appspot.com',
         '*.googleapis.com'
     ],
     'font-src': [
