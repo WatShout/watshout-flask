@@ -52,6 +52,9 @@ csp = {
 }
 
 app = Flask(__name__, static_url_path="/static")
+
+# Note: make sure content_security_policy=csp when deploying to production
+# if testing locally you can take it out
 Talisman(app, content_security_policy=csp)
 
 # Note: Everything is authenticated because of the service account
@@ -68,6 +71,11 @@ firebase = pyrebase.initialize_app(config)
 
 # Get a reference to the database service
 db = firebase.database()
+
+
+@app.route('/test/')
+def test():
+    return "this is a test"
 
 
 @app.route('/')
