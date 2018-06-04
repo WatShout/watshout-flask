@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect
-from flask_talisman import Talisman
+#from flask_talisman import Talisman
 
 import pyrebase
 
