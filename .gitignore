@@ -1,9 +1,6 @@
-.idea
-/.idea
-
-*.idea
-*/.idea
 
 .idea/
 
 __pycache__/
+
+app.yaml
