@@ -18,6 +18,7 @@
 
     <body>
 
+        <!-- Stores UID for easy access by profile-page.js -->
         {% if uid %}
         <meta id="uid" content="{{ uid }}">
         {% endif %}
@@ -31,7 +32,7 @@
             <div class="eight columns">
 
                    {% if name %}
-                    <h1>Profile page for: {{ name }}!</h1>
+                    <h1>Profile page for: {{ name }}</h1>
                     {% endif %}
 
                     {% if email %}
