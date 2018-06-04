@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect
-#from flask_talisman import Talisman
+from flask_talisman import Talisman
 
 import pyrebase
 
@@ -53,8 +53,7 @@ csp = {
 
 app = Flask(__name__, static_url_path="/static")
 
-# Note: make sure content_security_policy=csp when deploying to production
-# if testing locally you can take it out
+# Note: This isn't being used right now
 # Talisman(app, content_security_policy=csp)
 
 # Note: Everything is authenticated because of the service account
