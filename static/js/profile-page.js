@@ -1,4 +1,13 @@
-let goBack = () => window.location.replace(`/app/`);
+/*
+
+    Filename: profile-page.js
+
+    Purpose: Displays information about another user (with data retrieved from
+            Firebase) using a Jinja2 template
+
+    Associated HTML: templates/user_page.html
+
+ */
 
 firebase.auth().onAuthStateChanged(function(user) {
 
@@ -27,6 +36,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     }
 });
+
+let goBack = () => window.location.replace(`/app/`);
 
 let getTheirUID = () => {
 

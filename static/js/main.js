@@ -1,25 +1,29 @@
 
-// This file contains helper functions for the main maps page
-// I didn't want to have this and the maps be crowding the same file
+/*
 
+    Filename: main.js
+
+    Purpose: Provide functions for interacting with friends list while on
+            the main webapp page (/app/)
+
+    Associated HTML: main_app.html
+
+ */
+
+// These pertain to the currently logged-in user
 let userID;
-let email;
-
-// Makes sure page scrolls to top on reload
-window.onbeforeunload = function () {
-        window.scrollTo(0,0);
-    };
+let userEmail;
 
 firebase.auth().onAuthStateChanged(function(user) {
 
     if (user) {
 
         userID = user.uid;
-        email = user.email;
+        userEmail = user.email;
 
-        ref.child(`users`).child(userID).once('value', function(snapshot) {
+        ref.child(`users`).child(userID).once(`value`, function(snapshot) {
 
-            // User in database
+            // Indicates that a user is `new`
             if (!snapshot.exists()) {
 
                 let age = prompt("Enter your age");
@@ -32,14 +36,16 @@ firebase.auth().onAuthStateChanged(function(user) {
             }
         });
 
-    document.getElementById(`hello`).innerHTML = `Hello, ` +
-    user.email + ` (` + user.uid + `)`;
+        document.getElementById(`hello`).innerHTML = `Hi: ` + userEmail + `<br />` +
+            `User ID: ` + userID;
+
 
     } else {
-        console.log('logged out');
+        console.log(`logged out`);
         window.location.replace(`/login/`);
     }
 
+    // Checks for current pending friend requests
     ref.child(`friend_requests`).child(userID).on("child_added", function(snapshot) {
 
         let theirID = snapshot.key;
@@ -47,53 +53,65 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         if(request_type === "received"){
 
-            ref.child('users').child(theirID).child(`email`).on('value', function(snapshot) {
+            ref.child(`users`).child(theirID).child(`email`).on(`value`, function(snapshot) {
 
-                let htmlLink = `<a id="friend` + theirID + `" onclick=confirmFriend("` + theirID + `") href="#">` + snapshot.val() + `</a><br />`;
-
-                document.getElementById(`pending`).innerHTML += htmlLink;
+                document.getElementById(`pending`).innerHTML +=
+                    `<a id="friend` + theirID + `" onclick=confirmFriend("` + theirID + `") href="#">` + snapshot.val() + `</a><br />`;
 
             });
         }
     });
 
+    // Plots current paths by all friends
     ref.child(`friend_data`).child(userID).on(`child_added`, function(snapshot) {
 
             let theirID = snapshot.key;
 
-            ref.child('users').child(theirID).once('value', function(snapshot) {
+            deviceDict[theirID] = [];
 
-                // Get values from friend DB entry
-                let email = snapshot.val()['email'];
-                let device = snapshot.val()['device'];
 
-                // This assumes 'email' will never be null
-                document.getElementById(`accepted`).innerHTML += `<a href="/users/` + theirID + `">` + email + `</a><br />`;
+            // For each friend currently in an activity this plots all the points
+            // made up to the point the web page was loaded
+            ref.child(`users`).child(theirID).once(`value`, function(snapshot) {
 
-                // This will only complete if there is a 'box' for friend's device
-                try {
-                    document.getElementById(`past` + theirID).onclick = function () {
+                let theirEmail = snapshot.val()[`email`];
+                let theirDevice = snapshot.val()[`device`];
 
-                        getPast(theirID);
+                // Adds friend to friends list
+                document.getElementById(`accepted`).innerHTML += `<a href="/users/` + theirID + `">` + theirEmail + `</a><br />`;
 
-                    }
-                } catch(TypeError){
-                    // Do nothing
+                // TODO: Fix behavior when a user, already a friend, adds a device
+                if (theirDevice != null) {
+                    document.getElementById(`devices`).innerHTML += createHTMLEntry(theirID);
+
+                    /*
+                    ref.child(`users`).child(theirID).child(`device`)
+                        .child(`current`).on(`child_added`, function (snapshot) {
+
+                            addPoint(snapshot, theirID, map);
+
+                    });
+                    */
+
+                    ref.child(`users`)
+                        .child(theirID)
+                        .child(`device`)
+                        .child(`past`)
+                        .child(`mon-jun-04-02-30-36-gmt-2018`)
+                        .child(`path`)
+                        .on(`child_added`, function (snapshot) {
+
+                        addPoint(snapshot, theirID, map);
+
+                    })
                 }
-
-                // TODO: Need to show live-updates if a device/friend is added while web page is active
-
             });
-
-        });
-
-    initMap();
-
+    });
 });
 
 let searchByEmail = (query) => {
 
-    ref.child('users').orderByChild('email').equalTo(query).once('value', function(snapshot) {
+    ref.child(`users`).orderByChild(`email`).equalTo(query).once(`value`, function(snapshot) {
 
         if(snapshot.exists()){
             let theirID = Object.keys(snapshot.val())[0];
@@ -111,8 +129,6 @@ let searchByEmail = (query) => {
                 }
             )
 
-        } else {
-            console.log("Invalid email");
         }
 
     });
@@ -120,7 +136,7 @@ let searchByEmail = (query) => {
 
 let searchByID = (theirID) => {
 
-    ref.child('users').child(theirID).child(`email`).once('value', function(snapshot) {
+    ref.child(`users`).child(theirID).child(`email`).once(`value`, function(snapshot) {
 
         if(snapshot.exists()){
 
@@ -137,7 +153,7 @@ let askFriend = () => {
 
     let friendEmail = document.getElementById(`friend`).value;
 
-    ref.child('users').orderByChild('email').equalTo(friendEmail).once('value', function(snapshot) {
+    ref.child(`users`).orderByChild(`email`).equalTo(friendEmail).once(`value`, function(snapshot) {
 
         if(snapshot.exists()){
             let theirID = Object.keys(snapshot.val())[0];
@@ -149,7 +165,9 @@ let askFriend = () => {
             .set({"request_type": "sent"});
 
         } else {
-            console.log("Invalid email");
+
+            alert(`Invalid email`);
+
         }
 
     });

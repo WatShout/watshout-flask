@@ -1,14 +1,28 @@
 
+/*
+
+    Filename: login.js
+
+    Purpose: Uses FirebaseUI to provide Google and email login.
+            Once user is authenticated they are redirected to
+            /app/
+
+    Associated HTML: login.html
+
+ */
+
+
 // FirebaseUI config.
 let uiConfig = {
+
     signInSuccessUrl: `/app/`,
     signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID
     ],
+
     // Terms of service url.
-    // TODO: Fix this
     tosUrl: ''
 };
 

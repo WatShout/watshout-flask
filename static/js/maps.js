@@ -1,94 +1,32 @@
+
+/*
+
+    Filename: maps.js
+
+    Purpose: Helper functions for interacting with the map object on the
+            main webapp page (/app/)
+
+    Associated HTML: main_app.html
+
+ */
+
 let startingPosition = {lat: 37, lng: -122};
 
 let deviceDict = {};
 
 // Initializes the Google Map.
 const map = new google.maps.Map(document.getElementById(`map`), {
+
     zoom: 1,
     center: startingPosition,
     clickableIcons: false,
-    //disableDefaultUI: true,
+    disableDefaultUI: true,
 
 });
 
-let initMap = () => {
-
-ref.child(`friend_data`).child(userID).once(`value`).then(function(snapshot) {
-
-    let keys;
-
-    try {
-        keys = Object.keys(snapshot.val())
-    } catch(TypeError){
-        keys = [];
-    }
-
-    for(let i = 0; i < keys.length; i++){
-
-        let theirID = keys[i];
-
-        ref.child('users').child(theirID).once('value', function(snapshot) {
-
-            // Get values from friend DB entry
-            let device = snapshot.val()['device'];
-
-            // This will only complete if there is a 'box' for friend's device
-            try {
-                document.getElementById(`past` + theirID).onclick = function () {
-
-                    getPast(theirID);
-
-                }
-            } catch(TypeError){
-                // Do nothing
-            }
-
-            // Important check. If the friend has no 'device' entry, there is no need to make a box for them
-            if (device != null){
-
-                document.getElementById(`devices`).innerHTML += createHTMLEntry(theirID);
-
-                deviceDict[theirID] = [];
-
-                let thisRef = ref.child(`users`).child(theirID).child(`device`).child(`current`);
-
-                // Loads points that were made before page load
-                thisRef.on(`child_added`, function (snapshot) {
-
-                    addPoint(snapshot, theirID, map);
-
-                });
-
-                // Loads real-time points
-                thisRef.on(`child_changed`, function (snapshot) {
-
-                    addPoint(snapshot, theirID, map);
-
-                });
-
-                thisRef.on(`child_removed`, function (snapshot) {
-
-                    document.getElementById(theirID).innerHTML = ``;
-
-                    let length = deviceDict[theirID].length;
-
-                    deviceDict[theirID][length - 1].setMap(null);
-
-                    deviceDict[theirID] = [];
-
-                })
-
-            }
-
-        });
-
-        }
-
-    });
-};
 
 // Gets needed values from snapshot object
-let getValues = (snapshot) => {
+let getValuesFromSnapshot = (snapshot) => {
 
     let values = {};
 
@@ -103,6 +41,7 @@ let getValues = (snapshot) => {
 
 };
 
+
 // Performs HTML updates for every tag
 let updateHTML = (id, values, map) => {
 
@@ -113,10 +52,6 @@ let updateHTML = (id, values, map) => {
 
     document.getElementById(`click` + id).onclick = function () {
         map.panTo({lat: values["lat"], lng: values["lon"]});
-    };
-
-    document.getElementById(`past` + id).onclick = function () {
-        getPast(id);
     };
 
 };
@@ -142,8 +77,8 @@ let getPast = (id) => {
 
 let addPoint = (snapshot, currentID, map) => {
 
-    // Values contains everything from snapshot
-    let values = getValues(snapshot);
+    let values = getValuesFromSnapshot(snapshot);
+
 
     updateHTML(currentID, values, map);
 
@@ -221,7 +156,6 @@ let createHTMLEntry = (id) => {
     `\n<div id="time` + id + `">Time: </div>` +
     `\n<div id="speed` + id + `">Speed: </div>` +
     `\n<input id="click` + id +`" type="button" value="Locate" />` +
-    `\n<input id="past` + id +`" type="button" value="Past"/>` +
     `</div>`;
 
     return html;
