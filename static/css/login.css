@@ -14,15 +14,14 @@ html {
 }
 
 #container {
+    background-color: rgba(104, 104, 104, 0.2);
     position: absolute;
     display: block;
-    margin: 0 auto;
-    margin-top: 300px;
+    margin-top: 200px;
     z-index: 1;
 }
 
 #firebaseui-auth-container {
-    border: 1px solid #cecece;
     width: 300px;
 }
 
