@@ -79,7 +79,6 @@ let addPoint = (snapshot, currentID, map) => {
 
     let values = getValuesFromSnapshot(snapshot);
 
-
     updateHTML(currentID, values, map);
 
     // Adds marker to map
