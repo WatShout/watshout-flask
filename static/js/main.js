@@ -69,7 +69,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 
             deviceDict[theirID] = [];
 
-
             // For each friend currently in an activity this plots all the points
             // made up to the point the web page was loaded
             ref.child(`users`).child(theirID).once(`value`, function(snapshot) {
@@ -84,26 +83,14 @@ firebase.auth().onAuthStateChanged(function(user) {
                 if (theirDevice != null) {
                     document.getElementById(`devices`).innerHTML += createHTMLEntry(theirID);
 
-                    /*
+
                     ref.child(`users`).child(theirID).child(`device`)
                         .child(`current`).on(`child_added`, function (snapshot) {
 
                             addPoint(snapshot, theirID, map);
 
                     });
-                    */
 
-                    ref.child(`users`)
-                        .child(theirID)
-                        .child(`device`)
-                        .child(`past`)
-                        .child(`mon-jun-04-02-30-36-gmt-2018`)
-                        .child(`path`)
-                        .on(`child_added`, function (snapshot) {
-
-                        addPoint(snapshot, theirID, map);
-
-                    })
                 }
             });
     });

@@ -1,0 +1,77 @@
+<html>
+
+    <head>
+
+        <!-- The order in which these load is important -->
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
+
+        <script defer src="/static/js/config.js"></script>
+        <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0"></script>
+
+        <script defer src="/static/js/previous-activity.js"></script>
+
+        <link rel="stylesheet" href="/static/css/pills.min.css">
+        <link rel="stylesheet" href="/static/css/main.css">
+
+        {% if activity_id %}
+        <title>{{ activity_id }}</title>
+        {% endif %}
+
+    </head>
+
+    <body>
+
+        {% if uid %}
+        <meta id="uid" content="{{ uid }}">
+        {% endif %}
+
+        {% if activity_id %}
+        <meta id="activity_id" content="{{ activity_id }}">
+        {% endif %}
+
+        <div class="row">
+
+            <div class="two columns">
+
+            </div>
+
+            <div class="eight columns">
+
+               <h1>{{ activity_id }}</h1>
+
+               <h3>By: {{ uid }}</h3>
+
+            </div>
+
+            <div class="two columns">
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="two columns">
+
+            </div>
+
+            <div class="eight columns">
+
+               <!-- Centers the map -->
+                <div class="center">
+                    <div id="map"></div>
+                </div>
+
+            </div>
+
+            <div class="two columns">
+
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

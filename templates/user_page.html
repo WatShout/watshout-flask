@@ -43,6 +43,10 @@
                     <h3>Age is: {{ age }}</h3>
                     {% endif %}
 
+                    {% if links %}
+                    <h3>{{ links|safe }}</h3>
+                    {% endif %}
+
 
                     <input type="button" value="Go back" onclick="goBack()">
 
