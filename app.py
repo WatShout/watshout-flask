@@ -47,14 +47,15 @@ def user_page(uid=None):
 
         device = ref.child("users").child(uid).get().val()['device']['past']
 
-        links = []
+        activity_ids = []
 
+        # Gets the activity 'ID' and adds it to a list
+        # (that is parsed as a string)
         for key, value in device.items():
-
-            links.append("<a href=/users/" + uid + "/activities/" + key + ">" + key + "</a>")
+            activity_ids.append(key)
 
         return render_template('user_page.html', email=email, name=name, age=age, uid=uid,
-                               links=links)
+                               activity_ids=activity_ids)
 
     # If user isn't found in the database we assume they don't exist
     except TypeError:
@@ -70,4 +71,4 @@ def activity(uid=None, activity_id=None):
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=80, debug=False)
+    app.run(host='127.0.0.1', port=80, debug=True)

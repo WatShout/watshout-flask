@@ -10,6 +10,7 @@
         <script defer src="/static/js/config.js"></script>
         <script defer src="/static/js/profile-page.js"></script>
 
+        <link rel="stylesheet" href="/static/css/profile.css">
         <link rel="stylesheet" href="/static/css/pills.min.css">
 
         <title>Hello from Flask</title>
@@ -21,6 +22,10 @@
         <!-- Stores UID for easy access by profile-page.js -->
         {% if uid %}
         <meta id="uid" content="{{ uid }}">
+        {% endif %}
+
+        {% if activity_ids %}
+        <meta id="activity_ids" content="{{ activity_ids }}">
         {% endif %}
 
         <div class="row">
@@ -43,10 +48,9 @@
                     <h3>Age is: {{ age }}</h3>
                     {% endif %}
 
-                    {% if links %}
-                    <h3>{{ links|safe }}</h3>
-                    {% endif %}
+                    <div id="since"></div>
 
+                    <div id="past"></div>
 
                     <input type="button" value="Go back" onclick="goBack()">
 
