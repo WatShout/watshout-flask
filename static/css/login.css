@@ -1,0 +1,28 @@
+/*
+
+CSS for the sign up and sign in pages
+
+*/
+
+html {
+    background-color: #fdffb7;
+}
+
+#title {
+    font-size: 42px;
+    text-align: center;
+}
+
+#container {
+    position: absolute;
+    display: block;
+    margin: 0 auto;
+    margin-top: 300px;
+    z-index: 1;
+}
+
+#firebaseui-auth-container {
+    border: 1px solid #cecece;
+    width: 300px;
+}
+
