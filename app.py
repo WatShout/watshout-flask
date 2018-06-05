@@ -50,11 +50,15 @@ def strava_login(uid=None):
     else:
         uri = 'http://127.0.0.1:5000/users/' + uid + '/strava/authorized/'
 
+
     authorize_url = None
     if not access_token:
         authorize_url = client.authorization_url(
             client_id=26116,
-            redirect_uri=uri)
+            redirect_uri=uri,
+            approval_prompt='auto',
+            scope='view_private,write'
+        )
         return redirect(authorize_url, code=302)
 
 
@@ -65,14 +69,13 @@ def strava_authorized(uid=None):
     access_token = client.exchange_code_for_token(
         client_id=26116,
         client_secret='04ba9a4ac548cdc94c375baf65ceb95eca3af533',
-        code=code
-    )
+        code=code)
 
     client.access_token = access_token
-    athlete = client.get_athlete()
+
+    #client.upload_activity(test_run, 'gpx')
 
     return render_template('strava-authorized.html',
-                           id=athlete.id,
                            token=access_token,
                            uid=uid)
 
