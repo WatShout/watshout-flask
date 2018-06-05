@@ -18,18 +18,29 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         let myUID = user.uid;
 
-        ref.child(`friend_data`).child(theirUID).child(myUID).once('value', function(snapshot) {
+        // User is viewing their own ride
+        if (myUID === theirUID){
 
-            // If snapshot doesn't exist, then users are not friends
-            if (!snapshot.exists()){
+            console.log("Self");
 
-                alert(`You are not friends with this user`);
+        }
 
-                window.history.back();
+        else {
 
-            }
+            ref.child(`friend_data`).child(theirUID).child(myUID).once('value', function(snapshot) {
 
-        });
+                // If snapshot doesn't exist, then users are not friends
+                if (!snapshot.exists()){
+
+                    alert(`You are not friends with this user`);
+
+                    window.history.back();
+
+                }
+
+            });
+
+        }
 
 
     } else {

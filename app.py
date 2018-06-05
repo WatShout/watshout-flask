@@ -53,7 +53,10 @@ def authorized(uid=None):
     client.access_token = access_token
     athlete = client.get_athlete()
 
-    return render_template('strava_authorized.html', id=athlete.id, token=access_token, uid=uid)
+    return render_template('strava_authorized.html',
+                           id=athlete.id,
+                           token=access_token,
+                           uid=uid)
 
 
 @app.route('/users/<uid>/strava/login/')
@@ -63,7 +66,7 @@ def strava_test(uid=None):
     if not access_token:
         authorize_url = client.authorization_url(
             client_id=26116,
-            redirect_uri='http://localhost:5000/users/' + uid + '/strava/authorized/')
+            redirect_uri='https://watshout.herokuapp.com/users/' + uid + '/strava/authorized/')
         return redirect(authorize_url, code=302)
 
 
@@ -76,6 +79,12 @@ def user_page(uid=None):
         name = ref.child("users").child(uid).get().val()['name']
         age = ref.child("users").child(uid).get().val()['age']
 
+    # If user isn't found in the database we assume they don't exist
+    except TypeError:
+        return render_template('user_doesnt_exist.html', uid=uid)
+
+    # Try to build a list of user's activities
+    try:
         device = ref.child("users").child(uid).get().val()['device']['past']
 
         activity_ids = []
@@ -85,14 +94,20 @@ def user_page(uid=None):
         for key, value in device.items():
             activity_ids.append(key)
 
-        return render_template('user_page.html', email=email, name=name, age=age, uid=uid,
-                               activity_ids=activity_ids)
-
-    # If user isn't found in the database we assume they don't exist
-    except TypeError:
-        return render_template('user_doesnt_exist.html', uid=uid)
+    # User has no activities/devices
     except KeyError:
         return render_template('user_page.html', email=email, name=name, age=age, uid=uid)
+
+    # Get the user's Strava auth token
+    try:
+        strava_token = ref.child("users").child(uid).get().val()['strava_token']
+
+    # User hasn't authenticated with Strava
+    except KeyError:
+        strava_token = ""
+
+    return render_template('user_page.html', email=email, name=name, age=age, uid=uid,
+                           activity_ids=activity_ids, strava_token=strava_token)
 
 
 @app.route('/users/<string:uid>/activities/<string:activity_id>/')

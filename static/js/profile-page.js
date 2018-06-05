@@ -19,29 +19,41 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         let myUID = user.uid;
 
+        if (myUID === theirUID){
 
-        ref.child(`friend_data`).child(theirUID).child(myUID).once('value', function(snapshot) {
+            // User is viewing their own profile
 
-            // If snapshot doesn't exist, then users are not friends
-            if (!snapshot.exists() && theirUID !== myUID){
+        }
+        else {
 
-                alert(`You are not friends with this user`);
+            document.getElementById(`strava_info`).innerHTML = ``;
 
-                window.history.back();
+            ref.child(`friend_data`).child(theirUID).child(myUID).once('value', function(snapshot) {
 
-            } else {
+                 // Users are NOT friends
+                 if (!snapshot.exists()){
 
-                let timeInSeconds = snapshot.val() / 1000;
+                    alert(`You are not friends with this user`);
 
-                let date = new Date(0);
+                    window.history.back();
 
-                date.setUTCSeconds(timeInSeconds);
+                 }
+                 // Users are friends
+                 else {
 
-                document.getElementById(`since`).innerHTML =
-                    `You have been friends since ` + date;
-            }
+                    let timeInSeconds = snapshot.val() / 1000;
 
-        });
+                    let date = new Date(0);
+
+                    date.setUTCSeconds(timeInSeconds);
+
+                    document.getElementById(`since`).innerHTML =
+                        `You have been friends since ` + date;
+                }
+
+            });
+        }
+
 
 
     } else {
@@ -76,7 +88,7 @@ let getActivityList = (linkString) => {
 
     return array;
 
-}
+};
 
 let addPreviousActivities = (activityArray) => {
 
@@ -96,7 +108,7 @@ let addPreviousActivities = (activityArray) => {
 
     }
 
-}
+};
 
 
 addPreviousActivities(getActivityList(activity_ids));

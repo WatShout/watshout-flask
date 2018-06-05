@@ -21,36 +21,44 @@
 
         <!-- Stores UID for easy access by profile-page.js -->
         {% if uid %}
-        <meta id="uid" content="{{ uid }}">
+            <meta id="uid" content="{{ uid }}">
         {% endif %}
 
         {% if activity_ids %}
-        <meta id="activity_ids" content="{{ activity_ids }}">
+            <meta id="activity_ids" content="{{ activity_ids }}">
         {% endif %}
 
         <div class="row">
 
-            <div class="two columns">
-
-            </div>
+            <div class="two columns"></div>
 
             <div class="eight columns">
 
-                   {% if name %}
-                    <h1>Profile page for: {{ name }}</h1>
+                    {% if name %}
+                        <h1>Profile page for: {{ name }}</h1>
                     {% endif %}
 
                     {% if email %}
-                    <h3>Email address is: {{ email }}</h3>
+                        <h3>Email address is: {{ email }}</h3>
                     {% endif %}
 
                     {% if age %}
-                    <h3>Age is: {{ age }}</h3>
+                        <h3>Age is: {{ age }}</h3>
                     {% endif %}
 
-                    {% if uid %}
-                    <a href="strava/login">Login to Strava</a>
-                    {% endif %}
+                    <div id="strava_info">
+
+                        {% if strava_token == '' %}
+                            <h3 id="status">
+
+                                <a href="strava/login">Login to Strava!</a>
+
+                            </h3>
+                        {% else %}
+                            <h3 id="status">Logged in to Strava!</h3>
+                        {% endif %}
+
+                    </div>
 
                     <div id="since"></div>
 
@@ -60,9 +68,7 @@
 
             </div>
 
-            <div class="two columns">
-
-            </div>
+            <div class="two columns"></div>
 
         </div>
 
