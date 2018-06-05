@@ -48,7 +48,13 @@
 
                     <div id="strava_info">
 
-                        {% if strava_token == '' %}
+                        {% if strava_token  %}
+                            <h3 id="status">
+
+                                Already logged in!
+
+                            </h3>
+                        {% else %}
                             <h3 id="status">
 
                                 Token no: {{ strava_token }}
@@ -56,11 +62,7 @@
                                 <a href="strava/login">Login to Strava!</a>
 
                             </h3>
-                        {% elif strava_token == 'none' %}
 
-                                Token yes: {{ strava_token }}
-
-                            <h3 id="status">Logged in to Strava!</h3>
                         {% endif %}
 
                     </div>

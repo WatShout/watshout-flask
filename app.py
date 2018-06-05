@@ -104,7 +104,8 @@ def user_page(uid=None):
 
     # User hasn't authenticated with Strava
     except KeyError:
-        strava_token = "none"
+        return render_template('user_page.html', email=email, name=name, age=age, uid=uid,
+                               activity_ids=activity_ids)
 
     return render_template('user_page.html', email=email, name=name, age=age, uid=uid,
                            activity_ids=activity_ids, strava_token=strava_token)
