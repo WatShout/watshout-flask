@@ -1,0 +1,35 @@
+<html>
+<head>
+
+    <!-- The order in which these load is important -->
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
+
+    <script defer src="/static/js/config.js"></script>
+
+    <script defer src="/static/js/strava-auth-check.js"></script>
+
+    <title>Title</title>
+</head>
+<body>
+
+        <h3>Hello!!!!</h3>
+
+        {% if uid %}
+        <meta id="uid" content="{{ uid }}">
+            <h3>{{ uid }}</h3>
+        {% endif %}
+
+        {% if token %}
+        <meta id="token" content="{{ token }}">
+            <h3>{{ token }}</h3>
+        {% endif %}
+
+        {% if id %}
+        <meta id="id" content="{{ id }}">
+            <h3>{{ id }}</h3>
+        {% endif %}
+
+</body>
+</html>

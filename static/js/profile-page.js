@@ -23,7 +23,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         ref.child(`friend_data`).child(theirUID).child(myUID).once('value', function(snapshot) {
 
             // If snapshot doesn't exist, then users are not friends
-            if (!snapshot.exists()){
+            if (!snapshot.exists() && theirUID !== myUID){
 
                 alert(`You are not friends with this user`);
 

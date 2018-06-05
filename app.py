@@ -1,12 +1,10 @@
-from flask import Flask, render_template, Markup, request
+from flask import Flask, render_template, Markup, request, redirect
 from stravalib.client import Client
 
 import pyrebase
 
 client = Client()
-authorize_url = client.authorization_url(client_id=26116, redirect_uri='https://watshout.herokuapp.com/authorized/')
-
-print(authorize_url)
+access_token = None
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -42,15 +40,34 @@ def log_in():
     return app.send_static_file('login.html')
 
 
-@app.route('/authorized/', methods=['GET', 'POST'])
-def authorized():
-    code = request.data
-    #access_token = client.exchange_code_for_token(client_id=26116, client_secret="04ba9a4ac548cdc94c375baf65ceb95eca3af533", code=code)
-    #return access_token
-    return code
+@app.route('/users/<uid>/strava/authorized/')
+def authorized(uid=None):
+
+    code = request.args.get('code')
+    access_token = client.exchange_code_for_token(
+        client_id=26116,
+        client_secret='04ba9a4ac548cdc94c375baf65ceb95eca3af533',
+        code=code
+    )
+
+    client.access_token = access_token
+    athlete = client.get_athlete()
+
+    return render_template('strava_authorized.html', id=athlete.id, token=access_token, uid=uid)
 
 
-@app.route('/users/<uid>')
+@app.route('/users/<uid>/strava/login/')
+def strava_test(uid=None):
+
+    authorize_url = None
+    if not access_token:
+        authorize_url = client.authorization_url(
+            client_id=26116,
+            redirect_uri='http://localhost:5000/users/' + uid + '/strava/authorized/')
+        return redirect(authorize_url, code=302)
+
+
+@app.route('/users/<uid>/')
 def user_page(uid=None):
 
     # Try to display a simple page with user info
@@ -75,7 +92,7 @@ def user_page(uid=None):
     except TypeError:
         return render_template('user_doesnt_exist.html', uid=uid)
     except KeyError:
-        return uid + " has no activities"
+        return render_template('user_page.html', email=email, name=name, age=age, uid=uid)
 
 
 @app.route('/users/<string:uid>/activities/<string:activity_id>/')

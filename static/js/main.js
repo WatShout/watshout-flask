@@ -37,7 +37,8 @@ firebase.auth().onAuthStateChanged(function(user) {
         });
 
         document.getElementById(`hello`).innerHTML = `Hi: ` + userEmail + `<br />` +
-            `User ID: ` + userID;
+            `User ID: ` + userID +
+            `<a href="/users/` + userID + `/">` + `My page` + `</a>`;
 
 
     } else {
