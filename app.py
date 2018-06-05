@@ -66,7 +66,7 @@ def strava_test(uid=None):
     if not access_token:
         authorize_url = client.authorization_url(
             client_id=26116,
-            redirect_uri='http://localhost/users/' + uid + '/strava/authorized/')
+            redirect_uri='https://watshout.herokuapp.com/users/' + uid + '/strava/authorized/')
         return redirect(authorize_url, code=302)
 
 
