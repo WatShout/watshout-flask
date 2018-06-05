@@ -1,3 +1,4 @@
 gunicorn
 flask==1.0.2
 pyrebase==3.0.27
+stravalib==0.9.4

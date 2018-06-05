@@ -1,6 +1,12 @@
-from flask import Flask, render_template, Markup
+from flask import Flask, render_template, Markup, request
+from stravalib.client import Client
 
 import pyrebase
+
+client = Client()
+authorize_url = client.authorization_url(client_id=26116, redirect_uri='https://watshout.herokuapp.com/authorized/')
+
+print(authorize_url)
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -34,6 +40,14 @@ def main_map():
 @app.route('/login/')
 def log_in():
     return app.send_static_file('login.html')
+
+
+@app.route('/authorized/', methods=['GET', 'POST'])
+def authorized():
+    code = request.data
+    #access_token = client.exchange_code_for_token(client_id=26116, client_secret="04ba9a4ac548cdc94c375baf65ceb95eca3af533", code=code)
+    #return access_token
+    return code
 
 
 @app.route('/users/<uid>')
