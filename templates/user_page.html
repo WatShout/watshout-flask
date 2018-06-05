@@ -51,10 +51,15 @@
                         {% if strava_token == '' %}
                             <h3 id="status">
 
+                                Token no: {{ strava_token }}
+
                                 <a href="strava/login">Login to Strava!</a>
 
                             </h3>
                         {% else %}
+
+                                Token yes: {{ strava_token }}
+
                             <h3 id="status">Logged in to Strava!</h3>
                         {% endif %}
 
