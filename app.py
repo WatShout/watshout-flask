@@ -23,6 +23,8 @@ firebase = pyrebase.initialize_app(config)
 # Get a reference to the database service
 ref = firebase.database()
 
+DEBUG = False
+
 
 # Note: this will eventually redirect to the 'main' page
 @app.route('/')
@@ -40,8 +42,24 @@ def log_in():
     return app.send_static_file('login.html')
 
 
+@app.route('/users/<uid>/strava/login/')
+def strava_login(uid=None):
+
+    if not DEBUG:
+        uri = 'https://watshout.herokuapp.com/users/' + uid + '/strava/authorized/'
+    else:
+        uri = 'http://127.0.0.1:5000/users/' + uid + '/strava/authorized/'
+
+    authorize_url = None
+    if not access_token:
+        authorize_url = client.authorization_url(
+            client_id=26116,
+            redirect_uri=uri)
+        return redirect(authorize_url, code=302)
+
+
 @app.route('/users/<uid>/strava/authorized/')
-def authorized(uid=None):
+def strava_authorized(uid=None):
 
     code = request.args.get('code')
     access_token = client.exchange_code_for_token(
@@ -53,21 +71,10 @@ def authorized(uid=None):
     client.access_token = access_token
     athlete = client.get_athlete()
 
-    return render_template('strava_authorized.html',
+    return render_template('strava-authorized.html',
                            id=athlete.id,
                            token=access_token,
                            uid=uid)
-
-
-@app.route('/users/<uid>/strava/login/')
-def strava_test(uid=None):
-
-    authorize_url = None
-    if not access_token:
-        authorize_url = client.authorization_url(
-            client_id=26116,
-            redirect_uri='https://watshout.herokuapp.com/users/' + uid + '/strava/authorized/')
-        return redirect(authorize_url, code=302)
 
 
 @app.route('/users/<uid>/')
@@ -81,6 +88,7 @@ def user_page(uid=None):
 
     # If user isn't found in the database we assume they don't exist
     except TypeError:
+        print("TypeError: User doesn't exist")
         return render_template('user_doesnt_exist.html', uid=uid)
 
     # Try to build a list of user's activities
@@ -96,7 +104,8 @@ def user_page(uid=None):
 
     # User has no activities/devices
     except KeyError:
-        return render_template('user_page.html', email=email, name=name, age=age, uid=uid)
+        activity_ids = ""
+        print("KeyError: No activities")
 
     # Get the user's Strava auth token
     try:
@@ -104,16 +113,15 @@ def user_page(uid=None):
 
     # User hasn't authenticated with Strava
     except KeyError:
-        return render_template('user_page.html', email=email, name=name, age=age, uid=uid,
-                               activity_ids=activity_ids)
+        strava_token = ""
+        print("KeyError: No Strava connection")
 
-    return render_template('user_page.html', email=email, name=name, age=age, uid=uid,
+    return render_template('user-page.html', email=email, name=name, age=age, uid=uid,
                            activity_ids=activity_ids, strava_token=strava_token)
 
 
 @app.route('/users/<string:uid>/activities/<string:activity_id>/')
-def activity(uid=None, activity_id=None):
-
+def past_activity(uid=None, activity_id=None):
     return render_template('activity.html', uid=uid, activity_id=activity_id)
 
 

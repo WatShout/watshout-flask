@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="/static/css/profile.css">
         <link rel="stylesheet" href="/static/css/pills.min.css">
 
-        <title>Hello from Flask</title>
+        <title>{{ name }} | WatShout</title>
 
     </head>
 
@@ -49,22 +49,13 @@
                     <div id="strava_info">
                         {% if strava_token  %}
 
-                            <h3 id="status">
-
-                                Already logged in!
-
-                            </h3>
+                            <h3>Already logged in</h3>
 
                         {% else %}
-                            <h3 id="status">
-                                Token no: {{ strava_token }}
 
-                                <a href="strava/login">Login to Strava!</a>
-
-                            </h3>
+                            <a href="strava/login">Login to Strava!</a>
 
                         {% endif %}
-
                     </div>
 
                     <div id="since"></div>

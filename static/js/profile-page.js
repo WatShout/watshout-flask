@@ -5,7 +5,7 @@
     Purpose: Displays information about another user (with data retrieved from
             Firebase) using a Jinja2 template
 
-    Associated HTML: templates/user_page.html
+    Associated HTML: templates/user-page.html
 
  */
 

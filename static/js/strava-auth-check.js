@@ -1,14 +1,26 @@
+
+/*
+
+    Filename: strava-auth-check.js
+
+    Purpose: Makes sure the user requesting the Strava integration is the same user that is
+            currently logged in
+
+    Associated HTML: strava-authorized.html
+
+ */
+
 firebase.auth().onAuthStateChanged(function(user) {
 
-    if (user) {
+    if (user != null) {
 
         let loggedInUID = user.uid;
         let stravaRequestUID = document.getElementById(`uid`).getAttribute(`content`);
 
         let stravaToken = document.getElementById(`token`).getAttribute(`content`);
 
-        console.log("Login: " + loggedInUID);
-        console.log("Strava: " + stravaRequestUID);
+        console.log(loggedInUID);
+        console.log(stravaRequestUID);
 
         // User is allowed to connect Strava account
         if (loggedInUID === stravaRequestUID){
@@ -19,19 +31,18 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         } else {
 
-
             console.log("Login: " + loggedInUID);
             console.log("Strava: " + stravaRequestUID);
 
-            //alert(`You can't do that`);
-            //window.history.back();
+            document.getElementById(`text`).innerText = `<p>Something went wrong!</p>`;
+
         }
 
 
     } else {
 
         alert(`User not logged in`);
-        window.history.back();
+        window.location.replace(`/login/`);
 
     }
 });
