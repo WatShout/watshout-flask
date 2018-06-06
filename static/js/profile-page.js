@@ -63,7 +63,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     }
 });
 
-let goBack = () => window.location.replace(`/app/`);
+let goBack = () => window.location.replace(`/`);
 
 let activity_ids = document.getElementById(`activity_ids`).getAttribute(`content`);
 

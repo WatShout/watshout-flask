@@ -36,9 +36,11 @@ firebase.auth().onAuthStateChanged(function(user) {
             }
         });
 
-        document.getElementById(`hello`).innerHTML = `Hi: ` + userEmail + `<br />` +
-            `User ID: ` + userID +
-            `<a href="/users/` + userID + `/">` + `My page` + `</a>`;
+        try {
+            document.getElementById(`profile`).href = `/users/` + userID + `/`;
+        } catch (e) {
+            console.log(e + ` couldn't set link`);
+        }
 
 
     } else {
@@ -66,34 +68,32 @@ firebase.auth().onAuthStateChanged(function(user) {
     // Plots current paths by all friends
     ref.child(`friend_data`).child(userID).on(`child_added`, function(snapshot) {
 
-            let theirID = snapshot.key;
+        let theirID = snapshot.key;
 
-            deviceDict[theirID] = [];
+        deviceDict[theirID] = [];
 
-            // For each friend currently in an activity this plots all the points
-            // made up to the point the web page was loaded
-            ref.child(`users`).child(theirID).once(`value`, function(snapshot) {
+        // For each friend currently in an activity this plots all the points
+        // made up to the point the web page was loaded
+        ref.child(`users`).child(theirID).once(`value`, function(snapshot) {
 
-                let theirEmail = snapshot.val()[`email`];
-                let theirDevice = snapshot.val()[`device`];
+            let theirName = snapshot.val()[`name`];
+            let theirEmail = snapshot.val()[`email`];
+            let theirDevice = snapshot.val()[`device`];
 
-                // Adds friend to friends list
-                document.getElementById(`accepted`).innerHTML += `<a href="/users/` + theirID + `">` + theirEmail + `</a><br />`;
+            // TODO: Fix behavior when a user, already a friend, adds a device
+            if (theirDevice != null) {
+                document.getElementById(`devices`).innerHTML +=
+                    createHTMLEntry(theirName, theirID);
 
-                // TODO: Fix behavior when a user, already a friend, adds a device
-                if (theirDevice != null) {
-                    document.getElementById(`devices`).innerHTML += createHTMLEntry(theirID);
+                ref.child(`users`).child(theirID).child(`device`)
+                    .child(`current`).on(`child_added`, function (snapshot) {
 
+                    addPoint(snapshot, theirID, map);
 
-                    ref.child(`users`).child(theirID).child(`device`)
-                        .child(`current`).on(`child_added`, function (snapshot) {
+                });
 
-                            addPoint(snapshot, theirID, map);
-
-                    });
-
-                }
-            });
+            }
+        });
     });
 });
 
@@ -147,10 +147,10 @@ let askFriend = () => {
             let theirID = Object.keys(snapshot.val())[0];
 
             ref.child(`friend_requests`).child(theirID).child(userID)
-            .set({"request_type": "received"});
+                .set({"request_type": "received"});
 
             ref.child(`friend_requests`).child(userID).child(theirID)
-            .set({"request_type": "sent"});
+                .set({"request_type": "sent"});
 
         } else {
 

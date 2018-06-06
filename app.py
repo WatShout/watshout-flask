@@ -26,13 +26,7 @@ ref = firebase.database()
 DEBUG = False
 
 
-# Note: this will eventually redirect to the 'main' page
 @app.route('/')
-def redirect_to_app():
-    return "This will eventually be the home of the main web page"
-
-
-@app.route('/app/')
 def main_map():
     return app.send_static_file('main_app.html')
 

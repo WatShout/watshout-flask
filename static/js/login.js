@@ -15,7 +15,7 @@
 // FirebaseUI config.
 let uiConfig = {
 
-    signInSuccessUrl: `/app/`,
+    signInSuccessUrl: `/`,
     signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -41,7 +41,7 @@ let initApp = () => {
 
             // User is signed in (signInSuccessUrl is used)
 
-            window.location.replace(`/app/`);
+            window.location.replace(`/`);
 
         }
     });

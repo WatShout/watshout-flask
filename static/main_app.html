@@ -23,90 +23,48 @@
 
 <body>
 
-    <div>
+<div id="wrapper">
 
-        <!-- Note about pills.css -->
-        <!-- Every "row" has up to twelve "columns" -->
+    <div class="topnav">
 
-        <div class="row">
+        <a id="profile">Profile</a>
+        <a id="friends">Friends</a>
+        <a id="settings">Settings</a>
 
-            <div class="two columns"></div>
+        <div id="search-container">
 
-            <div class="eight columns">
-                <h5 id="hello"></h5>
-                <input id="logout" type="button" value="Log Out" onclick="signOut()" />
-            </div>
-
-            <div class="two columns"></div>
+            <input id="search" type="text" placeholder="Search..">
+            <button id="submit" type="submit">Submit</button>
 
         </div>
 
-        <div class="row">
 
-            <div class="two columns"></div>
+        <a href="javascript:signOut();" id="logout">Log Out</a>
 
-            <div class="eight columns">
 
-                <input id="friend" type="text" value="" />
 
-                <input id="askFriend" type="button" value="Add Friend" onclick="askFriend()" />
+    </div>
 
-            </div>
 
-            <div class="two columns"></div>
+    <div id="main-content">
 
-        </div>
+        <div id="sidebar">
 
-        <div class="row">
-
-            <div class="two columns"></div>
-
-            <div id="pending" class="eight columns">
-
-                <h5>Friend requests (click to confirm friend)</h5>
-
-            </div>
-
-            <div class="two columns"></div>
-
-        </div>
-
-        <div class="row">
-
-            <div class="two columns"></div>
-
-            <div id="accepted" class="eight columns">
-
-                <h5>Friends</h5>
-
-            </div>
-
-            <div class="two columns"></div>
-
-        </div>
-
-        <div class="row">
-
-            <div class="eight columns">
-
-                <!-- Centers the map -->
-                <div class="center">
-                    <div id="map"></div>
-                </div>
-
-            </div>
-
-            <div class="four columns">
-
+            <div class="scrollable">
                 <div id="devices"></div>
-
-                <input id="zoomout" type="button" value="Zoom Out" />
-
             </div>
+
+        </div>
+
+        <div id="content">
+
+            <div id="map"></div>
 
         </div>
 
     </div>
+
+</div>
 
 </body>
 

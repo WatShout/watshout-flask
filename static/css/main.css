@@ -1,20 +1,17 @@
 html {
-    background-color: #f8ffb2;
+    background-color: #333;
 }
 
 body {
-    background-color: #ffffff;
+    background-color: #333;
 }
 
-.bearimg {
-    max-height: 50px;
-    max-width: 50px;
+
+.scrollable {
+    height: 100vh;
+    overflow-y: auto;
 }
 
-footer {
-    background-color: #f8ffb2;
-    height: 50px;
-}
 
 .center {
     display:flex;
@@ -34,51 +31,87 @@ footer {
     width: 100px;
 }
 
-#hello {
-    text-align: left;
-    font-size: 18px;
-}
-
-#buttons {
-    text-align: right;
-}
-
-#logout {
-    margin-right: 50px;
-    vertical-align: top;
-    display: inline-block;
-}
-
-#title {
-    margin-top: 0px;
-    margin-bottom: -50px;
-    font-style: normal;
-    font-family: sans-serif;
-    text-align: center;
-}
-
 #map {
-    width: 90%;
-    height: 75%;
+    width: 100%;
+    height: 100vh;
     background-color: #ffffff;
 }
 
-#cover {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    top:0;
-    left: 0;
-    background: #000;
-    z-index:9999;
+.deviceinfo {
+    background-color: #f8ffb2;
+    border: 1px solid #939393;
+
 }
 
-.deviceinfo {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    border-style: solid;
-    border-radius: 1px;
-    background-color: #f8ffb2;
-    border-color: #f8ffb2;
+#wrapper {
+    height: 100vh;
+    overflow: hidden;
+}
 
+#main-content {
+    height: 90vh;
+    float: bottom;
+}
+
+#sidebar {
+    width: 25vw;
+    height:auto;
+    float:left;
+    background-color: #333;
+}
+
+#content {
+    width: 75vw;
+    height:auto;
+    float: right;
+}
+
+.topnav {
+    float: top;
+    overflow: hidden;
+    background-color: #333;
+    height: 8vh;
+}
+
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.topnav input[type=text] {
+    float: right;
+    padding: 6px;
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+}
+
+#submit {
+  float: left;
+  padding: 6px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+
+#search {
+    float: left;
+}
+
+#logout {
+    float: right;
 }

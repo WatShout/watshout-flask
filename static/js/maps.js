@@ -10,14 +10,14 @@
 
  */
 
-let startingPosition = {lat: 37, lng: -122};
+let startingPosition = {lat: 37.4419, lng: -122.1430};
 
 let deviceDict = {};
 
 // Initializes the Google Map.
 const map = new google.maps.Map(document.getElementById(`map`), {
 
-    zoom: 1,
+    zoom: 14,
     center: startingPosition,
     clickableIcons: false,
     disableDefaultUI: true,
@@ -146,16 +146,24 @@ let formatTime = (milliseconds) => {
 
 };
 
-let createHTMLEntry = (id) => {
+let createHTMLEntry = (name, id) => {
 
+    /*
     let html =
     `<div class="deviceinfo" id="` + id + `">` +
-    `\n<h5 id="device` + id + `">Device Name: ` + id + `</h1>` +
+    `\n<a href="` + `/users/` + id + `">` + name + `</a>` +
     `\n<div id="battery` + id + `">Battery: </div>` +
     `\n<div id="time` + id + `">Time: </div>` +
     `\n<div id="speed` + id + `">Speed: </div>` +
     `\n<input id="click` + id +`" type="button" value="Locate" />` +
     `</div>`;
+    */
+
+    let html = `<div class="deviceinfo" id="` + id + `">` +
+        `\n<a href="` + `/users/` + id + `">` + name + `</a>` +
+        `\n<p>User is currently not sharing location</p>` +
+        `</div>`;
+
 
     return html;
 };
