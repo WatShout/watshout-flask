@@ -17,7 +17,7 @@ let startingPosition = {lat: 37.4419, lng: -122.1430};
 
 const map = new google.maps.Map(document.getElementById(`my-map`), {
 
-    zoom: 14,
+    zoom: 1,
     center: startingPosition,
     clickableIcons: false,
     disableDefaultUI: true,
@@ -108,47 +108,87 @@ let getActivityList = (linkString) => {
 
 let addPreviousActivities = (id, activityArray) => {
 
-    elementArray = [];
+    pathShown = {};
 
     for (let i = 0; i < activityArray.length; i++){
 
         let activity_name = activityArray[i];
 
+        let script = `getThisActivity(` + `'` + id.toString() + `',` + `'` + activity_name.toString() + `')`;
+
+
         let html = `<div class="activity_container">`;
 
-        html += `<input type="button" id="` + activity_name + `">`;
+        html += `<input type="button" onclick="` + script + `">`;
 
         html += `</div>`;
 
         document.getElementById(`content`).innerHTML += html;
 
-        let currentElement = document.getElementById(activity_name);
-
-        elementArray.push(currentElement)
+        pathShown[activity_name] = false;
 
     }
 
+};
 
-    elementArray.forEach(function (child) {
 
-        let eventID = child.id;
+let createPath = (snapshot, event_name) => {
 
-        child.addEventListener(`click`, function () {
+    if (!pathShown[event_name]){
+        let markers = [];
+        let path = [];
 
-            return function () {
+        snapshot.forEach(function (child) {
 
-                console.log(eventID);
+            let lat = child.val()[`lat`];
+            let lon = child.val()[`lon`];
 
-                ref.child(`users`).child(id).child(`device`).child(`past`).child(eventID).child(`path`)
-                    .once(`value`, function (snapshot) {
+            let currentPosition = {
+                lat: lat,
+                lng: lon
+            };
 
-                        console.log(snapshot.val());
+            let currentMarker = new google.maps.Marker({
+                position: currentPosition,
+                map: map,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 0
+                }
+            });
 
-                    });
-            }
+            markers.push(currentMarker);
+            path.push(currentPosition);
 
         });
 
-    })
+        let currentLine = new google.maps.Polyline({
+            path: path,
+            geodesic: true,
+            strokeColor: `#FF0000`,
+            strokeOpacity: 1.0,
+            strokeWeight: 6
+        });
+
+        pathShown[event_name + `line`] = currentLine;
+        pathShown[event_name + `line`].setMap(map);
+        pathShown[event_name] = true;
+    }
+    else {
+        pathShown[event_name + `line`].setMap(null);
+        pathShown[event_name] = false;
+    }
+
+
+};
+
+let getThisActivity = (id, event_name) => {
+
+    ref.child(`users`).child(id).child(`device`).child(`past`).child(event_name).child(`path`)
+        .once(`value`, function (snapshot) {
+
+            createPath(snapshot, event_name);
+
+        });
 
 };
