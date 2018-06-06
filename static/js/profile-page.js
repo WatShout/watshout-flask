@@ -13,7 +13,21 @@ let getTheirUID = () => document.getElementById(`uid`).getAttribute(`content`);
 
 let theirUID = getTheirUID();
 
+let startingPosition = {lat: 37.4419, lng: -122.1430};
+
+const map = new google.maps.Map(document.getElementById(`my-map`), {
+
+    zoom: 14,
+    center: startingPosition,
+    clickableIcons: false,
+    disableDefaultUI: true,
+
+});
+
 firebase.auth().onAuthStateChanged(function(user) {
+
+    // Initializes the Google Map.
+
 
     if (user) {
 
@@ -23,6 +37,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
             // User is viewing their own profile
 
+            addPreviousActivities(myUID, getActivityList(activity_ids));
+
         }
         else {
 
@@ -30,16 +46,16 @@ firebase.auth().onAuthStateChanged(function(user) {
 
             ref.child(`friend_data`).child(theirUID).child(myUID).once('value', function(snapshot) {
 
-                 // Users are NOT friends
-                 if (!snapshot.exists()){
+                // Users are NOT friends
+                if (!snapshot.exists()){
 
                     alert(`You are not friends with this user`);
 
                     window.history.back();
 
-                 }
-                 // Users are friends
-                 else {
+                }
+                // Users are friends
+                else {
 
                     let timeInSeconds = snapshot.val() / 1000;
 
@@ -52,6 +68,8 @@ firebase.auth().onAuthStateChanged(function(user) {
                 }
 
             });
+
+            addPreviousActivities(theirUID, getActivityList(activity_ids));
         }
 
 
@@ -62,8 +80,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     }
 });
-
-let goBack = () => window.location.replace(`/`);
 
 let activity_ids = document.getElementById(`activity_ids`).getAttribute(`content`);
 
@@ -90,25 +106,49 @@ let getActivityList = (linkString) => {
 
 };
 
-let addPreviousActivities = (activityArray) => {
+let addPreviousActivities = (id, activityArray) => {
+
+    elementArray = [];
 
     for (let i = 0; i < activityArray.length; i++){
 
-        let name = activityArray[i];
+        let activity_name = activityArray[i];
 
         let html = `<div class="activity_container">`;
 
-        let link = `/users/` + theirUID + `/activities/` + name;
+        html += `<input type="button" id="` + activity_name + `">`;
 
-        let current = `<a href="` + link + `">` + name + `</a><br />`;
+        html += `</div>`;
 
-        html += current + `</div>`;
+        document.getElementById(`content`).innerHTML += html;
 
-        document.getElementById(`past`).innerHTML += html;
+        let currentElement = document.getElementById(activity_name);
+
+        elementArray.push(currentElement)
 
     }
 
+
+    elementArray.forEach(function (child) {
+
+        let eventID = child.id;
+
+        child.addEventListener(`click`, function () {
+
+            return function () {
+
+                console.log(eventID);
+
+                ref.child(`users`).child(id).child(`device`).child(`past`).child(eventID).child(`path`)
+                    .once(`value`, function (snapshot) {
+
+                        console.log(snapshot.val());
+
+                    });
+            }
+
+        });
+
+    })
+
 };
-
-
-addPreviousActivities(getActivityList(activity_ids));

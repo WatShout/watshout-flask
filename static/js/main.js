@@ -89,6 +89,12 @@ firebase.auth().onAuthStateChanged(function(user) {
                     .child(`current`).on(`child_added`, function (snapshot) {
 
                     addPoint(snapshot, theirID, map);
+                    createLine(deviceDict[theirID], map);
+
+                    document.getElementById(`not-tracking` + theirID).innerHTML = ``;
+
+                    changeHTMLTag(theirID, `battery`, snapshot.val()[`battery`]);
+                    changeHTMLTag(theirID, `speed`, snapshot.val()[`speed`]);
 
                 });
 
@@ -139,7 +145,7 @@ let searchByID = (theirID) => {
 
 let askFriend = () => {
 
-    let friendEmail = document.getElementById(`friend`).value;
+    let friendEmail = document.getElementById(`search`).value;
 
     ref.child(`users`).orderByChild(`email`).equalTo(friendEmail).once(`value`, function(snapshot) {
 

@@ -45,6 +45,8 @@ let getValuesFromSnapshot = (snapshot) => {
 // Performs HTML updates for every tag
 let updateHTML = (id, values, map) => {
 
+    /*
+
     changeHTMLTag(id, `Device`, id);
     changeHTMLTag(id, `Speed`, values["speed"]);
     changeHTMLTag(id, `Time`, formatTime(values["time"]));
@@ -53,6 +55,8 @@ let updateHTML = (id, values, map) => {
     document.getElementById(`click` + id).onclick = function () {
         map.panTo({lat: values["lat"], lng: values["lon"]});
     };
+
+    */
 
 };
 
@@ -79,7 +83,7 @@ let addPoint = (snapshot, currentID, map) => {
 
     let values = getValuesFromSnapshot(snapshot);
 
-    updateHTML(currentID, values, map);
+    //updateHTML(currentID, values, map);
 
     // Adds marker to map
     let currentMarker = new google.maps.Marker({
@@ -98,9 +102,6 @@ let addPoint = (snapshot, currentID, map) => {
     }
 
     deviceDict[currentID].push(currentMarker);
-
-    createLine(deviceDict[currentID], map);
-
 
 };
 
@@ -148,22 +149,13 @@ let formatTime = (milliseconds) => {
 
 let createHTMLEntry = (name, id) => {
 
-    /*
-    let html =
-    `<div class="deviceinfo" id="` + id + `">` +
-    `\n<a href="` + `/users/` + id + `">` + name + `</a>` +
-    `\n<div id="battery` + id + `">Battery: </div>` +
-    `\n<div id="time` + id + `">Time: </div>` +
-    `\n<div id="speed` + id + `">Speed: </div>` +
-    `\n<input id="click` + id +`" type="button" value="Locate" />` +
-    `</div>`;
-    */
 
     let html = `<div class="deviceinfo" id="` + id + `">` +
-        `\n<a href="` + `/users/` + id + `">` + name + `</a>` +
-        `\n<p>User is currently not sharing location</p>` +
-        `</div>`;
-
+    `<a href="` + `/users/` + id + `">` + name + `</a>` + ` (` + id + `)` +
+    `\n<div id="not-tracking` + id + `">User is not tracking right now</div>` +
+    `\n<div id="battery` + id + `"></div>` +
+    `\n<div id="speed` + id + `"></div>` +
+    `</div>`;
 
     return html;
 };
@@ -177,8 +169,8 @@ let changeHTMLTag = (id, label, value) => {
     try{
         document.getElementById(lower + id).innerHTML = newValue;
     } catch(TypeError){
-        createHTMLEntry(id);
-        document.getElementById(lower + id).innerHTML = newValue;
+        //createHTMLEntry(id);
+        //document.getElementById(lower + id).innerHTML = newValue;
     }
 };
 

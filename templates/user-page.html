@@ -7,6 +7,8 @@
         <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
         <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
 
+        <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0"></script>
+
         <script defer src="/static/js/config.js"></script>
         <script defer src="/static/js/profile-page.js"></script>
 
@@ -28,28 +30,46 @@
             <meta id="activity_ids" content="{{ activity_ids }}">
         {% endif %}
 
-        <div class="row">
+        <div id="wrapper">
 
-            <div class="two columns"></div>
+            <div class="topnav">
 
-            <div class="eight columns">
+                <a href="/" id="home">Home</a>
+                <a id="profile">Profile</a>
+                <a id="friends">Friends</a>
+                <a id="settings">Settings</a>
+
+                <div id="search-container">
+
+                    <input id="search" type="text" placeholder="Search..">
+                    <button id="submit" type="submit" onclick="askFriend()">Add Friend</button>
+
+                </div>
+
+                <a href="javascript:signOut();" id="logout">Log Out</a>
+
+            </div>
+
+            <div id="main-row">
+
+                <div id="personalinfo">
 
                     {% if name %}
-                        <h1>Profile page for: {{ name }}</h1>
+                        <h1>{{ name }}</h1>
                     {% endif %}
 
                     {% if email %}
-                        <h3>Email address is: {{ email }}</h3>
+                        <h3>{{ email }}</h3>
                     {% endif %}
 
                     {% if age %}
-                        <h3>Age is: {{ age }}</h3>
+                        <h3>{{ age }}</h3>
                     {% endif %}
 
                     <div id="strava_info">
                         {% if strava_token  %}
 
-                            <h3>Already logged in</h3>
+                            <p>Connected to Strava</p>
 
                         {% else %}
 
@@ -58,15 +78,18 @@
                         {% endif %}
                     </div>
 
-                    <div id="since"></div>
+                </div>
 
-                    <div id="past"></div>
+                <div id="sidebar">
 
-                    <input type="button" value="Go back" onclick="goBack()">
+                    <div id="my-map"></div>
+
+                </div>
+
+                <div id="content"></div>
 
             </div>
 
-            <div class="two columns"></div>
 
         </div>
 
