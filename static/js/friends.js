@@ -6,7 +6,7 @@ let getFriendRequests = () => {
 
     ref.child(`friend_requests`).child(myUID).orderByChild(`request_type`).equalTo(`received`).on(`child_added`, function (snapshot) {
 
-        // snapshot.key has ID
+        document.getElementById(`pending`).innerHTML += snapshot.key;
 
     });
 
@@ -16,7 +16,7 @@ let getFriendsList = () => {
 
     ref.child(`friend_data`).child(myUID).on(`child_added`, function (snapshot) {
 
-        // snapshot.key has ID
+        document.getElementById(`pending`).innerHTML += snapshot.key;
 
     })
 
@@ -28,11 +28,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
       myUID = user.uid;
 
-      document.getElementById(`logout`).innerText = user.uid;
-
       getFriendRequests();
       getFriendsList();
-
 
 
   }

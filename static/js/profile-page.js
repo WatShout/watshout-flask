@@ -33,6 +33,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         let myUID = user.uid;
 
+        document.getElementById(`logout`).innerText = user.email;
+
         document.getElementById(`profile`).href = `/users/` + myUID + `/`;
         document.getElementById(`friends`).href = `/users/` + myUID + `/friends/`;
 

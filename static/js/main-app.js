@@ -19,9 +19,8 @@ firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
 
         userID = user.uid;
-        userEmail = user.email;
 
-        document.getElementById(`logout`).innerText = userEmail;
+        document.getElementById(`logout`).innerText = user.email;
 
         ref.child(`users`).child(userID).once(`value`, function(snapshot) {
 
@@ -73,7 +72,7 @@ firebase.auth().onAuthStateChanged(function(user) {
             let theirEmail = snapshot.val()[`email`];
             let theirDevice = snapshot.val()[`device`];
 
-            console.log(theirEmail + `, ` + theirDevice);
+            // TODO: console.log(snapshot.val()[`device`]);
 
             // TODO: Fix behavior when a user, already a friend, adds a device
             if (theirDevice != null) {

@@ -57,26 +57,12 @@
     <div id="main-row">
 
         <div id="pending">
-            {% if pending_uid_list %}
-                Friend Requests
-                {% for item in pending_uid_list %}
-                    <p>{{ item|safe }}</p>
-                {% endfor %}
-            {% else %}
-                No pending friend requests
-            {% endif %}
+        Pending requests
         </div>
 
 
         <div id="accepted">
-            {% if friend_email_list %}
-                Friends List
-                {% for item in friend_email_list %}
-                    <p>{{ item|safe }}</p>
-                {% endfor %}
-            {% else %}
-                <p>No Friends</p>
-            {% endif %}
+        Friend list
         </div>
 
 

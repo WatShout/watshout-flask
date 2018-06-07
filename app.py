@@ -23,7 +23,7 @@ firebase = pyrebase.initialize_app(config)
 # Get a reference to the database service
 ref = firebase.database()
 
-DEBUG = True
+DEBUG = False
 
 
 @app.route('/')
@@ -119,51 +119,7 @@ def user_page(uid=None):
 
 @app.route('/users/<string:uid>/friends/')
 def friends_page(uid=None):
-
-    this_uid = uid
-
-    friend_uid_list = ref.child('friend_data').child(uid).get().val()
-
-    try:
-        friend_uid_list = list(friend_uid_list.keys())
-    except AttributeError:
-        friend_uid_list = []
-
-    friend_link_list = []
-
-    for uid in friend_uid_list:
-        their_email = ref.child('users').child(uid).child('email').get().val()
-
-        link_html = '<a href="/users/' + uid + '/">' + their_email + '</a>'
-
-        friend_link_list.append(link_html)
-
-    try:
-        pending_uid_list = ref.child('friend_requests').child(this_uid)\
-        .order_by_child('request_type')\
-        .equal_to('received').get().val()
-    except IndexError:
-        pending_uid_list = []
-
-    try:
-        pending_uid_list = list(pending_uid_list.keys())
-    except AttributeError:
-        pending_uid_list = []
-
-    pending_link_list = []
-
-    for uid in pending_uid_list:
-        their_email = ref.child('users').child(uid).child('email').get().val()
-
-        link_html = '<a id="' + uid + '" href="#" onclick="' + 'confirmFriend(' + "'" + uid + "'" + ')">' + their_email + '</a>'
-
-        pending_link_list.append(link_html)
-
-    print(pending_link_list)
-
-    return render_template('friends-page.html', uid=uid,
-                           friend_email_list=friend_link_list,
-                           pending_uid_list=pending_link_list)
+    return render_template('friends-page.html', uid=uid)
 
 
 @app.route('/users/<string:uid>/activities/<string:activity_id>/')
