@@ -28,7 +28,7 @@ DEBUG = False
 
 @app.route('/')
 def main_map():
-    return app.send_static_file('main_app.html')
+    return app.send_static_file('main-app.html')
 
 
 @app.route('/login/')
@@ -113,7 +113,7 @@ def user_page(uid=None):
         strava_token = ""
         print("KeyError: No Strava connection")
 
-    return render_template('user-page.html', email=email, name=name, age=age, uid=uid,
+    return render_template('profile-page.html', email=email, name=name, age=age, uid=uid,
                            activity_ids=activity_ids, strava_token=strava_token)
 
 
