@@ -21,6 +21,8 @@ firebase.auth().onAuthStateChanged(function(user) {
         userID = user.uid;
         userEmail = user.email;
 
+        document.getElementById(`logout`).innerText = userEmail;
+
         ref.child(`users`).child(userID).once(`value`, function(snapshot) {
 
             // Indicates that a user is `new`
@@ -55,22 +57,6 @@ firebase.auth().onAuthStateChanged(function(user) {
         window.location.replace(`/login/`);
     }
 
-    // Checks for current pending friend requests
-    ref.child(`friend_requests`).child(userID).on("child_added", function(snapshot) {
-
-        let theirID = snapshot.key;
-        let request_type = snapshot.val()[`request_type`];
-
-        if(request_type === "received"){
-
-            ref.child(`users`).child(theirID).child(`email`).on(`value`, function(snapshot) {
-
-                document.getElementById(`pending`).innerHTML +=
-                    `<a id="friend` + theirID + `" onclick=confirmFriend("` + theirID + `") href="#">` + snapshot.val() + `</a><br />`;
-
-            });
-        }
-    });
 
     // Plots current paths by all friends
     ref.child(`friend_data`).child(userID).on(`child_added`, function(snapshot) {
@@ -79,7 +65,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         deviceDict[theirID] = [];
 
-
         // For each friend currently in an activity this plots all the points
         // made up to the point the web page was loaded
         ref.child(`users`).child(theirID).once(`value`, function(snapshot) {
@@ -87,6 +72,8 @@ firebase.auth().onAuthStateChanged(function(user) {
             let theirName = snapshot.val()[`name`];
             let theirEmail = snapshot.val()[`email`];
             let theirDevice = snapshot.val()[`device`];
+
+            console.log(theirEmail + `, ` + theirDevice);
 
             // TODO: Fix behavior when a user, already a friend, adds a device
             if (theirDevice != null) {
@@ -153,23 +140,4 @@ let searchByID = (theirID) => {
 
 
 
-let confirmFriend = (theirID) => {
 
-    let currentTime = Date.now();
-
-    // Pushing data to friends data
-    ref.child(`friend_data`).child(theirID).update(
-        {[userID]: currentTime}
-    );
-
-    ref.child(`friend_data`).child(userID).update(
-        {[theirID]: currentTime}
-    );
-
-    ref.child(`friend_requests`).child(userID).child(theirID).remove();
-    ref.child(`friend_requests`).child(theirID).child(userID).remove();
-
-    let element = document.getElementById(`friend` + theirID);
-    element.parentNode.removeChild(element);
-
-};

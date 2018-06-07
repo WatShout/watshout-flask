@@ -138,9 +138,12 @@ def friends_page(uid=None):
 
         friend_link_list.append(link_html)
 
-    pending_uid_list = ref.child('friend_requests').child(this_uid)\
+    try:
+        pending_uid_list = ref.child('friend_requests').child(this_uid)\
         .order_by_child('request_type')\
         .equal_to('received').get().val()
+    except IndexError:
+        pending_uid_list = []
 
     try:
         pending_uid_list = list(pending_uid_list.keys())
@@ -152,9 +155,11 @@ def friends_page(uid=None):
     for uid in pending_uid_list:
         their_email = ref.child('users').child(uid).child('email').get().val()
 
-        link_html = '<a href="/users/' + uid + '/">' + their_email + '</a>'
+        link_html = '<a id="' + uid + '" href="#" onclick="' + 'confirmFriend(' + "'" + uid + "'" + ')">' + their_email + '</a>'
 
         pending_link_list.append(link_html)
+
+    print(pending_link_list)
 
     return render_template('friends-page.html', uid=uid,
                            friend_email_list=friend_link_list,
