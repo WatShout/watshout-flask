@@ -23,7 +23,7 @@ firebase = pyrebase.initialize_app(config)
 # Get a reference to the database service
 ref = firebase.database()
 
-DEBUG = False
+DEBUG = True
 
 
 @app.route('/')
@@ -36,7 +36,7 @@ def log_in():
     return app.send_static_file('login.html')
 
 
-@app.route('/users/<uid>/strava/login/')
+@app.route('/users/<string:uid>/strava/login/')
 def strava_login(uid=None):
 
     if not DEBUG:
@@ -56,7 +56,7 @@ def strava_login(uid=None):
         return redirect(authorize_url, code=302)
 
 
-@app.route('/users/<uid>/strava/authorized/')
+@app.route('/users/<string:uid>/strava/authorized/')
 def strava_authorized(uid=None):
 
     code = request.args.get('code')
@@ -74,7 +74,7 @@ def strava_authorized(uid=None):
                            uid=uid)
 
 
-@app.route('/users/<uid>/')
+@app.route('/users/<string:uid>/')
 def user_page(uid=None):
 
     # Try to display a simple page with user info
@@ -115,6 +115,50 @@ def user_page(uid=None):
 
     return render_template('user-page.html', email=email, name=name, age=age, uid=uid,
                            activity_ids=activity_ids, strava_token=strava_token)
+
+
+@app.route('/users/<string:uid>/friends/')
+def friends_page(uid=None):
+
+    this_uid = uid
+
+    friend_uid_list = ref.child('friend_data').child(uid).get().val()
+
+    try:
+        friend_uid_list = list(friend_uid_list.keys())
+    except AttributeError:
+        friend_uid_list = []
+
+    friend_link_list = []
+
+    for uid in friend_uid_list:
+        their_email = ref.child('users').child(uid).child('email').get().val()
+
+        link_html = '<a href="/users/' + uid + '/">' + their_email + '</a>'
+
+        friend_link_list.append(link_html)
+
+    pending_uid_list = ref.child('friend_requests').child(this_uid)\
+        .order_by_child('request_type')\
+        .equal_to('received').get().val()
+
+    try:
+        pending_uid_list = list(pending_uid_list.keys())
+    except AttributeError:
+        pending_uid_list = []
+
+    pending_link_list = []
+
+    for uid in pending_uid_list:
+        their_email = ref.child('users').child(uid).child('email').get().val()
+
+        link_html = '<a href="/users/' + uid + '/">' + their_email + '</a>'
+
+        pending_link_list.append(link_html)
+
+    return render_template('friends-page.html', uid=uid,
+                           friend_email_list=friend_link_list,
+                           pending_uid_list=pending_link_list)
 
 
 @app.route('/users/<string:uid>/activities/<string:activity_id>/')

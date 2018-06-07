@@ -33,6 +33,9 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         let myUID = user.uid;
 
+        document.getElementById(`profile`).href = `/users/` + myUID + `/`;
+        document.getElementById(`friends`).href = `/users/` + myUID + `/friends/`;
+
         if (myUID === theirUID){
 
             // User is viewing their own profile
@@ -71,7 +74,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 
             addPreviousActivities(theirUID, getActivityList(activity_ids));
         }
-
 
 
     } else {
@@ -119,7 +121,7 @@ let addPreviousActivities = (id, activityArray) => {
 
         let html = `<div class="activity_container">`;
 
-        html += `<input type="button" onclick="` + script + `">`;
+        html += `<input id="` + activity_name + `" class="activity_button" value="Toggle" type="button" onclick="` + script + `">`;
 
         html += `</div>`;
 
@@ -170,11 +172,13 @@ let createPath = (snapshot, event_name) => {
             strokeWeight: 6
         });
 
+        document.getElementById(event_name).style.backgroundColor = "#fbff87";
         pathShown[event_name + `line`] = currentLine;
         pathShown[event_name + `line`].setMap(map);
         pathShown[event_name] = true;
     }
     else {
+        document.getElementById(event_name).style.backgroundColor = "#4a4d51";
         pathShown[event_name + `line`].setMap(null);
         pathShown[event_name] = false;
     }
@@ -191,4 +195,14 @@ let getThisActivity = (id, event_name) => {
 
         });
 
+};
+
+let signOut = () => {
+    firebase.auth().signOut().then(function() {
+
+        window.location.replace(`/login/`);
+
+    }, function(error) {
+      // An error happened.
+    });
 };

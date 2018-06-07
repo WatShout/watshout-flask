@@ -39,8 +39,15 @@ firebase.auth().onAuthStateChanged(function(user) {
         try {
             document.getElementById(`profile`).href = `/users/` + userID + `/`;
         } catch (e) {
-            console.log(e + ` couldn't set link`);
+            console.log(e + ` couldn't set profile link`);
         }
+
+        try {
+            document.getElementById(`friends`).href = `/users/` + userID + `/friends/`;
+        } catch (e) {
+            console.log(e + ` couldn't set friend link`);
+        }
+
 
 
     } else {
@@ -71,6 +78,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         let theirID = snapshot.key;
 
         deviceDict[theirID] = [];
+
 
         // For each friend currently in an activity this plots all the points
         // made up to the point the web page was loaded
@@ -143,30 +151,7 @@ let searchByID = (theirID) => {
     });
 };
 
-let askFriend = () => {
 
-    let friendEmail = document.getElementById(`search`).value;
-
-    ref.child(`users`).orderByChild(`email`).equalTo(friendEmail).once(`value`, function(snapshot) {
-
-        if(snapshot.exists()){
-            let theirID = Object.keys(snapshot.val())[0];
-
-            ref.child(`friend_requests`).child(theirID).child(userID)
-                .set({"request_type": "received"});
-
-            ref.child(`friend_requests`).child(userID).child(theirID)
-                .set({"request_type": "sent"});
-
-        } else {
-
-            alert(`Invalid email`);
-
-        }
-
-    });
-
-};
 
 let confirmFriend = (theirID) => {
 

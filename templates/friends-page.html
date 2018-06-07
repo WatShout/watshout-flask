@@ -4,26 +4,30 @@
 
     <!-- The order in which these load is important -->
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-messaging.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
 
-    <script defer src="/static/js/config.js"></script>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0"></script>
 
-    <script defer src="/static/js/maps.js"></script>
-    <script defer src="/static/js/main.js"></script>
+    <script defer src="/static/js/config.js"></script>
+
+    <script defer src="/static/js/friend-page.js"></script>
 
     <script defer src="/static/js/friends.js"></script>
 
+    <link rel="stylesheet" href="/static/css/profile.css">
     <link rel="stylesheet" href="/static/css/pills.min.css">
-    <link rel="stylesheet" href="/static/css/main.css">
 
-    <title>WebApp | WatShout</title>
+    <title>Friends | WatShout</title>
 
 </head>
 
+
+
 <body>
+
+{% if uid %}
+    <meta id="uid" content="{{ uid }}">
+{% endif %}
 
 <div id="wrapper">
 
@@ -45,26 +49,30 @@
 
     </div>
 
+    <div>
 
-    <div id="main-content">
+        <p style="text-align: center">Friends List</p>
 
-        <div id="sidebar">
+    </div>
 
-            <div class="scrollable">
-                <div id="devices"></div>
-            </div>
+    <div id="main-row">
 
-        </div>
+        Friend Requests
+        {% for item in pending_uid_list %}
+            <p>{{ item|safe }}</p>
+        {% endfor %}
 
-        <div id="content">
 
-            <div id="map"></div>
+        Friends List
+        {% for item in friend_email_list %}
+            <p>{{ item|safe }}</p>
+        {% endfor %}
 
-        </div>
 
     </div>
 
 </div>
+
 
 </body>
 
