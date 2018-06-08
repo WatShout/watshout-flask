@@ -12,7 +12,6 @@
 
     <script defer src="/static/js/config.js"></script>
 
-    <script defer src="/static/js/friends-page.js"></script>
     <script defer src="/static/js/friends-functions.js"></script>
 
     <link rel="stylesheet" href="/static/css/profile.css">
@@ -34,9 +33,9 @@
     <div class="topnav">
 
         <a href="/" id="home">Home</a>
-        <a id="profile">Profile</a>
-        <a id="friends">Friends</a>
-        <a id="settings">Settings</a>
+        <a href="/me" id="profile">Profile</a>
+        <a href="/me/friends/" id="friends">Friends</a>
+        <a href="/me/settings" id="settings">Settings</a>
 
         <div id="search-container">
 
@@ -45,7 +44,9 @@
 
         </div>
 
-        <a href="javascript:signOut();" id="logout">Log Out</a>
+        {% if my_email %}
+        <a href="javascript:signOut();" id="logout">{{ my_email }}</a>
+        {% endif %}
 
     </div>
 
@@ -60,6 +61,15 @@
         <div id="accepted">
             Friend list
             <br />
+
+            <div id="friendreplace">
+
+                {% for item in friend_links %}
+                 {{ item|safe }}
+                {% endfor %}
+
+            </div>
+
         </div>
 
         <div id="pending">

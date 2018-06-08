@@ -1,17 +1,5 @@
 
-let myUID;
-
-firebase.auth().onAuthStateChanged(function(user) {
-
-    if (user){
-
-        myUID = user.uid;
-
-        getFriendRequests();
-        getFriendsList();
-
-    }
-});
+let myUID = document.getElementById(`uid`).getAttribute(`content`);
 
 let removeChild = (id) => {
     let element = document.getElementById(id);
@@ -50,6 +38,8 @@ let getFriendRequests = () => {
 
 let getFriendsList = () => {
 
+    let allHTML = ``;
+
     ref.child(`friend_data`).child(myUID).on(`child_added`, function (snapshot) {
 
         let theirUID = snapshot.key;
@@ -58,14 +48,11 @@ let getFriendsList = () => {
 
             theirEmail = snapshot.val();
 
-            let emailHTML = `<a id="` + theirUID + `" href="/users/` + theirUID + `">` + theirEmail + `</a>`;
+            let thisLink = `<a id="` + theirUID + `" href="/users/` + theirUID + `">` + theirEmail + `</a><br />`;
 
-            // This should only 'work' on the friends page
-            try {
-                document.getElementById(`accepted`).innerHTML += emailHTML + `<br />`;
-            } catch (TypeError){
+            document.getElementById(`accepted`).innerHTML += thisLink;
 
-            }
+            allHTML += thisLink;
 
         });
     });
@@ -124,3 +111,5 @@ let confirmFriend = (theirUID) => {
 
 };
 
+getFriendRequests();
+getFriendsList();
