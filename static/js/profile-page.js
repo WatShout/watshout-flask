@@ -52,8 +52,14 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         if (myUID === theirUID){
 
-            // User is viewing their own profile
+            // URL fixing (WIP)
+            /*
+            let currentURL = window.location.href;
+            let newURL = currentURL.replace(myUID, `me`);
+            history.replaceState(null, null, newURL);
+            */
 
+            // User is viewing their own profile
             if (activity_ids.length !== 0){
                 addPreviousActivities(myUID, getActivityList(activity_ids));
             }
@@ -206,4 +212,18 @@ let getThisActivity = (id, event_name) => {
 
 };
 
+let unlinkStrava = () => {
+
+    ref.child(`users`).child(myUID).child(`strava_token`).once(`value`, function(snapshot) {
+
+        snapshot.ref.remove();
+
+        let element = document.getElementById(`unlink`);
+        element.parentNode.removeChild(element);
+
+        document.getElementById(`strava_info`).innerHTML = `<a href="strava/login" >Login to Strava!</a>`;
+
+    })
+
+};
 

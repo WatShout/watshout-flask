@@ -15,8 +15,8 @@ firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
 
         let loggedInUID = user.uid;
-        let stravaRequestUID = document.getElementById(`uid`).getAttribute(`content`);
 
+        let stravaRequestUID = document.getElementById(`uid`).getAttribute(`content`);
         let stravaToken = document.getElementById(`token`).getAttribute(`content`);
 
         console.log(loggedInUID);
@@ -26,22 +26,22 @@ firebase.auth().onAuthStateChanged(function(user) {
         if (loggedInUID === stravaRequestUID){
 
             ref.child(`users`).child(loggedInUID).child(`strava_token`).set(stravaToken);
-
             window.location.replace(`/users/` + loggedInUID);
 
-        } else {
+        }
 
-            console.log("Login: " + loggedInUID);
-            console.log("Strava: " + stravaRequestUID);
+        // Someone else is trying to link their Strava account
+        else {
 
-            document.getElementById(`text`).innerText = `<p>Something went wrong!</p>`;
+            alert(`You can only link your own Strava account`);
+            window.location.replace(`/`);
 
         }
 
 
     } else {
 
-        alert(`User not logged in`);
+        alert(`You aren't logged into WatShout!`);
         window.location.replace(`/login/`);
 
     }

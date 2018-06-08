@@ -10,8 +10,14 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         if (myUID === theirUID){
 
-            document.getElementById(`logout`).innerText = user.email;
+            // URL fixing (WIP)
+            /*
+            let currentURL = window.location.href;
+            let newURL = currentURL.replace(myUID, `me`);
+            history.replaceState(null, null, newURL);
+            */
 
+            document.getElementById(`logout`).innerText = user.email;
             document.getElementById(`profile`).href = `/users/` + myUID + `/`;
 
 
