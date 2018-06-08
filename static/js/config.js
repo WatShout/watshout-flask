@@ -24,9 +24,32 @@ const ref = database.ref();
 
 
 let signOut = () => {
+
+    //console.log(firebase.auth().currentUser.uid);
+
+    let uid;
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user){
+            uid = user.uid
+        }
+    });
+
     firebase.auth().signOut().then(function() {
 
-        window.location.replace(`/login/`);
+        $.ajax({
+
+            'url' : '/delete_cookie/' + uid,
+            'type' : 'GET',
+
+            'success' : function(response, status, xhr) {
+                window.location.replace(`/login/`);
+            },
+            'error' : function(request,error)
+            {
+                console.log(`error`)
+            }
+        });
 
     }, function(error) {
       // An error happened.

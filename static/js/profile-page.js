@@ -37,68 +37,6 @@ let getActivityIDs = () => {
 
 let activity_ids = getActivityIDs();
 
-firebase.auth().onAuthStateChanged(function(user) {
-
-    if (user) {
-
-        let myUID = user.uid;
-
-        document.getElementById(`logout`).innerText = user.email;
-
-        document.getElementById(`friends`).href = `/users/` + myUID + `/friends/`;
-        document.getElementById(`settings`).href = `/users/` + myUID + `/settings/`;
-
-        if (myUID === theirUID){
-
-            // URL fixing (WIP)
-            /*
-            let currentURL = window.location.href;
-            let newURL = currentURL.replace(myUID, `me`);
-            history.replaceState(null, null, newURL);
-            */
-
-            // User is viewing their own profile
-            if (activity_ids.length !== 0){
-                addPreviousActivities(myUID, getActivityList(activity_ids));
-            }
-
-        }
-        else {
-
-            document.getElementById(`profile`).href = `/users/` + myUID;
-
-            document.getElementById(`strava_info`).innerHTML = ``;
-
-            // Check friendship
-            ref.child(`friend_data`).child(theirUID).child(myUID).once('value', function(snapshot) {
-
-                // Users are NOT friends
-                if (!snapshot.exists()){
-
-                    alert(`You are not friends with this user`);
-
-                    window.history.back();
-
-                }
-                // Users are friends
-                else {
-
-                }
-
-            });
-
-            if (activity_ids.length !== 0){
-                addPreviousActivities(theirUID, getActivityList(activity_ids));
-            }
-        }
-
-    } else {
-
-        window.location.replace(`/login/`);
-
-    }
-});
-
 
 let getActivityList = (linkString) => {
 
@@ -226,4 +164,8 @@ let unlinkStrava = () => {
     })
 
 };
+
+if (activity_ids.length !== 0){
+    addPreviousActivities(theirUID, getActivityList(activity_ids));
+}
 

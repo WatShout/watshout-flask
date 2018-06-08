@@ -1,35 +1,5 @@
 
-let getTheirUID = () => document.getElementById(`uid`).getAttribute(`content`);
-
-let theirUID = getTheirUID();
-
-let myUID;
-
-firebase.auth().onAuthStateChanged(function(user) {
-
-    // Initializes the Google Map.
-    if (user) {
-
-        myUID = user.uid;
-        let currentEmail = user.email;
-
-        if (myUID === theirUID) {
-
-            document.getElementById(`logout`).innerText = currentEmail;
-
-            document.getElementById(`currentemail`).innerText += currentEmail;
-
-            document.getElementById(`home`).href = `/`;
-            document.getElementById(`profile`).href = `/users/` + myUID;
-            document.getElementById(`friends`).href = `/users/` + myUID + `/friends/`;
-
-        }
-    }
-
-    else {
-    }
-});
-
+let myUID = document.getElementById(`uid`).getAttribute(`content`);
 
 let changeEmail = () => {
 

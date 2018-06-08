@@ -30,9 +30,9 @@
     <div class="topnav">
 
         <a href="/" id="home">Home</a>
-        <a id="profile">Profile</a>
-        <a id="friends">Friends</a>
-        <a id="settings">Settings</a>
+        <a href="/me" id="profile">Profile</a>
+        <a href="/me/friends/" id="friends">Friends</a>
+        <a href="/me/settings" id="settings">Settings</a>
 
         <div id="search-container">
 
@@ -41,7 +41,9 @@
 
         </div>
 
-        <a href="javascript:signOut();" id="logout">Log Out</a>
+        {% if email %}
+            <a href="javascript:signOut();" id="logout">{{ email }}</a>
+        {% endif %}
 
     </div>
 
