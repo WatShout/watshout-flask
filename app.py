@@ -177,7 +177,7 @@ def my_friends():
     return render_template('friends-page.html', uid=my_uid, my_email=my_email)
 
 
-@app.route('/me/settings')
+@app.route('/me/settings/')
 def my_settings():
 
     my_uid = request.cookies.get('uid')
