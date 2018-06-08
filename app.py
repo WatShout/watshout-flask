@@ -124,7 +124,12 @@ def friends_page(uid=None):
 
 @app.route('/users/<string:uid>/settings/')
 def settings(uid=None):
-    return render_template('settings.html', uid=uid)
+
+    email = ref.child("users").child(uid).child("email").get().val()
+
+
+    return render_template('settings.html', uid=uid,
+                           email=email)
 
 
 @app.route('/users/<string:uid>/activities/<string:activity_id>/')
