@@ -23,7 +23,7 @@ firebase = pyrebase.initialize_app(config)
 # Get a reference to the database service
 ref = firebase.database()
 
-DEBUG = True
+DEBUG = False
 
 
 @app.route('/')
