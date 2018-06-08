@@ -49,6 +49,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         document.getElementById(`logout`).innerText = user.email;
 
         document.getElementById(`friends`).href = `/users/` + myUID + `/friends/`;
+        document.getElementById(`settings`).href = `/users/` + userID + `/settings/`;
 
         if (myUID === theirUID){
 
