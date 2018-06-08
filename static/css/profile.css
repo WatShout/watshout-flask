@@ -45,14 +45,14 @@
 }
 
 #submit {
-  float: left;
-  padding: 6px;
-  margin-top: 8px;
-  margin-right: 16px;
-  background: #ddd;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
+    float: left;
+    padding: 6px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
 }
 
 #search {
@@ -95,6 +95,20 @@
     height:auto;
     float: right;
 }
+
+#accepted {
+    width: 50%;
+    height:auto;
+    float: left;
+}
+
+#pending {
+    width: 50%;
+    height:auto;
+    float:right;
+}
+
+
 
 .activity_button {
     width: 50px;

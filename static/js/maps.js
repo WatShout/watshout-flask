@@ -147,45 +147,10 @@ let formatTime = (milliseconds) => {
 
 };
 
-let createHTMLEntry = (name, id) => {
 
-
-    let html = `<div class="deviceinfo" id="` + id + `">` +
-    `<a href="` + `/users/` + id + `">` + name + `</a>` + ` (` + id + `)` +
-    `\n<div id="not-tracking` + id + `">User is not tracking right now</div>` +
-    `\n<div id="battery` + id + `"></div>` +
-    `\n<div id="speed` + id + `"></div>` +
-    `</div>`;
-
-    return html;
-};
-
-let changeHTMLTag = (id, label, value) => {
-
-    let lower = label.toLowerCase();
-
-    let newValue = label + ": " + value;
-
-    try{
-        document.getElementById(lower + id).innerHTML = newValue;
-    } catch(TypeError){
-        //createHTMLEntry(id);
-        //document.getElementById(lower + id).innerHTML = newValue;
-    }
-};
 
 let round = (value, decimals) => {
 
     return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 
-};
-
-let signOut = () => {
-    firebase.auth().signOut().then(function() {
-
-        window.location.replace(`/login/`);
-
-    }, function(error) {
-      // An error happened.
-    });
 };

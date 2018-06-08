@@ -23,4 +23,14 @@ const database = firebase.database();
 const ref = database.ref();
 
 
+let signOut = () => {
+    firebase.auth().signOut().then(function() {
+
+        window.location.replace(`/login/`);
+
+    }, function(error) {
+      // An error happened.
+    });
+};
+
 

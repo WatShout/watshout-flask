@@ -23,7 +23,7 @@ firebase = pyrebase.initialize_app(config)
 # Get a reference to the database service
 ref = firebase.database()
 
-DEBUG = False
+DEBUG = True
 
 
 @app.route('/')
@@ -124,7 +124,7 @@ def friends_page(uid=None):
 
 @app.route('/users/<string:uid>/activities/<string:activity_id>/')
 def past_activity(uid=None, activity_id=None):
-    return render_template('activity.html', uid=uid, activity_id=activity_id)
+    return render_template('past-activity.html', uid=uid, activity_id=activity_id)
 
 
 if __name__ == '__main__':

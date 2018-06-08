@@ -19,8 +19,9 @@ firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
 
         userID = user.uid;
+        userEmail = user.email;
 
-        document.getElementById(`logout`).innerText = user.email;
+        document.getElementById(`logout`).innerText = userEmail;
 
         ref.child(`users`).child(userID).once(`value`, function(snapshot) {
 
@@ -60,13 +61,13 @@ firebase.auth().onAuthStateChanged(function(user) {
     // Plots current paths by all friends
     ref.child(`friend_data`).child(userID).on(`child_added`, function(snapshot) {
 
-        let theirID = snapshot.key;
+        let theirUID = snapshot.key;
 
-        deviceDict[theirID] = [];
+        deviceDict[theirUID] = [];
 
         // For each friend currently in an activity this plots all the points
         // made up to the point the web page was loaded
-        ref.child(`users`).child(theirID).once(`value`, function(snapshot) {
+        ref.child(`users`).child(theirUID).once(`value`, function(snapshot) {
 
             let theirName = snapshot.val()[`name`];
             let theirEmail = snapshot.val()[`email`];
@@ -77,18 +78,24 @@ firebase.auth().onAuthStateChanged(function(user) {
             // TODO: Fix behavior when a user, already a friend, adds a device
             if (theirDevice != null) {
                 document.getElementById(`devices`).innerHTML +=
-                    createHTMLEntry(theirName, theirID);
 
-                ref.child(`users`).child(theirID).child(`device`)
+                    createHTMLEntry(theirName, theirUID, theirEmail);
+
+                ref.child(`users`).child(theirUID).child(`device`)
                     .child(`current`).on(`child_added`, function (snapshot) {
 
-                    addPoint(snapshot, theirID, map);
-                    createLine(deviceDict[theirID], map);
+                    addPoint(snapshot, theirUID, map);
+                    createLine(deviceDict[theirUID], map);
 
-                    document.getElementById(`not-tracking` + theirID).innerHTML = ``;
+                    // This should fail when the user is currently tracking
+                    try {
+                        document.getElementById(`not-tracking` + theirUID).innerHTML = ``;
+                    } catch (TypeError){
 
-                    changeHTMLTag(theirID, `battery`, snapshot.val()[`battery`]);
-                    changeHTMLTag(theirID, `speed`, snapshot.val()[`speed`]);
+                    }
+
+                    changeHTMLTag(theirUID, `battery`, snapshot.val()[`battery`]);
+                    changeHTMLTag(theirUID, `speed`, snapshot.val()[`speed`]);
 
                 });
 
@@ -97,45 +104,34 @@ firebase.auth().onAuthStateChanged(function(user) {
     });
 });
 
-let searchByEmail = (query) => {
 
-    ref.child(`users`).orderByChild(`email`).equalTo(query).once(`value`, function(snapshot) {
+let createHTMLEntry = (theirName, theirUID, theirEmail) => {
 
-        if(snapshot.exists()){
-            let theirID = Object.keys(snapshot.val())[0];
+    let html = `<div class="deviceinfo" id="` + theirUID + `">` +
+            `<a href="` + `/users/` + theirUID + `">` + theirName + `</a>` + ` (` + theirEmail + `)` +
+            `\n<div id="not-tracking` + theirUID + `">User is not tracking right now</div>` +
+            `\n<div id="battery` + theirUID + `"></div>` +
+            `\n<div id="speed` + theirUID + `"></div>` +
+            `</div>`;
 
+    return html;
 
-            ref.child(`friends`).child(theirID).child(userID).set(
-                {
-                    "request_type": "received"
-                }
-            );
-
-            ref.child(`friends`).child(userID).child(theirID).set(
-                {
-                    "request_type": "sent"
-                }
-            )
-
-        }
-
-    });
 };
 
-let searchByID = (theirID) => {
+let changeHTMLTag = (theirUID, label, value) => {
 
-    ref.child(`users`).child(theirID).child(`email`).once(`value`, function(snapshot) {
+    let lower = label.toLowerCase();
 
-        if(snapshot.exists()){
+    let newValue = label + ": " + value;
 
-            return snapshot.val();
-
-        } else {
-            return "test";
-        }
-
-    });
+    try{
+        document.getElementById(lower + theirUID).innerHTML = newValue;
+    } catch(TypeError){
+        //createHTMLEntry(id);
+        //document.getElementById(lower + id).innerHTML = newValue;
+    }
 };
+
 
 
 

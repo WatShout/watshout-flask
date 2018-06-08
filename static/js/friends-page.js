@@ -4,34 +4,32 @@ let theirUID = getTheirUID();
 
 firebase.auth().onAuthStateChanged(function(user) {
 
-  if (user){
+    if (user){
 
-      let myUID = user.uid;
+        const myUID = user.uid;
 
-      document.getElementById(`logout`).innerText = user.email;
+        if (myUID === theirUID){
 
-      document.getElementById(`profile`).href = `/users/` + myUID + `/`;
-      document.getElementById(`friends`).href = `/users/` + myUID + `/friends/`;
+            document.getElementById(`logout`).innerText = user.email;
+
+            document.getElementById(`profile`).href = `/users/` + myUID + `/`;
+            document.getElementById(`friends`).href = `/users/` + myUID + `/friends/`;
+
+        } else {
+            alert(`You can only view your own friends page (for now)`);
+            window.location.href = `/`;
+        }
+
+    }
 
 
-  }
+    else {
 
+        alert(`You aren't even logged in!`);
+        window.location.href = `/login/`;
 
-  else {
-
-
-  }
+    }
 
 
 });
-
-let signOut = () => {
-    firebase.auth().signOut().then(function() {
-
-        window.location.replace(`/login/`);
-
-    }, function(error) {
-      // An error happened.
-    });
-};
 

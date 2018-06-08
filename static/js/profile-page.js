@@ -24,6 +24,19 @@ const map = new google.maps.Map(document.getElementById(`my-map`), {
 
 });
 
+
+let getActivityIDs = () => {
+
+    try {
+        return document.getElementById(`activity_ids`).getAttribute(`content`);
+    } catch (ReferenceError) {
+        return [];
+    }
+
+};
+
+let activity_ids = getActivityIDs();
+
 firebase.auth().onAuthStateChanged(function(user) {
 
     // Initializes the Google Map.
@@ -42,13 +55,16 @@ firebase.auth().onAuthStateChanged(function(user) {
 
             // User is viewing their own profile
 
-            addPreviousActivities(myUID, getActivityList(activity_ids));
+            if (activity_ids.length !== 0){
+                addPreviousActivities(myUID, getActivityList(activity_ids));
+            }
 
         }
         else {
 
             document.getElementById(`strava_info`).innerHTML = ``;
 
+            // Check friendship
             ref.child(`friend_data`).child(theirUID).child(myUID).once('value', function(snapshot) {
 
                 // Users are NOT friends
@@ -62,21 +78,14 @@ firebase.auth().onAuthStateChanged(function(user) {
                 // Users are friends
                 else {
 
-                    let timeInSeconds = snapshot.val() / 1000;
-
-                    let date = new Date(0);
-
-                    date.setUTCSeconds(timeInSeconds);
-
-                    document.getElementById(`since`).innerHTML =
-                        `You have been friends since ` + date;
                 }
 
             });
 
-            addPreviousActivities(theirUID, getActivityList(activity_ids));
+            if (activity_ids.length !== 0){
+                addPreviousActivities(theirUID, getActivityList(activity_ids));
+            }
         }
-
 
     } else {
 
@@ -85,7 +94,6 @@ firebase.auth().onAuthStateChanged(function(user) {
     }
 });
 
-let activity_ids = document.getElementById(`activity_ids`).getAttribute(`content`);
 
 let getActivityList = (linkString) => {
 
@@ -197,14 +205,4 @@ let getThisActivity = (id, event_name) => {
 
         });
 
-};
-
-let signOut = () => {
-    firebase.auth().signOut().then(function() {
-
-        window.location.replace(`/login/`);
-
-    }, function(error) {
-      // An error happened.
-    });
 };
