@@ -132,14 +132,18 @@ def my_friends():
 
     my_email = ref.child("users").child(my_uid).child("email").get().val()
 
-    my_friends = ref.child("friend_data").child(my_uid).get().val()
+    try:
+        my_friends = ref.child("friend_data").child(my_uid).get().val()
 
-    friend_links = []
+        friend_links = []
 
-    for their_uid in my_friends:
-        their_email = ref.child("users").child(their_uid).child("email").get().val()
-        link = '<a id="' + their_uid + '" href="/users/' + their_uid + '">' + their_email + '</a>'
-        friend_links.append(link)
+        for their_uid in my_friends:
+            their_email = ref.child("users").child(their_uid).child("email").get().val()
+            link = '<a id="' + their_uid + '" href="/users/' + their_uid + '">' + their_email + '</a>'
+            friend_links.append(link)
+
+    except TypeError:
+        friend_links = []
 
     return render_template('friends-page.html', uid=my_uid, my_email=my_email)
 
