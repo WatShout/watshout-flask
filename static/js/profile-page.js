@@ -159,7 +159,8 @@ let unlinkStrava = () => {
         let element = document.getElementById(`unlink`);
         element.parentNode.removeChild(element);
 
-        document.getElementById(`strava_info`).innerHTML = `<a href="strava/login" >Login to Strava!</a>`;
+        document.getElementById(`strava_info`).innerHTML =
+            `<a href="strava/login" ><img src="/static/res/small_strava_button.png"></a>`
 
     })
 

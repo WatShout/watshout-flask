@@ -68,59 +68,6 @@ def login():
     return app.send_static_file('login.html')
 
 
-@app.route('/me/strava/login/')
-def strava_login():
-
-    my_uid = request.cookies.get('uid')
-    if my_uid is None:
-        return redirect(url_for('login'))
-
-    verified = request.cookies.get('verified')
-    if verified is None:
-        return render_template('email-verify.html', uid=my_uid)
-
-    if not DEBUG:
-        uri = 'https://watshout.herokuapp.com/me/strava/authorized/'
-    else:
-        uri = 'http://127.0.0.1:5000/me/strava/authorized/'
-
-    authorize_url = None
-    if not access_token:
-        authorize_url = client.authorization_url(
-            client_id=26116,
-            redirect_uri=uri,
-            approval_prompt='auto',
-            scope='view_private,write'
-        )
-        return redirect(authorize_url, code=302)
-
-
-@app.route('/me/strava/authorized/')
-def strava_authorized():
-    code = request.args.get('code')
-
-    my_uid = request.cookies.get('uid')
-    if my_uid is None:
-        return redirect(url_for('login'))
-
-    verified = request.cookies.get('verified')
-    if verified is None:
-        return render_template('email-verify.html', uid=my_uid)
-
-    access_token = client.exchange_code_for_token(
-        client_id=26116,
-        client_secret='04ba9a4ac548cdc94c375baf65ceb95eca3af533',
-        code=code)
-
-    client.access_token = access_token
-
-    # client.upload_activity(test_run, 'gpx')
-
-    return render_template('strava-authorized.html',
-                           token=access_token,
-                           uid=my_uid)
-
-
 @app.route('/me/')
 def my_page():
 
@@ -212,6 +159,59 @@ def my_settings():
 
     return render_template('settings.html', uid=my_uid,
                            email=email)
+
+
+@app.route('/me/strava/login/')
+def strava_login():
+
+    my_uid = request.cookies.get('uid')
+    if my_uid is None:
+        return redirect(url_for('login'))
+
+    verified = request.cookies.get('verified')
+    if verified is None:
+        return render_template('email-verify.html', uid=my_uid)
+
+    if not DEBUG:
+        uri = 'https://watshout.herokuapp.com/me/strava/authorized/'
+    else:
+        uri = 'http://127.0.0.1:5000/me/strava/authorized/'
+
+    authorize_url = None
+    if not access_token:
+        authorize_url = client.authorization_url(
+            client_id=26116,
+            redirect_uri=uri,
+            approval_prompt='auto',
+            scope='view_private,write'
+        )
+        return redirect(authorize_url, code=302)
+
+
+@app.route('/me/strava/authorized/')
+def strava_authorized():
+    code = request.args.get('code')
+
+    my_uid = request.cookies.get('uid')
+    if my_uid is None:
+        return redirect(url_for('login'))
+
+    verified = request.cookies.get('verified')
+    if verified is None:
+        return render_template('email-verify.html', uid=my_uid)
+
+    access_token = client.exchange_code_for_token(
+        client_id=26116,
+        client_secret='04ba9a4ac548cdc94c375baf65ceb95eca3af533',
+        code=code)
+
+    client.access_token = access_token
+
+    # client.upload_activity(test_run, 'gpx')
+
+    return render_template('strava-authorized.html',
+                           token=access_token,
+                           uid=my_uid)
 
 
 @app.route('/users/<string:their_uid>/')
