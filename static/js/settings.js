@@ -11,37 +11,41 @@ firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
 
         myUID = user.uid;
+        let currentEmail = user.email;
 
         if (myUID === theirUID) {
 
-            document.getElementById(`logout`).innerText = user.email;
+            document.getElementById(`logout`).innerText = currentEmail;
+
+            document.getElementById(`currentemail`).innerText += currentEmail;
 
             document.getElementById(`home`).href = `/`;
             document.getElementById(`profile`).href = `/users/` + myUID;
             document.getElementById(`friends`).href = `/users/` + myUID + `/friends/`;
 
-
         }
-
     }
 
     else {
-
     }
-
-
 });
 
 
 let changeEmail = () => {
 
     let user = firebase.auth().currentUser;
+    let uid = user.uid;
     let newEmail = document.getElementById(`newemail`).value;
 
     user.updateEmail(newEmail).then(function() {
 
         document.getElementById(`currentemail`).innerHTML =
             `Current email: ` + newEmail;
+
+        document.getElementById(`logout`).innerText = newEmail;
+
+        ref.child(`users`).child(uid).child(`email`).set(newEmail);
+
 
     }).catch(function(error) {
 

@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="/static/css/profile.css">
     <link rel="stylesheet" href="/static/css/pills.min.css">
 
+    <title>Settings | WatShout</title>
 
 </head>
 <body>
@@ -46,18 +47,21 @@
 
     <div id="main-row">
 
-        <h2 style="text-align: center">Settings</h2>
+        <div id="settings">
 
-        {% if email %}
-            <p id="currentemail">Current email: {{ email }}</p>
-            <input id="newemail" type="text" placeholder="New email...">
-            <button type="submit" onclick="changeEmail()">Change email</button>
+            <h2 style="text-align: center">Settings</h2>
 
-        {% endif %}
+                <p id="currentemail">Current email: </p>
+                <input id="newemail" type="text" placeholder="New email...">
+                <button type="submit" onclick="changeEmail()">Change email</button>
 
-        <br />
+            <br />
 
-        <input value="Reset email" type="button" onclick="passwordReset()">
+            <input value="Reset password" type="button" onclick="passwordReset()">
+
+        </div>
+
+
 
     </div>
 

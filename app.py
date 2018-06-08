@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Markup, request, redirect
+from flask import Flask, render_template, Markup, request, redirect, url_for, make_response
 from stravalib.client import Client
 
 import pyrebase
@@ -29,6 +29,15 @@ DEBUG = True
 @app.route('/')
 def main_map():
     return app.send_static_file('main-app.html')
+
+
+@app.route('/create_cookie/<string:uid>')
+def create_cookie(uid=None):
+
+    res = make_response()
+    res.set_cookie('uid', uid, max_age=60 * 60 * 24 * 7 * 365)
+
+    return res
 
 
 @app.route('/login/')
