@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Markup, request, redirect
+from flask import Flask, render_template, Markup, request, redirect, url_for, make_response
 from stravalib.client import Client
 
 import pyrebase
@@ -23,12 +23,21 @@ firebase = pyrebase.initialize_app(config)
 # Get a reference to the database service
 ref = firebase.database()
 
-DEBUG = False
+DEBUG = True
 
 
 @app.route('/')
 def main_map():
     return app.send_static_file('main-app.html')
+
+
+@app.route('/create_cookie/<string:uid>')
+def create_cookie(uid=None):
+
+    res = make_response()
+    res.set_cookie('uid', uid, max_age=60 * 60 * 24 * 7 * 365)
+
+    return res
 
 
 @app.route('/login/')
@@ -120,6 +129,16 @@ def user_page(uid=None):
 @app.route('/users/<string:uid>/friends/')
 def friends_page(uid=None):
     return render_template('friends-page.html', uid=uid)
+
+
+@app.route('/users/<string:uid>/settings/')
+def settings(uid=None):
+
+    email = ref.child("users").child(uid).child("email").get().val()
+
+
+    return render_template('settings.html', uid=uid,
+                           email=email)
 
 
 @app.route('/users/<string:uid>/activities/<string:activity_id>/')

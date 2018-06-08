@@ -39,9 +39,6 @@ let activity_ids = getActivityIDs();
 
 firebase.auth().onAuthStateChanged(function(user) {
 
-    // Initializes the Google Map.
-
-
     if (user) {
 
         let myUID = user.uid;
@@ -49,6 +46,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         document.getElementById(`logout`).innerText = user.email;
 
         document.getElementById(`friends`).href = `/users/` + myUID + `/friends/`;
+        document.getElementById(`settings`).href = `/users/` + myUID + `/settings/`;
 
         if (myUID === theirUID){
 
@@ -66,6 +64,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         }
         else {
+
+            document.getElementById(`profile`).href = `/users/` + myUID;
 
             document.getElementById(`strava_info`).innerHTML = ``;
 

@@ -21,6 +21,10 @@ firebase.auth().onAuthStateChanged(function(user) {
         userID = user.uid;
         userEmail = user.email;
 
+        document.getElementById(`profile`).href = `/users/` + userID + `/`;
+        document.getElementById(`friends`).href = `/users/` + userID + `/friends/`;
+        document.getElementById(`settings`).href = `/users/` + userID + `/settings/`;
+
         document.getElementById(`logout`).innerText = userEmail;
 
         ref.child(`users`).child(userID).once(`value`, function(snapshot) {
@@ -37,20 +41,6 @@ firebase.auth().onAuthStateChanged(function(user) {
                 });
             }
         });
-
-        try {
-            document.getElementById(`profile`).href = `/users/` + userID + `/`;
-        } catch (e) {
-            console.log(e + ` couldn't set profile link`);
-        }
-
-        try {
-            document.getElementById(`friends`).href = `/users/` + userID + `/friends/`;
-        } catch (e) {
-            console.log(e + ` couldn't set friend link`);
-        }
-
-
 
     } else {
         console.log(`logged out`);

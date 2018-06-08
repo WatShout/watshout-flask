@@ -41,8 +41,22 @@ let initApp = () => {
 
             // User is signed in (signInSuccessUrl is used)
 
-            window.location.replace(`/`);
+            let uid = user.uid;
 
+            $.ajax({
+
+                'url' : '/create_cookie/' + uid,
+                'type' : 'GET',
+
+                'success' : function(response, status, xhr) {
+                    console.log(`success`);
+                    window.location.replace(`/`);
+                },
+                'error' : function(request,error)
+                {
+                    console.log(`error`)
+                }
+            });
         }
     });
 };

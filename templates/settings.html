@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- The order in which these load is important -->
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
+
+
+    <script defer src="/static/js/config.js"></script>
+    <script defer src="/static/js/settings.js"></script>
+
+    <link rel="stylesheet" href="/static/css/profile.css">
+    <link rel="stylesheet" href="/static/css/pills.min.css">
+
+    <title>Settings | WatShout</title>
+
+</head>
+<body>
+
+{% if uid %}
+    <meta id="uid" content="{{ uid }}">
+{% endif %}
+
+<div id="wrapper">
+
+    <div class="topnav">
+
+        <a href="/" id="home">Home</a>
+        <a id="profile">Profile</a>
+        <a id="friends">Friends</a>
+        <a id="settings">Settings</a>
+
+        <div id="search-container">
+
+            <input id="search" type="text" placeholder="Search..">
+            <button id="submit" type="submit" onclick="askFriend()">Add Friend</button>
+
+        </div>
+
+        <a href="javascript:signOut();" id="logout">Log Out</a>
+
+    </div>
+
+    <div id="main-row">
+
+        <div id="settings">
+
+            <h2 style="text-align: center">Settings</h2>
+
+                <p id="currentemail">Current email: </p>
+                <input id="newemail" type="text" placeholder="New email...">
+                <button type="submit" onclick="changeEmail()">Change email</button>
+
+            <br />
+
+            <input value="Reset password" type="button" onclick="passwordReset()">
+
+        </div>
+
+
+
+    </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

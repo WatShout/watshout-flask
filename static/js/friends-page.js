@@ -4,6 +4,8 @@ let theirUID = getTheirUID();
 
 firebase.auth().onAuthStateChanged(function(user) {
 
+    console.log(user);
+
     if (user){
 
         const myUID = user.uid;
@@ -19,6 +21,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
             document.getElementById(`logout`).innerText = user.email;
             document.getElementById(`profile`).href = `/users/` + myUID + `/`;
+            document.getElementById(`settings`).href = `/users/` + myUID + `/settings/`;
 
 
         } else {
@@ -31,8 +34,10 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     else {
 
+        /*
         alert(`You aren't even logged in!`);
         window.location.href = `/login/`;
+        */
 
     }
 
