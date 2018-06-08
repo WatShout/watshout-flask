@@ -7,6 +7,10 @@ let changeEmail = () => {
     let uid = user.uid;
     let newEmail = document.getElementById(`newemail`).value;
 
+    document.getElementById(`newemail`).value = ``;
+
+    newEmail = newEmail.toLowerCase();
+
     user.updateEmail(newEmail).then(function() {
 
         document.getElementById(`currentemail`).innerHTML =

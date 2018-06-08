@@ -50,7 +50,12 @@ let getFriendsList = () => {
 
             let thisLink = `<a id="` + theirUID + `" href="/users/` + theirUID + `">` + theirEmail + `</a><br />`;
 
-            document.getElementById(`accepted`).innerHTML += thisLink;
+            // This should only run on friends page
+            try {
+                document.getElementById(`accepted`).innerHTML += thisLink;
+            } catch (TypeError){
+
+            }
 
             allHTML += thisLink;
 

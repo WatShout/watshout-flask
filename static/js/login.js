@@ -43,23 +43,57 @@ let initApp = () => {
 
             let uid = user.uid;
 
-            $.ajax({
+            if (user.emailVerified){
 
-                'url' : '/create_cookie/' + uid,
-                'type' : 'GET',
+                $.ajax({
 
-                'success' : function(response, status, xhr) {
-                    console.log(`success`);
-                    window.location.replace(`/`);
-                },
-                'error' : function(request,error)
-                {
-                    console.log(`error`)
-                }
-            });
+                    'url' : '/cookies/verified/create/',
+                    'type' : 'GET',
+
+                    'success' : function() {
+                        //console.log(`Created cookie`);
+
+                        $.ajax({
+
+                            'url' : '/cookies/uid/create/' + uid,
+                            'type' : 'GET',
+
+                            'success' : function() {
+                                console.log(`Created both cookies`);
+                                window.location.replace(`/`);
+                            },
+                            'error' : function() {
+                                console.log(`Verified, but failed UID cookie`)
+                            }
+                        });
+
+                    },
+                    'error' : function() {
+                        console.log(`Failed verify cookie`)
+                    }
+                });
+
+            } else {
+                $.ajax({
+
+                    'url' : '/cookies/uid/create/' + uid,
+                    'type' : 'GET',
+
+                    'success' : function() {
+                        console.log(`success`);
+                        window.location.replace(`/`);
+                    },
+                    'error' : function() {
+                        console.log(`Created UID cookie only`)
+                    }
+                });
+            }
+
         }
     });
 };
+
+
 
 window.onload = function() {
     initApp();

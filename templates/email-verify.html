@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- The order in which these load is important -->
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-messaging.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
+
+    <script defer src="/static/js/config.js"></script>
+
+    <script defer src="/static/js/email-verify.js"></script>
+
+    <title>Title</title>
+</head>
+<body>
+
+        {% if uid %}
+            <meta id="uid" content="{{ uid }}">
+        {% endif %}
+
+        <h1>Please verify your email!</h1>
+
+        <h3>Then you can refresh this page</h3>
+
+</body>
+</html>

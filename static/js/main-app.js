@@ -21,6 +21,33 @@ firebase.auth().onAuthStateChanged(function(user) {
         userID = user.uid;
         userEmail = user.email;
 
+        if (!user.emailVerified){
+
+            user.sendEmailVerification().then(function() {
+
+                console.log(`Email sent`);
+
+            }, function(error) {
+                // An error happened.
+            });
+
+        } else {
+
+            $.ajax({
+
+                'url' : '/cookies/verified/create/',
+                'type' : 'GET',
+
+                'success' : function() {
+                    //console.log(`Created cookie`);
+                },
+                'error' : function() {
+                    console.log(`error`)
+                }
+            });
+
+        }
+
 
         ref.child(`users`).child(userID).once(`value`, function(snapshot) {
 

@@ -29,28 +29,37 @@ DEBUG = False
 @app.route('/')
 def main_map():
     my_uid = request.cookies.get('uid')
-
     if my_uid is None:
         return redirect(url_for('login'))
+
+    verified = request.cookies.get('verified')
+    if verified is None:
+        return render_template('email-verify.html', uid=my_uid)
 
     my_email = ref.child("users").child(my_uid).child("email").get().val()
 
     return render_template('main-app.html', uid=my_uid, my_email=my_email)
 
 
-@app.route('/create_cookie/<string:uid>')
-def create_cookie(uid=None):
+@app.route('/cookies/verified/create/')
+def create_verification_cookie():
     res = make_response()
-    res.set_cookie('uid', uid, max_age=60 * 60 * 24 * 7 * 365)
-
+    res.set_cookie('verified', 'true', max_age=60 * 60 * 24 * 7 * 365)
     return res
 
 
-@app.route('/delete_cookie/<string:uid>')
-def delete_cookie(uid=None):
+@app.route('/cookies/uid/create/<string:uid>')
+def create_uid_cookie(uid=None):
+    res = make_response()
+    res.set_cookie('uid', uid, max_age=60 * 60 * 24 * 7 * 365)
+    return res
+
+
+@app.route('/cookies/delete/<string:uid>')
+def delete_uid_cookie(uid=None):
     res = make_response()
     res.set_cookie('uid', uid, max_age=0)
-
+    res.set_cookie('verified', 'true', max_age=0)
     return res
 
 
@@ -63,9 +72,12 @@ def login():
 def strava_login():
 
     my_uid = request.cookies.get('uid')
-
     if my_uid is None:
         return redirect(url_for('login'))
+
+    verified = request.cookies.get('verified')
+    if verified is None:
+        return render_template('email-verify.html', uid=my_uid)
 
     if not DEBUG:
         uri = 'https://watshout.herokuapp.com/me/strava/authorized/'
@@ -88,9 +100,12 @@ def strava_authorized():
     code = request.args.get('code')
 
     my_uid = request.cookies.get('uid')
-
     if my_uid is None:
         return redirect(url_for('login'))
+
+    verified = request.cookies.get('verified')
+    if verified is None:
+        return render_template('email-verify.html', uid=my_uid)
 
     access_token = client.exchange_code_for_token(
         client_id=26116,
@@ -108,10 +123,14 @@ def strava_authorized():
 
 @app.route('/me/')
 def my_page():
-    my_uid = request.cookies.get('uid')
 
+    my_uid = request.cookies.get('uid')
     if my_uid is None:
         return redirect(url_for('login'))
+
+    verified = request.cookies.get('verified')
+    if verified is None:
+        return render_template('email-verify.html', uid=my_uid)
 
     # Try to display a simple page with user info
     try:
@@ -149,8 +168,6 @@ def my_page():
         strava_token = "no"
         print("KeyError: No Strava connection")
 
-    print(strava_token)
-
     return render_template('profile-page.html', email=email, name=name, age=age, uid=my_uid,
                            activity_ids=activity_ids, strava_token=strava_token)
 
@@ -159,9 +176,12 @@ def my_page():
 def my_friends():
 
     my_uid = request.cookies.get('uid')
-
     if my_uid is None:
         return redirect(url_for('login'))
+
+    verified = request.cookies.get('verified')
+    if verified is None:
+        return render_template('email-verify.html', uid=my_uid)
 
     my_email = ref.child("users").child(my_uid).child("email").get().val()
 
@@ -181,9 +201,12 @@ def my_friends():
 def my_settings():
 
     my_uid = request.cookies.get('uid')
-
     if my_uid is None:
         return redirect(url_for('login'))
+
+    verified = request.cookies.get('verified')
+    if verified is None:
+        return render_template('email-verify.html', uid=my_uid)
 
     email = ref.child("users").child(my_uid).child("email").get().val()
 
@@ -195,9 +218,12 @@ def my_settings():
 def user_page(their_uid=None):
 
     my_uid = request.cookies.get('uid')
-
     if my_uid is None:
         return redirect(url_for('login'))
+
+    verified = request.cookies.get('verified')
+    if verified is None:
+        return render_template('email-verify.html', uid=my_uid)
 
     my_email = ref.child("users").child(my_uid).child("email").get().val()
 

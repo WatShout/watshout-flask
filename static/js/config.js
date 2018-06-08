@@ -39,7 +39,7 @@ let signOut = () => {
 
         $.ajax({
 
-            'url' : '/delete_cookie/' + uid,
+            'url' : '/cookies/delete/' + uid,
             'type' : 'GET',
 
             'success' : function(response, status, xhr) {
