@@ -12,7 +12,7 @@
 
 firebase.auth().onAuthStateChanged(function(user) {
 
-    if (user != null) {
+    if (user) {
 
         let loggedInUID = user.uid;
         let stravaRequestUID = document.getElementById(`uid`).getAttribute(`content`);

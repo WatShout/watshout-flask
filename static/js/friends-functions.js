@@ -58,7 +58,7 @@ let getFriendsList = () => {
 
             theirEmail = snapshot.val();
 
-            let emailHTML = `<a id="` + theirUID + `" href="#">` + theirEmail + `</a>`;
+            let emailHTML = `<a id="` + theirUID + `" href="/users/` + theirUID + `">` + theirEmail + `</a>`;
 
             // This should only 'work' on the friends page
             try {
