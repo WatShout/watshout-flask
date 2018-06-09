@@ -27,31 +27,49 @@ storageRef = firebase.storage()
 DEBUG = False
 
 
-@app.route('/')
-def main_map():
-    my_uid = request.cookies.get('uid')
-    if my_uid is None:
+def get_cookies(this_request):
+    uid = this_request.cookies.get('uid')
+    verified = this_request.cookies.get('verified')
+    return uid, verified
+
+
+def get_user_entry(uid):
+    return ref.child("users").child(uid).get().val()
+
+
+def check_user_exists(uid, verified):
+
+    user_entry = ref.child("users").child(uid).get().val()
+
+    if uid is None:
         return redirect(url_for('login'))
 
-    my_user_entry = ref.child("users").child(my_uid).get().val()
+    elif user_entry is None:
+        return redirect(url_for('main_page'))
+
+    elif verified is None:
+        return render_template('email-verify.html', uid=uid)
+
+    else:
+        return None
+
+
+@app.route('/')
+def main_page():
+    my_uid, verified = get_cookies(request)
+    check_user_exists(my_uid, verified)
+
+    my_user_entry = get_user_entry(my_uid)
 
     if my_user_entry is not None:
         has_info = "yes"
+        my_email = my_user_entry["email"]
+
     else:
         has_info = "no"
-
-    verified = request.cookies.get('verified')
-    if verified is None:
-        return render_template('email-verify.html', uid=my_uid)
-
-    my_email = ref.child("users").child(my_uid).child("email").get().val()
+        my_email = ""
 
     return render_template('main-app.html', uid=my_uid, my_email=my_email, has_info=has_info)
-
-
-@app.route('/me/create/')
-def create_user():
-    return app.send_static_file('create-user.html')
 
 
 @app.route('/cookies/verified/create/')
@@ -83,27 +101,19 @@ def login():
 
 @app.route('/me/')
 def my_page():
+    my_uid, verified = get_cookies(request)
+    redirect_link = check_user_exists(my_uid, verified)
 
-    my_uid = request.cookies.get('uid')
-    if my_uid is None:
-        return redirect(url_for('login'))
+    if redirect_link is not None:
+        return redirect_link
 
-    verified = request.cookies.get('verified')
-    if verified is None:
-        return render_template('email-verify.html', uid=my_uid)
+    my_user_entry = get_user_entry(my_uid)
 
     profile_pic = storageRef.child('users/' + my_uid + '/profile.png').get_url(None)
 
-    # Try to display a simple page with user info
-    try:
-        email = ref.child("users").child(my_uid).get().val()['email']
-        name = ref.child("users").child(my_uid).get().val()['name']
-        age = ref.child("users").child(my_uid).get().val()['age']
-
-    # If user isn't found in the database we assume they don't exist
-    except TypeError:
-        print("TypeError: User doesn't exist")
-        return render_template('user_doesnt_exist.html', uid=my_uid)
+    email = my_user_entry['email']
+    name = my_user_entry['name']
+    age = my_user_entry['age']
 
     # Try to build a list of user's activities
     try:
@@ -137,16 +147,15 @@ def my_page():
 
 @app.route('/me/friends/')
 def my_friends():
+    my_uid, verified = get_cookies(request)
+    redirect_link = check_user_exists(my_uid, verified)
 
-    my_uid = request.cookies.get('uid')
-    if my_uid is None:
-        return redirect(url_for('login'))
+    if redirect_link is not None:
+        return redirect_link
 
-    verified = request.cookies.get('verified')
-    if verified is None:
-        return render_template('email-verify.html', uid=my_uid)
+    my_user_entry = get_user_entry(my_uid)
 
-    my_email = ref.child("users").child(my_uid).child("email").get().val()
+    my_email = my_user_entry['email']
 
     try:
         my_friends = ref.child("friend_data").child(my_uid).get().val()
@@ -166,16 +175,15 @@ def my_friends():
 
 @app.route('/me/settings/')
 def my_settings():
+    my_uid, verified = get_cookies(request)
+    redirect_link = check_user_exists(my_uid, verified)
 
-    my_uid = request.cookies.get('uid')
-    if my_uid is None:
-        return redirect(url_for('login'))
+    if redirect_link is not None:
+        return redirect_link
 
-    verified = request.cookies.get('verified')
-    if verified is None:
-        return render_template('email-verify.html', uid=my_uid)
+    my_user_entry = get_user_entry(my_uid)
 
-    email = ref.child("users").child(my_uid).child("email").get().val()
+    email = my_user_entry['email']
 
     return render_template('settings.html', uid=my_uid,
                            email=email)
@@ -237,15 +245,15 @@ def strava_authorized():
 @app.route('/users/<string:their_uid>/')
 def user_page(their_uid=None):
 
-    my_uid = request.cookies.get('uid')
-    if my_uid is None:
-        return redirect(url_for('login'))
+    my_uid, verified = get_cookies(request)
+    redirect_link = check_user_exists(my_uid, verified)
 
-    verified = request.cookies.get('verified')
-    if verified is None:
-        return render_template('email-verify.html', uid=my_uid)
+    if redirect_link is not None:
+        return redirect_link
 
-    my_email = ref.child("users").child(my_uid).child("email").get().val()
+    my_user_entry = get_user_entry(my_uid)
+
+    my_email = my_user_entry["email"]
     my_friends = ref.child("friend_data").child(my_uid).get().val()
 
     if their_uid in my_friends:

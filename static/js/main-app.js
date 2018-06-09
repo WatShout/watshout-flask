@@ -25,46 +25,61 @@ let closeNav = () => {
     document.getElementById(`myNav`).style.width = `0%`;
 };
 
+
 let submitForm = () => {
+
+    document.getElementById(`error`).innerHTML = ``;
 
     let age = document.getElementById(`age`).value;
 
     const profilePic = $('#photo').get(0).files[0];
 
-    if (profilePic != null){
+    console.log(document.getElementById(`photo`).naturalWidth);
 
-        const typeExtension = profilePic.type.split(`/`)[1].toLowerCase();
+    let errorText = ``;
 
-        console.log(typeExtension === `png`);
-
-        if (typeExtension !== `png` && typeExtension !== `jpg` && typeExtension !== `jpeg`){
-            alert(`Wrong image format!`);
-            return;
-        }
-
-        const name = `profile.` + typeExtension;
-        const metadata = { contentType: profilePic.type };
-
-        ref.child(`users`).child(globalUser.uid).child(`profile_pic_format`).set(typeExtension);
-
-        let thisReference = storageRef.child(`users`).child(globalUser.uid).child(name);
-
-        thisReference.put(profilePic, metadata)
-            .then(function () {
-
-                document.getElementById(`logout`).innerHTML = globalUser.email;
-
-                ref.child(`users`).child(globalUser.uid).update({
-                    "name": globalUser.displayName,
-                    "age": parseInt(age),
-                    "email": globalUser.email
-                }).then(function () {
-                    closeNav();
-                })
-            })
-    } else {
-        closeNav();
+    if (age.length === 0){
+        errorText += `Please enter your age <br />`;
     }
+
+    if (profilePic == null){
+        errorText += `Please upload a photo <br />`;
+    }
+
+    if (errorText.length > 0){
+        document.getElementById(`error`).innerHTML = errorText;
+        return;
+    }
+
+    const typeExtension = profilePic.type.split(`/`)[1].toLowerCase();
+
+    console.log(typeExtension === `png`);
+
+    if (typeExtension !== `png` && typeExtension !== `jpg` && typeExtension !== `jpeg`){
+        alert(`Wrong image format!`);
+        return;
+    }
+
+    const name = `profile.` + typeExtension;
+    const metadata = { contentType: profilePic.type };
+
+    ref.child(`users`).child(globalUser.uid).child(`profile_pic_format`).set(typeExtension);
+
+    let thisReference = storageRef.child(`users`).child(globalUser.uid).child(name);
+
+    thisReference.put(profilePic, metadata)
+        .then(function () {
+
+            document.getElementById(`logout`).innerHTML = globalUser.email;
+
+            ref.child(`users`).child(globalUser.uid).update({
+                "name": globalUser.displayName,
+                "age": parseInt(age),
+                "email": globalUser.email
+            }).then(function () {
+                closeNav();
+            })
+        })
 };
 
 
