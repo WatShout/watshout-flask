@@ -31,28 +31,40 @@ let submitForm = () => {
 
     const profilePic = $('#photo').get(0).files[0];
 
-    ref.child(`users`).child(globalUser.uid).update({
-        "name": globalUser.displayName,
-        "age": parseInt(age),
-        "email": globalUser.email
-    }).then(function() {
+    if (profilePic != null){
 
-        if (profilePic != null){
+        const typeExtension = profilePic.type.split(`/`)[1].toLowerCase();
 
-            const typeExtension = profilePic.type.split(`/`)[1];
-            const name = `profile.` + typeExtension;
-            const metadata = { contentType: profilePic.type };
+        console.log(typeExtension === `png`);
 
-            let thisReference = storageRef.child(`users`).child(globalUser.uid).child(name);
+        if (typeExtension !== `png` && typeExtension !== `jpg` && typeExtension !== `jpeg`){
+            alert(`Wrong image format!`);
+            return;
+        }
 
-            thisReference.put(profilePic, metadata)
-                .then(function () {
+        const name = `profile.` + typeExtension;
+        const metadata = { contentType: profilePic.type };
+
+        ref.child(`users`).child(globalUser.uid).child(`profile_pic_format`).set(typeExtension);
+
+        let thisReference = storageRef.child(`users`).child(globalUser.uid).child(name);
+
+        thisReference.put(profilePic, metadata)
+            .then(function () {
+
+                document.getElementById(`logout`).innerHTML = globalUser.email;
+
+                ref.child(`users`).child(globalUser.uid).update({
+                    "name": globalUser.displayName,
+                    "age": parseInt(age),
+                    "email": globalUser.email
+                }).then(function () {
                     closeNav();
                 })
-        } else {
-            closeNav();
-        }
-    })
+            })
+    } else {
+        closeNav();
+    }
 };
 
 
@@ -151,11 +163,11 @@ firebase.auth().onAuthStateChanged(function(user) {
 let createHTMLEntry = (theirName, theirUID, theirEmail) => {
 
     let html = `<div class="deviceinfo" id="` + theirUID + `">` +
-            `<a href="` + `/users/` + theirUID + `">` + theirName + `</a>` + ` (` + theirEmail + `)` +
-            `\n<div id="not-tracking` + theirUID + `">User is not tracking right now</div>` +
-            `\n<div id="battery` + theirUID + `"></div>` +
-            `\n<div id="speed` + theirUID + `"></div>` +
-            `</div>`;
+        `<a href="` + `/users/` + theirUID + `">` + theirName + `</a>` + ` (` + theirEmail + `)` +
+        `\n<div id="not-tracking` + theirUID + `">User is not tracking right now</div>` +
+        `\n<div id="battery` + theirUID + `"></div>` +
+        `\n<div id="speed` + theirUID + `"></div>` +
+        `</div>`;
 
     return html;
 

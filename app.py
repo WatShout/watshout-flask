@@ -246,7 +246,6 @@ def user_page(their_uid=None):
         return render_template('email-verify.html', uid=my_uid)
 
     my_email = ref.child("users").child(my_uid).child("email").get().val()
-
     my_friends = ref.child("friend_data").child(my_uid).get().val()
 
     if their_uid in my_friends:
@@ -255,7 +254,8 @@ def user_page(their_uid=None):
         name = ref.child("users").child(their_uid).get().val()['name']
         age = ref.child("users").child(their_uid).get().val()['age']
 
-        profile_pic = storageRef.child('users/' + their_uid + '/profile.png').get_url(None)
+        profile_pic_format = ref.child("users").child(their_uid).get().val()['profile_pic_format']
+        profile_pic = storageRef.child('users/' + their_uid + '/profile.' + profile_pic_format).get_url(None)
 
         # Try to build a list of user's activities
         try:

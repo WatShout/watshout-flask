@@ -45,6 +45,7 @@
       Age: <input type="text" id="age">
 
       <input id="photo" type='file' />
+      Please only .png, .jpg, .jpeg
       <img id="myImg" src="#" alt="your image" />
 
       <br />
@@ -71,6 +72,8 @@
 
         {% if my_email %}
         <a href="javascript:signOut();" id="logout">{{ my_email }}</a>
+        {% else %}
+        <a href="javascript:signOut();" id="logout"></a>
         {% endif %}
 
     </div>
