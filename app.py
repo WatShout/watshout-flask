@@ -14,7 +14,7 @@ config = {
     "authDomain": "watshout-app.firebaseapp.com",
     "databaseURL": "https://watshout-app.firebaseio.com",
     "projectID": "watshout-app",
-    "storageBucket": "",
+    "storageBucket": "watshout-app.appspot.com",
     "serviceAccount": "serviceAccountCredentials.json"
 }
 
@@ -22,8 +22,9 @@ firebase = pyrebase.initialize_app(config)
 
 # Get a reference to the database service
 ref = firebase.database()
+storageRef = firebase.storage()
 
-DEBUG = False
+DEBUG = True
 
 
 @app.route('/')
@@ -32,13 +33,25 @@ def main_map():
     if my_uid is None:
         return redirect(url_for('login'))
 
+    my_user_entry = ref.child("users").child(my_uid).get().val()
+
+    if my_user_entry is not None:
+        has_info = "yes"
+    else:
+        has_info = "no"
+
     verified = request.cookies.get('verified')
     if verified is None:
         return render_template('email-verify.html', uid=my_uid)
 
     my_email = ref.child("users").child(my_uid).child("email").get().val()
 
-    return render_template('main-app.html', uid=my_uid, my_email=my_email)
+    return render_template('main-app.html', uid=my_uid, my_email=my_email, has_info=has_info)
+
+
+@app.route('/me/create/')
+def create_user():
+    return app.send_static_file('create-user.html')
 
 
 @app.route('/cookies/verified/create/')
@@ -79,6 +92,8 @@ def my_page():
     if verified is None:
         return render_template('email-verify.html', uid=my_uid)
 
+    profile_pic = storageRef.child('users/' + my_uid + '/profile.png').get_url(None)
+
     # Try to display a simple page with user info
     try:
         email = ref.child("users").child(my_uid).get().val()['email']
@@ -116,7 +131,8 @@ def my_page():
         print("KeyError: No Strava connection")
 
     return render_template('profile-page.html', email=email, name=name, age=age, uid=my_uid,
-                           activity_ids=activity_ids, strava_token=strava_token)
+                           activity_ids=activity_ids, strava_token=strava_token,
+                           profile_pic=profile_pic)
 
 
 @app.route('/me/friends/')
@@ -239,6 +255,8 @@ def user_page(their_uid=None):
         name = ref.child("users").child(their_uid).get().val()['name']
         age = ref.child("users").child(their_uid).get().val()['age']
 
+        profile_pic = storageRef.child('users/' + their_uid + '/profile.png').get_url(None)
+
         # Try to build a list of user's activities
         try:
             device = ref.child("users").child(their_uid).get().val()['device']['past']
@@ -256,7 +274,7 @@ def user_page(their_uid=None):
             print("KeyError: No activities")
 
         return render_template('profile-page.html', my_email=my_email, email=email, name=name, age=age, uid=their_uid,
-                               activity_ids=activity_ids)
+                               activity_ids=activity_ids, profile_pic=profile_pic)
     else:
         return "You are not friends with this user"
 

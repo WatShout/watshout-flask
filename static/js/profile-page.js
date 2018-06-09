@@ -24,7 +24,6 @@ const map = new google.maps.Map(document.getElementById(`my-map`), {
 
 });
 
-
 let getActivityIDs = () => {
 
     try {

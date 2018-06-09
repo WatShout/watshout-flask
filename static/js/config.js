@@ -14,14 +14,14 @@ let config = {
   authDomain: "watshout-app.firebaseapp.com",
   databaseURL: "https://watshout-app.firebaseio.com",
   projectId: "watshout-app",
-  storageBucket: "",
+  storageBucket: "gs://watshout-app.appspot.com",
   messagingSenderId: "572143736497"
 };
 firebase.initializeApp(config);
 
 const database = firebase.database();
 const ref = database.ref();
-
+const storageRef = firebase.storage().ref();
 
 let signOut = () => {
 

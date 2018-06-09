@@ -14,11 +14,8 @@ let getFriendRequests = () => {
         const theirUID = snapshot.key;
 
         ref.child(`users`).child(theirUID).child(`email`).once(`value`, function (snapshot) {
-
             theirEmail = snapshot.val();
-
             let confirmLink = `<a id="` + theirUID + `" href="#" onclick="confirmFriend('` + theirUID + `')">` + theirEmail + `</a>`;
-
             document.getElementById(`pending`).innerHTML += confirmLink + `<br />`;
 
         });
@@ -28,7 +25,6 @@ let getFriendRequests = () => {
     ref.child(`friend_requests`).child(myUID).orderByChild(`request_type`).equalTo(`received`).on(`child_removed`, function (snapshot) {
 
         let theirUID = snapshot.key;
-
         removeChild(theirUID);
 
     });

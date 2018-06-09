@@ -8,6 +8,7 @@
         <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
         <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
         <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
 
         <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0"></script>
 
@@ -67,6 +68,10 @@
                     {% if email %}
                         <h3>{{ email }}</h3>
                     {% endif %}
+
+                    {% if profile_pic %}
+                    <img src="{{ profile_pic }}">
+                     {% endif %}
 
 
                     {% if strava_token %}

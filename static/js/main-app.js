@@ -10,16 +10,62 @@
 
  */
 
+
 // These pertain to the currently logged-in user
 let userID;
 let userEmail;
+
+let globalUser;
+
+let openNav = () => {
+    document.getElementById(`myNav`).style.width = `100%`;
+};
+
+let closeNav = () => {
+    document.getElementById(`myNav`).style.width = `0%`;
+};
+
+let submitForm = () => {
+
+    let age = document.getElementById(`age`).value;
+
+    const profilePic = $('#photo').get(0).files[0];
+
+    ref.child(`users`).child(globalUser.uid).update({
+        "name": globalUser.displayName,
+        "age": parseInt(age),
+        "email": globalUser.email
+    }).then(function() {
+
+        if (profilePic != null){
+
+            const typeExtension = profilePic.type.split(`/`)[1];
+            const name = `profile.` + typeExtension;
+            const metadata = { contentType: profilePic.type };
+
+            let thisReference = storageRef.child(`users`).child(globalUser.uid).child(name);
+
+            thisReference.put(profilePic, metadata)
+                .then(function () {
+                    closeNav();
+                })
+        } else {
+            closeNav();
+        }
+    })
+};
+
 
 firebase.auth().onAuthStateChanged(function(user) {
 
     if (user) {
 
+        globalUser = user;
+
         userID = user.uid;
         userEmail = user.email;
+
+        let hasInfo = document.getElementById(`has_info`).getAttribute(`content`);
 
         if (!user.emailVerified){
 
@@ -48,21 +94,9 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         }
 
-
-        ref.child(`users`).child(userID).once(`value`, function(snapshot) {
-
-            // Indicates that a user is `new`
-            if (!snapshot.exists()) {
-
-                let age = prompt("Enter your age");
-
-                ref.child(`users`).child(user.uid).update({
-                    "name": user.displayName,
-                    "age": parseInt(age),
-                    "email": user.email
-                });
-            }
-        });
+        if (hasInfo === `no`){
+            openNav();
+        }
 
     }
 
@@ -139,6 +173,21 @@ let changeHTMLTag = (theirUID, label, value) => {
         //createHTMLEntry(id);
         //document.getElementById(lower + id).innerHTML = newValue;
     }
+};
+
+// These handle displaying the selected image on the screen
+$(function () {
+    $(":file").change(function () {
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoaded;
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+
+let imageIsLoaded = (e) => {
+    $('#myImg').attr('src', e.target.result);
 };
 
 
