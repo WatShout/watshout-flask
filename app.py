@@ -24,7 +24,7 @@ firebase = pyrebase.initialize_app(config)
 ref = firebase.database()
 storageRef = firebase.storage()
 
-DEBUG = True
+DEBUG = False
 
 
 @app.route('/')
