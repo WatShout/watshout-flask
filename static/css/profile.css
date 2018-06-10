@@ -120,12 +120,10 @@
 }
 
 #profile {
-    max-height: 150px;
-    max-width: 150px;
+    max-width: 200px;
 }
 
 #myImg {
-    max-height: 150px;
-    max-width: 150px;
+    max-width: 200px;
 }
 
