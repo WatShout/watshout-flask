@@ -8,7 +8,7 @@
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
-
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
 
     <script defer src="/static/js/config.js"></script>
     <script defer src="/static/js/settings.js"></script>
@@ -53,12 +53,33 @@
 
             <h2 style="text-align: center">Settings</h2>
 
-                <p id="currentemail">Current email: {{ email }}</p>
-                <input id="newemail" type="text" placeholder="New email...">
-                <button type="submit" onclick="changeEmail()">Change email</button>
-
+            <p id="currentemail">Current email: {{ email }}</p>
+            <br />
+            <br />
+            <input id="newemail" type="text" placeholder="New email...">
+            <br />
+            <br />
+            <button type="submit" onclick="changeEmail()">Change email</button>
+            <br />
             <br />
 
+            {% if profile_pic %}
+                <img id="myImg" src={{ profile_pic }} />
+            {% else %}
+                <img id="myImg" src="#" />
+            {% endif %}
+
+            <br />
+            <br />
+            Please only .png, .jpg, .jpeg
+            <br />
+            <br />
+            <input id="photo" type='file' />
+            <br />
+            <br />
+            <input type="button" value="Change picture" onclick="changeProfilePic()">
+            <br />
+            <br />
             <input value="Reset password" type="button" onclick="passwordReset()">
 
         </div>
@@ -67,7 +88,7 @@
     </div>
 
 
-    </div>
+</div>
 
 
 </div>

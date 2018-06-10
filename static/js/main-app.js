@@ -34,8 +34,6 @@ let submitForm = () => {
 
     const profilePic = $('#photo').get(0).files[0];
 
-    console.log(document.getElementById(`photo`).naturalWidth);
-
     let errorText = ``;
 
     if (age.length === 0){
@@ -52,8 +50,6 @@ let submitForm = () => {
     }
 
     const typeExtension = profilePic.type.split(`/`)[1].toLowerCase();
-
-    console.log(typeExtension === `png`);
 
     if (typeExtension !== `png` && typeExtension !== `jpg` && typeExtension !== `jpeg`){
         alert(`Wrong image format!`);

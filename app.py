@@ -185,8 +185,10 @@ def my_settings():
 
     email = my_user_entry['email']
 
+    profile_pic = storageRef.child('users/' + my_uid + '/profile.png').get_url(None)
+
     return render_template('settings.html', uid=my_uid,
-                           email=email)
+                           email=email, profile_pic=profile_pic)
 
 
 @app.route('/me/strava/login/')

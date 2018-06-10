@@ -29,6 +29,49 @@ let changeEmail = () => {
 
 };
 
+let changeProfilePic = () => {
+    const profilePic = $('#photo').get(0).files[0];
+    let oldName;
+
+    if (profilePic != null){
+
+        const newTypeExtension = profilePic.type.split(`/`)[1].toLowerCase();
+
+        if (newTypeExtension !== `png` && newTypeExtension !== `jpg` && newTypeExtension !== `jpeg`){
+            alert(`Wrong image format!`);
+            return;
+        }
+
+        ref.child(`users`).child(myUID).child(`profile_pic_format`).once(`value`, function (snapshot) {
+
+            const oldTypeExtension = snapshot.val();
+
+            oldName = `profile.` + oldTypeExtension;
+
+        }).then(function () {
+
+            const thisStorageRef = storageRef.child(`users`).child(myUID);
+
+            thisStorageRef.child(oldName).delete().then(function() {
+
+                const newName = `profile.` + newTypeExtension;
+                const metadata = { contentType: profilePic.type };
+
+                thisStorageRef.child(newName).put(profilePic, metadata).then(function() {
+
+                    console.log(`uploaded!`);
+
+                }).then(function () {
+
+                    ref.child(`users`).child(myUID).child(`profile_pic_format`).set(newTypeExtension);
+
+                })
+            })
+        });
+    }
+};
+
+
 let passwordReset = () => {
 
     let auth = firebase.auth();
@@ -44,3 +87,19 @@ let passwordReset = () => {
     });
 
 };
+
+// These handle displaying the selected image on the screen
+$(function () {
+    $(":file").change(function () {
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoaded;
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+
+let imageIsLoaded = (e) => {
+    $('#myImg').attr('src', e.target.result);
+};
+
