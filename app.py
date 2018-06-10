@@ -109,11 +109,12 @@ def my_page():
 
     my_user_entry = get_user_entry(my_uid)
 
-    profile_pic = storageRef.child('users/' + my_uid + '/profile.png').get_url(None)
-
     email = my_user_entry['email']
     name = my_user_entry['name']
     age = my_user_entry['age']
+
+    profile_pic_format = my_user_entry['profile_pic_format']
+    profile_pic = storageRef.child('users/' + my_uid + '/profile.' + profile_pic_format).get_url(None)
 
     # Try to build a list of user's activities
     try:
@@ -185,7 +186,8 @@ def my_settings():
 
     email = my_user_entry['email']
 
-    profile_pic = storageRef.child('users/' + my_uid + '/profile.png').get_url(None)
+    profile_pic_format = my_user_entry['profile_pic_format']
+    profile_pic = storageRef.child('users/' + my_uid + '/profile.' + profile_pic_format).get_url(None)
 
     return render_template('settings.html', uid=my_uid,
                            email=email, profile_pic=profile_pic)
