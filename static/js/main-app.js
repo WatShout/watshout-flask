@@ -26,13 +26,38 @@ let closeNav = () => {
 };
 
 
+let resizeImage = (img) => {
+
+    let preferredWidth = 1920;
+    let ratio = preferredWidth / img.naturalWidth;
+
+    let canvas = $(`<canvas>`)[0];
+    canvas.width = img.width * ratio;
+    canvas.height = img.height * ratio;
+
+    let ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0,0,canvas.width, canvas.height);
+
+    return String(canvas.toDataURL());
+
+};
+
+function dataURLtoBlob(dataurl) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+}
+
 let submitForm = () => {
 
     document.getElementById(`error`).innerHTML = ``;
 
     let age = document.getElementById(`age`).value;
 
-    const profilePic = $('#photo').get(0).files[0];
+    let profilePic = $('#photo').get(0).files[0];
 
     let errorText = ``;
 
@@ -210,7 +235,11 @@ $(function () {
 });
 
 let imageIsLoaded = (e) => {
-    $('#myImg').attr('src', e.target.result);
+
+    document.getElementById(`myImg`).src = e.target.result;
+
+
+
 };
 
 
