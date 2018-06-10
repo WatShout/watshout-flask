@@ -138,3 +138,8 @@ body {
     margin-top: 30px;
     color: #000000;
 }
+
+#myImg {
+    max-height: 400px;
+    max-width: 400px;
+}
