@@ -1,5 +1,7 @@
 from flask import Flask, render_template, Markup, request, redirect, url_for, make_response
 from stravalib.client import Client
+import urllib.request
+import json
 
 import pyrebase
 
@@ -289,6 +291,28 @@ def user_page(their_uid=None):
                                activity_ids=activity_ids, profile_pic=profile_pic)
     else:
         return "You are not friends with this user"
+
+
+@app.route('/mobile/strava/<string:uid>/<string:file_name>/')
+def upload_activity(uid=None, file_name=None):
+    try:
+        strava_token = ref.child("users").child(uid).child("strava_token").get().val()
+        client.access_token = strava_token
+
+        file_name = file_name + ".gpx"
+
+        url = storageRef.child("users").child(uid).child("gpx").child(file_name).get_url(None)
+
+        url_response = urllib.request.urlopen(url)
+        data = url_response.read()
+        parsed_data = data.decode('utf-8')
+
+        client.upload_activity(parsed_data, 'gpx')
+
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    except Exception as e:
+        print(e)
+        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
 #@app.route('/users/<string:uid>/friends/')
