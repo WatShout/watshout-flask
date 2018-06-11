@@ -296,6 +296,9 @@ def user_page(their_uid=None):
 @app.route('/mobile/strava/<string:uid>/<string:file_name>/')
 def upload_activity(uid=None, file_name=None):
     try:
+
+        id = file_name
+
         strava_token = ref.child("users").child(uid).child("strava_token").get().val()
         client.access_token = strava_token
 
@@ -308,7 +311,6 @@ def upload_activity(uid=None, file_name=None):
         parsed_data = data.decode('utf-8')
 
         client.upload_activity(parsed_data, 'gpx')
-
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     except Exception as e:
         print(e)
