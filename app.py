@@ -143,7 +143,7 @@ def my_page():
         strava_token = "no"
         print("KeyError: No Strava connection")
 
-    return render_template('profile-page.html', email=email, name=name, age=age, uid=my_uid,
+    return render_template('profile-page.html', email=email, my_email=email, name=name, age=age, uid=my_uid,
                            activity_ids=activity_ids, strava_token=strava_token,
                            profile_pic=profile_pic)
 
