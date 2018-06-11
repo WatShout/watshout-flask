@@ -2,6 +2,7 @@ from flask import Flask, render_template, Markup, request, redirect, url_for, ma
 from stravalib.client import Client
 import urllib.request
 import json
+import time
 
 import pyrebase
 
@@ -310,7 +311,9 @@ def upload_activity(uid=None, file_name=None):
         data = url_response.read()
         parsed_data = data.decode('utf-8')
 
-        print(client.upload_activity(parsed_data, 'gpx').activity_id)
+        print(client.upload_activity(parsed_data, 'gpx').is_complete)
+
+        #time.sleep(10)
 
         #for activity in client.get_activities(limit=1):
           #  print("{0.name} {0.moving_time}".format(activity))
