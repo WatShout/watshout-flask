@@ -311,14 +311,12 @@ def upload_activity(uid=None, file_name=None):
         data = url_response.read()
         parsed_data = data.decode('utf-8')
 
-        while not client.upload_activity(parsed_data, 'gpx').is_complete:
-            time.sleep(1)
-            print('waiting')
+        client.upload_activity(parsed_data, 'gpx')
 
-        print(client.upload_activity(parsed_data, 'gpx').activity_id)
+        time.sleep(10)
 
-        #for activity in client.get_activities(limit=1):
-          #  print("{0.name} {0.moving_time}".format(activity))
+        for activity in client.get_activities(limit=1):
+            print(activity.activity_id)
 
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     except Exception as e:
