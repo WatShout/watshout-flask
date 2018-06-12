@@ -313,11 +313,6 @@ def upload_activity(uid=None, file_name=None):
 
         client.upload_activity(parsed_data, 'gpx')
 
-        time.sleep(10)
-
-        for activity in client.get_activities(limit=1):
-            print("{0.name} {0.moving_time}".format(activity))
-
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     except Exception as e:
         print(e)
