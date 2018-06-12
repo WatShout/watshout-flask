@@ -316,7 +316,7 @@ def upload_activity(uid=None, file_name=None):
         time.sleep(10)
 
         for activity in client.get_activities(limit=1):
-            print(activity.activity_id)
+            print("{0.name} {0.moving_time}".format(activity))
 
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     except Exception as e:
