@@ -156,42 +156,49 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         deviceDict[theirUID] = [];
 
-        // For each friend currently in an activity this plots all the points
-        // made up to the point the web page was loaded
-        ref.child(`users`).child(theirUID).once(`value`, function(snapshot) {
+        storageRef.child("users").child(theirUID).child("profile.png").getDownloadURL()
+            .then(function (url) {
 
-            let theirName = snapshot.val()[`name`];
-            let theirEmail = snapshot.val()[`email`];
-            let theirDevice = snapshot.val()[`device`];
+                theirProfilePics[theirUID] = url;
 
-            // TODO: console.log(snapshot.val()[`device`]);
+                // For each friend currently in an activity this plots all the points
+                // made up to the point the web page was loaded
+                ref.child(`users`).child(theirUID).once(`value`, function(snapshot) {
 
-            // TODO: Fix behavior when a user, already a friend, adds a device
-            if (theirDevice != null) {
-                document.getElementById(`devices`).innerHTML +=
+                    let theirName = snapshot.val()[`name`];
+                    let theirEmail = snapshot.val()[`email`];
+                    let theirDevice = snapshot.val()[`device`];
 
-                    createHTMLEntry(theirName, theirUID, theirEmail);
+                    // TODO: console.log(snapshot.val()[`device`]);
 
-                ref.child(`users`).child(theirUID).child(`device`)
-                    .child(`current`).on(`child_added`, function (snapshot) {
+                    // TODO: Fix behavior when a user, already a friend, adds a device
+                    if (theirDevice != null) {
+                        document.getElementById(`devices`).innerHTML +=
 
-                    addPoint(snapshot, theirUID, map);
-                    createLine(deviceDict[theirUID], map);
+                            createHTMLEntry(theirName, theirUID, theirEmail);
 
-                    // This should fail when the user is currently tracking
-                    try {
-                        document.getElementById(`not-tracking` + theirUID).innerHTML = ``;
-                    } catch (TypeError){
+                        ref.child(`users`).child(theirUID).child(`device`)
+                            .child(`current`).on(`child_added`, function (snapshot) {
+
+                            addPoint(snapshot, theirUID, map);
+                            createLine(deviceDict[theirUID], map);
+
+                            // This should fail when the user is currently tracking
+                            try {
+                                document.getElementById(`not-tracking` + theirUID).innerHTML = ``;
+                            } catch (TypeError){
+
+                            }
+
+                            changeHTMLTag(theirUID, `battery`, snapshot.val()[`battery`]);
+                            changeHTMLTag(theirUID, `speed`, snapshot.val()[`speed`]);
+
+                        });
 
                     }
-
-                    changeHTMLTag(theirUID, `battery`, snapshot.val()[`battery`]);
-                    changeHTMLTag(theirUID, `speed`, snapshot.val()[`speed`]);
-
                 });
 
-            }
-        });
+            });
     });
 });
 

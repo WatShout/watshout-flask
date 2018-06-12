@@ -13,6 +13,7 @@
 let startingPosition = {lat: 37.4419, lng: -122.1430};
 
 let deviceDict = {};
+let theirProfilePics = {};
 
 // Initializes the Google Map.
 const map = new google.maps.Map(document.getElementById(`map`), {
@@ -85,13 +86,20 @@ let addPoint = (snapshot, currentID, map) => {
 
     //updateHTML(currentID, values, map);
 
+    let icon = {
+        url: theirProfilePics[currentID],
+        scaledSize: new google.maps.Size(30, 30) // scaled size
+
+    };
+
     // Adds marker to map
     let currentMarker = new google.maps.Marker({
         position: {
             lat: values["lat"],
             lng: values["lon"]
         },
-        map: map
+        map: map,
+        icon: icon
     });
 
     let length = deviceDict[currentID].length;
