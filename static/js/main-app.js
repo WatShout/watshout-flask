@@ -146,6 +146,10 @@ firebase.auth().onAuthStateChanged(function(user) {
             openNav();
         }
 
+    } else {
+
+        window.location.href = "/login/";
+
     }
 
 
