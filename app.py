@@ -311,6 +311,8 @@ def upload_activity(uid=None, file_name=None):
         data = url_response.read()
         parsed_data = data.decode('utf-8')
 
+        print("Parsed data: " + parsed_data)
+
         client.upload_activity(parsed_data, 'gpx')
 
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
