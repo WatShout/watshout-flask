@@ -109,6 +109,8 @@ let addPoint = (snapshot, currentID, map) => {
         deviceDict[currentID][length - 1].setVisible(false);
     }
 
+    map.panTo(new google.maps.LatLng(values["lat"], values["lon"]));
+
     deviceDict[currentID].push(currentMarker);
 
 };
