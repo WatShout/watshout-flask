@@ -252,8 +252,3 @@ let imageIsLoaded = (e) => {
 
 
 };
-
-
-
-
-
