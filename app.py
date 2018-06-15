@@ -1,12 +1,15 @@
+from __future__ import absolute_import
 from flask import Flask, render_template, Markup, request, redirect, url_for, make_response
-from stravalib.client import Client
 import urllib.request
 import json
-
 import pyrebase
 
+from stravalib.client import Client
 client = Client()
 access_token = None
+
+from twilio.rest import Client
+twilio_client = Client('AC78e6f5f0eee70cd307d2c801965890f8', '29be32eb089f379f6622e7365b280727')
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -318,14 +321,27 @@ def upload_activity(uid=None, file_name=None):
         return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
-#@app.route('/users/<string:uid>/friends/')
-#def friends_page(uid=None):
-#    return render_template('friends-page.html', uid=uid)
+@app.route('/twilio/send/', methods=['POST'])
+def send_message():
 
+    if request.method == 'GET':
+        return json.dumps({'success': False}), 405, {'ContentType': 'application/json'}
 
-#@app.route('/users/<string:uid>/activities/<string:activity_id>/')
-#def past_activity(uid=None, activity_id=None):
-#    return render_template('past-activity.html', uid=uid, activity_id=activity_id)
+    try:
+        message = request.headers.get('message')
+        to_number = request.headers.get('to_number')
+        twilio_number = '+18312788199'
+
+        twilio_message = twilio_client.messages.create(
+            body=message,
+            from_=twilio_number,
+            to=to_number
+        )
+
+        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
+    except Exception:
+        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
 
 
 if __name__ == '__main__':
