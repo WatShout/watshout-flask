@@ -318,7 +318,7 @@ def upload_activity(uid=None, file_name=None):
         return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     except Exception as e:
         print(e)
-        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
+        return json.dumps({'success': False}), 69, {'ContentType': 'application/json'}
 
 
 @app.route('/twilio/send/', methods=['POST'])
