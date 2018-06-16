@@ -1,9 +1,7 @@
 from xml.dom import minidom
-import dateutil.parser as dp
 import calendar
 import dateutil.parser
 import pandas as pd
-
 
 def iso_to_epoch(iso_time):
     return calendar.timegm(dateutil.parser.parse(iso_time).timetuple())

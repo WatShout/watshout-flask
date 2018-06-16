@@ -5,3 +5,4 @@ pyrebase==3.0.27
 stravalib==0.9.4
 twilio==6.14.4
 pandas==0.22.0
+python-dateutil==2.7.3
