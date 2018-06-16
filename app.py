@@ -1,8 +1,11 @@
-from __future__ import absolute_import
-from flask import Flask, render_template, Markup, request, redirect, url_for, make_response
+import os
+from flask import Flask, render_template, Markup, request, redirect, url_for, make_response, send_from_directory, send_file
 import urllib.request
 import json
 import pyrebase
+import random
+from convert_gpx import Converter
+import io
 
 from stravalib.client import Client
 client = Client()
@@ -342,6 +345,30 @@ def send_message():
 
     except Exception:
         return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
+
+
+@app.route('/gpx/')
+def static_page():
+    return app.send_static_file('gpx-to-csv.html')
+
+
+@app.route('/gpx/convert/', methods=['POST'])
+def convert_gpx():
+
+    name = str(random.randint(1, 100000000)) + ".csv"
+
+    while name in os.listdir('csv_temp'):
+        name = str(random.randint(1, 100000000)) + ".csv"
+
+    string = request.headers.get('text')
+
+    converter = Converter(string, name)
+
+    if os.path.exists('csv_temp/' + name):
+        return_file = send_from_directory(directory='csv_temp', filename=name, as_attachment=True)
+        return return_file
+
+    return "Something broke"
 
 
 if __name__ == '__main__':
