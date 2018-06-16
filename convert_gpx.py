@@ -1,11 +1,8 @@
 from xml.dom import minidom
 import dateutil.parser as dp
 import calendar
-import csv
-from datetime import datetime
 import dateutil.parser
 import pandas as pd
-from iso8601utils import parsers
 
 def iso_to_epoch(iso_time):
     return calendar.timegm(dateutil.parser.parse(iso_time).timetuple())
