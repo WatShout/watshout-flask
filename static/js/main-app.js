@@ -10,6 +10,23 @@
 
  */
 
+let success = (pos) => {
+  let crd = pos.coords;
+
+  let currentLocation = {
+      lat: crd.latitude,
+      lng: crd.longitude
+  };
+
+  map.panTo(currentLocation);
+  map.setZoom(16);
+};
+
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(success);
+} else {
+    console.log("Not supported");
+}
 
 // These pertain to the currently logged-in user
 let userID;
