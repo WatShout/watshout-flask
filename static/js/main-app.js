@@ -1,4 +1,3 @@
-
 /*
 
     Filename: main.js
@@ -11,15 +10,15 @@
  */
 
 let success = (pos) => {
-  let crd = pos.coords;
+    let crd = pos.coords;
 
-  let currentLocation = {
-      lat: crd.latitude,
-      lng: crd.longitude
-  };
+    let currentLocation = {
+        lat: crd.latitude,
+        lng: crd.longitude
+    };
 
-  map.panTo(currentLocation);
-  map.setZoom(16);
+    map.panTo(currentLocation);
+    map.setZoom(16);
 };
 
 if (navigator.geolocation) {
@@ -33,6 +32,8 @@ let userID;
 let userEmail;
 
 let globalUser;
+
+let theirColors = [];
 
 let openNav = () => {
     document.getElementById(`myNav`).style.width = `100%`;
@@ -53,7 +54,7 @@ let resizeImage = (img) => {
     canvas.height = img.height * ratio;
 
     let ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0,0,canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
     return String(canvas.toDataURL());
 
@@ -62,10 +63,10 @@ let resizeImage = (img) => {
 function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
+    while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
     }
-    return new Blob([u8arr], {type:mime});
+    return new Blob([u8arr], {type: mime});
 }
 
 let submitForm = () => {
@@ -78,28 +79,28 @@ let submitForm = () => {
 
     let errorText = ``;
 
-    if (age.length === 0){
+    if (age.length === 0) {
         errorText += `Please enter your age <br />`;
     }
 
-    if (profilePic == null){
+    if (profilePic == null) {
         errorText += `Please upload a photo <br />`;
     }
 
-    if (errorText.length > 0){
+    if (errorText.length > 0) {
         document.getElementById(`error`).innerHTML = errorText;
         return;
     }
 
     const typeExtension = profilePic.type.split(`/`)[1].toLowerCase();
 
-    if (typeExtension !== `png` && typeExtension !== `jpg` && typeExtension !== `jpeg`){
+    if (typeExtension !== `png` && typeExtension !== `jpg` && typeExtension !== `jpeg`) {
         alert(`Wrong image format!`);
         return;
     }
 
     const name = `profile.` + typeExtension;
-    const metadata = { contentType: profilePic.type };
+    const metadata = {contentType: profilePic.type};
 
     ref.child(`users`).child(globalUser.uid).child(`profile_pic_format`).set(typeExtension);
 
@@ -121,7 +122,7 @@ let submitForm = () => {
 };
 
 
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged(function (user) {
 
     if (user) {
 
@@ -132,13 +133,13 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         let hasInfo = document.getElementById(`has_info`).getAttribute(`content`);
 
-        if (!user.emailVerified){
+        if (!user.emailVerified) {
 
-            user.sendEmailVerification().then(function() {
+            user.sendEmailVerification().then(function () {
 
                 console.log(`Email sent`);
 
-            }, function(error) {
+            }, function (error) {
                 // An error happened.
             });
 
@@ -146,20 +147,20 @@ firebase.auth().onAuthStateChanged(function(user) {
 
             $.ajax({
 
-                'url' : '/cookies/verified/create/',
-                'type' : 'GET',
+                'url': '/cookies/verified/create/',
+                'type': 'GET',
 
-                'success' : function() {
+                'success': function () {
                     //console.log(`Created cookie`);
                 },
-                'error' : function() {
+                'error': function () {
                     console.log(`error`)
                 }
             });
 
         }
 
-        if (hasInfo === `no`){
+        if (hasInfo === `no`) {
             openNav();
         }
 
@@ -171,24 +172,27 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 
     // Plots current paths by all friends
-    ref.child(`friend_data`).child(userID).on(`child_added`, function(snapshot) {
+    ref.child(`friend_data`).child(userID).on(`child_added`, function (snapshot) {
 
         let theirUID = snapshot.key;
 
         deviceDict[theirUID] = [];
 
-        storageRef.child("users").child(theirUID).child("profile.png").getDownloadURL()
-            .then(function (url) {
 
-                theirProfilePics[theirUID] = url;
+        // For each friend currently in an activity this plots all the points
+        // made up to the point the web page was loaded
+        ref.child(`users`).child(theirUID).once(`value`, function (snapshot) {
 
-                // For each friend currently in an activity this plots all the points
-                // made up to the point the web page was loaded
-                ref.child(`users`).child(theirUID).once(`value`, function(snapshot) {
+            storageRef.child("users").child(theirUID).child(`profile.` + snapshot.val()[`profile_pic_format`]).getDownloadURL()
+                .then(function (url) {
+
+                    theirProfilePics[theirUID] = url;
 
                     let theirName = snapshot.val()[`name`];
                     let theirEmail = snapshot.val()[`email`];
                     let theirDevice = snapshot.val()[`device`];
+
+                    theirColors[theirUID] = snapshot.val()[`color`];
 
                     // TODO: console.log(snapshot.val()[`device`]);
 
@@ -201,13 +205,13 @@ firebase.auth().onAuthStateChanged(function(user) {
                         ref.child(`users`).child(theirUID).child(`device`)
                             .child(`current`).on(`child_added`, function (snapshot) {
 
-                            addPoint(snapshot, theirUID, map);
-                            createLine(deviceDict[theirUID], map);
+                            addPoint(snapshot, theirUID, map, theirName);
+                            createLine(deviceDict[theirUID], map, theirColors[theirUID]);
 
                             // This should fail when the user is currently tracking
                             try {
                                 document.getElementById(`not-tracking` + theirUID).innerHTML = ``;
-                            } catch (TypeError){
+                            } catch (TypeError) {
 
                             }
 
@@ -219,7 +223,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                     }
                 });
 
-            });
+        });
     });
 });
 
@@ -243,9 +247,9 @@ let changeHTMLTag = (theirUID, label, value) => {
 
     let newValue = label + ": " + value;
 
-    try{
+    try {
         document.getElementById(lower + theirUID).innerHTML = newValue;
-    } catch(TypeError){
+    } catch (TypeError) {
         //createHTMLEntry(id);
         //document.getElementById(lower + id).innerHTML = newValue;
     }
@@ -265,7 +269,6 @@ $(function () {
 let imageIsLoaded = (e) => {
 
     document.getElementById(`myImg`).src = e.target.result;
-
 
 
 };

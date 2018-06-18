@@ -14,6 +14,7 @@ let startingPosition = {lat: 37.4419, lng: -122.1430};
 
 let deviceDict = {};
 let theirProfilePics = {};
+let popUpDict = {};
 
 // Initializes the Google Map.
 const map = new google.maps.Map(document.getElementById(`map`), {
@@ -80,7 +81,11 @@ let getPast = (id) => {
     });
 };
 
-let addPoint = (snapshot, currentID, map) => {
+let addPoint = (snapshot, currentID, map, name) => {
+
+    if (popUpDict[currentID] != null) {
+        popUpDict[currentID].close();
+    }
 
     let values = getValuesFromSnapshot(snapshot);
 
@@ -99,8 +104,27 @@ let addPoint = (snapshot, currentID, map) => {
             lng: values["lon"]
         },
         map: map,
-        icon: icon
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 0
+        }
     });
+
+    let contentString = `<div id="windowcontainer"><div id="leftwindow">`;
+    contentString += `<img style="max-width: 40px; max-height: 90px;" src="` + theirProfilePics[currentID] + `">`;
+    contentString += `<p class="windowtext">Speed: ` + values['speed'] + `</p>`;
+    contentString += `</div><div id="rightwindow">`;
+    contentString += `<p style="font-weight:bold;" class="windowtext">` + name + `</p>`;
+    contentString += `<p class="windowtext">Battery: ` + values['battery'] + `</p>`;
+    contentString += `<p class="windowtext">Time: ` + formatTime(values['time']) + `</p>`;
+    contentString += `<p class="windowtext">HR: ` + `123bpm` + `</p>`;
+    contentString += `</div></div>`;
+
+    let infowindow = new google.maps.InfoWindow({
+          content: contentString
+    });
+
+    popUpDict[currentID] = infowindow;
 
     let length = deviceDict[currentID].length;
 
@@ -109,13 +133,15 @@ let addPoint = (snapshot, currentID, map) => {
         deviceDict[currentID][length - 1].setVisible(false);
     }
 
-    map.panTo(new google.maps.LatLng(values["lat"], values["lon"]));
+    popUpDict[currentID].open(map, currentMarker);
+
+    //map.panTo(new google.maps.LatLng(values["lat"], values["lon"]));
 
     deviceDict[currentID].push(currentMarker);
 
 };
 
-let createLine = (markers, map) => {
+let createLine = (markers, map, color) => {
 
     let currentPath = [];
 
@@ -128,12 +154,18 @@ let createLine = (markers, map) => {
 
     }
 
+    let currentColor;
+    if (color == null){
+        currentColor = '#0000FF'
+    }else {
+        currentColor = color;
+    }
     if (length > 0) {
 
         let currentLine = new google.maps.Polyline({
             path: currentPath,
             geodesic: true,
-            strokeColor: `#FF0000`,
+            strokeColor: currentColor,
             strokeOpacity: 1.0,
             strokeWeight: 6
         });
