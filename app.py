@@ -32,16 +32,19 @@ storageRef = firebase.storage()
 DEBUG = False
 
 
+# Gets UID and verified cookies from HTTP request
 def get_cookies(this_request):
     uid = this_request.cookies.get('uid')
     verified = this_request.cookies.get('verified')
     return uid, verified
 
 
+# Gets all of a user's information
 def get_user_entry(uid):
     return ref.child("users").child(uid).get().val()
 
 
+# Performs redirects based on user authentication, email verification, etc.
 def check_user_exists(uid, verified):
 
     user_entry = ref.child("users").child(uid).get().val()
@@ -59,6 +62,7 @@ def check_user_exists(uid, verified):
         return None
 
 
+# Main web app
 @app.route('/')
 def main_page():
     my_uid, verified = get_cookies(request)
@@ -77,6 +81,7 @@ def main_page():
     return render_template('main-app.html', uid=my_uid, my_email=my_email, has_info=has_info)
 
 
+# Creates a verified cookie for user
 @app.route('/cookies/verified/create/')
 def create_verification_cookie():
     res = make_response()
@@ -84,6 +89,7 @@ def create_verification_cookie():
     return res
 
 
+# Creates UID cookie for user
 @app.route('/cookies/uid/create/<string:uid>')
 def create_uid_cookie(uid=None):
     res = make_response()
@@ -91,6 +97,7 @@ def create_uid_cookie(uid=None):
     return res
 
 
+# Deletes cookie upon logout
 @app.route('/cookies/delete/<string:uid>')
 def delete_uid_cookie(uid=None):
     res = make_response()
@@ -99,11 +106,13 @@ def delete_uid_cookie(uid=None):
     return res
 
 
+# Serves simple static login page
 @app.route('/login/')
 def login():
     return app.send_static_file('login.html')
 
 
+# User viewing their own profile
 @app.route('/me/')
 def my_page():
     my_uid, verified = get_cookies(request)
@@ -151,6 +160,7 @@ def my_page():
                            profile_pic=profile_pic)
 
 
+# User viewing their own friends list
 @app.route('/me/friends/')
 def my_friends():
     my_uid, verified = get_cookies(request)
@@ -179,6 +189,7 @@ def my_friends():
     return render_template('friends-page.html', uid=my_uid, my_email=my_email)
 
 
+# User changing their own settings
 @app.route('/me/settings/')
 def my_settings():
     my_uid, verified = get_cookies(request)
@@ -198,6 +209,7 @@ def my_settings():
                            email=email, profile_pic=profile_pic)
 
 
+# Redirects to Strava callback URL
 @app.route('/me/strava/login/')
 def strava_login():
 
@@ -225,6 +237,7 @@ def strava_login():
         return redirect(authorize_url, code=302)
 
 
+# Loads a page that makes Firebase updates and then redirects to user page
 @app.route('/me/strava/authorized/')
 def strava_authorized():
     code = request.args.get('code')
@@ -251,6 +264,7 @@ def strava_authorized():
                            uid=my_uid)
 
 
+# Viewing another user's profile page
 @app.route('/users/<string:their_uid>/')
 def user_page(their_uid=None):
 
@@ -296,6 +310,7 @@ def user_page(their_uid=None):
         return "You are not friends with this user"
 
 
+# URL for uploading a Strava activity
 @app.route('/mobile/strava/<string:uid>/<string:file_name>/')
 def upload_activity(uid=None, file_name=None):
     try:
@@ -321,6 +336,7 @@ def upload_activity(uid=None, file_name=None):
         return json.dumps({'locationSuccess': False}), 69, {'ContentType': 'application/json'}
 
 
+# URL for sending a SMS message
 @app.route('/twilio/send/', methods=['POST'])
 def send_message():
 

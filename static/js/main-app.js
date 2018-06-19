@@ -64,11 +64,8 @@ firebase.auth().onAuthStateChanged(function (user) {
 
     // User isn't authenticated
     else {
-
         window.location.href = "/login/";
-
     }
-
 
     // Gets list of all friends
     ref.child(`friend_data`).child(userID).on(`child_added`, function (snapshot) {
