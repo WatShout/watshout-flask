@@ -10,15 +10,19 @@
 
  */
 
-let startingPosition = {lat: 37.4419, lng: -122.1430};
-
-let deviceDict = {};
-let theirProfilePics = {};
-let popUpDict = {};
+// Note about these Dicts:
+// The 'key' is always the user's UID and the
+// 'value' is in the name of the dictionary
+// e.g. profilePicsDict[UID] = url for profile picture
+let markerDict = {};
+let coordDict = {};
+let profilePicsDict = {};
+let infoWindowDict = {};
+let colorsDict = {};
 
 // Initializes the Google Map.
+let startingPosition = {lat: 37.4419, lng: -122.1430};
 const map = new google.maps.Map(document.getElementById(`map`), {
-
     zoom: 14,
     center: startingPosition,
     clickableIcons: false,
@@ -27,7 +31,7 @@ const map = new google.maps.Map(document.getElementById(`map`), {
 });
 
 
-// Gets needed values from snapshot object
+// Takes a snapshot and returns a dictionary of values
 let getValuesFromSnapshot = (snapshot) => {
 
     let values = {};
@@ -43,75 +47,42 @@ let getValuesFromSnapshot = (snapshot) => {
 
 };
 
+// Adds a point to the map
+/* Params:
+    snapshot - received from Firebase on child_added
+    theirUID - The UID of the user whose point is being plotted
+    map - global reference for maps object
+    name - the name of the user
+ */
+let addPoint = (snapshot, theirUID, map, name) => {
 
-// Performs HTML updates for every tag
-let updateHTML = (id, values, map) => {
-
-    /*
-
-    changeHTMLTag(id, `Device`, id);
-    changeHTMLTag(id, `Speed`, values["speed"]);
-    changeHTMLTag(id, `Time`, formatTime(values["time"]));
-    changeHTMLTag(id, `Battery`, round(values["battery"], 0) + `%`);
-
-    document.getElementById(`click` + id).onclick = function () {
-        map.panTo({lat: values["lat"], lng: values["lon"]});
-    };
-
-    */
-
-};
-
-let getPast = (id) => {
-
-    ref.child(`users`).child(id).child(`device`).child(`past`).orderByChild(`time`).limitToLast(1).once("value", function(snapshot) {
-
-        let key = Object.keys(snapshot.val());
-
-        let path = snapshot.child(key).child(`path`);
-
-        path.forEach(function (childSnapshot) {
-
-            addPoint(childSnapshot, id, map);
-
-            // Once the button is clicked once, it doesn't do anything
-            document.getElementById(`past` + id).onclick = function() {};
-
-        })
-    });
-};
-
-let addPoint = (snapshot, currentID, map, name) => {
-
-    if (popUpDict[currentID] != null) {
-        popUpDict[currentID].close();
+    // This makes sure every user only has one InfoWindow at once
+    if (infoWindowDict[theirUID] != null) {
+        infoWindowDict[theirUID].close();
     }
 
     let values = getValuesFromSnapshot(snapshot);
 
-    //updateHTML(currentID, values, map);
-
-    let icon = {
-        url: theirProfilePics[currentID],
-        scaledSize: new google.maps.Size(30, 30) // scaled size
-
+    let currentLocation = {
+        lat: values["lat"],
+        lng: values["lon"]
     };
 
-    // Adds marker to map
     let currentMarker = new google.maps.Marker({
-        position: {
-            lat: values["lat"],
-            lng: values["lon"]
-        },
+        position: currentLocation,
         map: map,
+        // No icon
         icon: {
             path: google.maps.SymbolPath.CIRCLE,
             scale: 0
         }
     });
 
+    coordDict[theirUID].push(currentLocation);
+
+    // This is a WIP, it's good enough for now
     let contentString = `<div id="windowcontainer"><div id="leftwindow">`;
-    contentString += `<img style="max-width: 40px; max-height: 90px;" src="` + theirProfilePics[currentID] + `">`;
+    contentString += `<img style="max-width: 40px; max-height: 90px;" src="` + profilePicsDict[theirUID] + `">`;
     contentString += `<p class="windowtext">Speed: ` + values['speed'] + `</p>`;
     contentString += `</div><div id="rightwindow">`;
     contentString += `<p style="font-weight:bold;" class="windowtext">` + name + `</p>`;
@@ -120,54 +91,49 @@ let addPoint = (snapshot, currentID, map, name) => {
     contentString += `<p class="windowtext">HR: ` + `123bpm` + `</p>`;
     contentString += `</div></div>`;
 
-    let infowindow = new google.maps.InfoWindow({
+    // Set user's current InfoWindow then opens it
+    infoWindowDict[theirUID] = new google.maps.InfoWindow({
           content: contentString
     });
+    infoWindowDict[theirUID].open(map, currentMarker);
 
-    popUpDict[currentID] = infowindow;
+    let length = markerDict[theirUID].length;
 
-    let length = deviceDict[currentID].length;
-
-    // If list only has one object, then previous is the same as current
+    // 'Hides' all previous markers by making the previous marker invisible
     if (length !== 0) {
-        deviceDict[currentID][length - 1].setVisible(false);
+        markerDict[theirUID][length - 1].setVisible(false);
     }
 
-    popUpDict[currentID].open(map, currentMarker);
-
-    //map.panTo(new google.maps.LatLng(values["lat"], values["lon"]));
-
-    deviceDict[currentID].push(currentMarker);
+    // Pushes current marker to
+    markerDict[theirUID].push(currentMarker);
 
 };
 
-let createLine = (markers, map, color) => {
-
-    let currentPath = [];
-
-    for (let i = 0; i < markers.length; i++){
-
-        currentPath.push({
-            lat: markers[i].getPosition().lat(),
-            lng: markers[i].getPosition().lng()
-        });
-
-    }
+// Creates the polyline showing a user's 'path'
+/* Params:
+    coordList - A list of coordinate (LatLng) values
+    map - Global reference for map object
+    color - the color of the line to be plotted
+ */
+let createLine = (coordList, theirUID, map) => {
 
     let currentColor;
-    if (color == null){
+
+    // If a color isn't specified then line is blue
+    if (colorsDict[theirUID] == null){
         currentColor = '#0000FF'
-    }else {
+    } else {
         currentColor = color;
     }
-    if (length > 0) {
+
+    if (coordList.length > 0) {
 
         let currentLine = new google.maps.Polyline({
-            path: currentPath,
+            path: coordList,
             geodesic: true,
             strokeColor: currentColor,
             strokeOpacity: 1.0,
-            strokeWeight: 6
+            strokeWeight: 8
         });
 
         currentLine.setMap(map);
@@ -190,9 +156,9 @@ let formatTime = (milliseconds) => {
 };
 
 
-
+// Rounds a number to specified number of decimals
 let round = (value, decimals) => {
 
-    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+    return Number(Math.round(value + `e` + decimals) + `e-` + decimals);
 
 };

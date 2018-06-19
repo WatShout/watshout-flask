@@ -315,17 +315,17 @@ def upload_activity(uid=None, file_name=None):
 
         client.upload_activity(parsed_data, 'gpx')
 
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+        return json.dumps({'locationSuccess': True}), 200, {'ContentType': 'application/json'}
     except Exception as e:
         print(e)
-        return json.dumps({'success': False}), 69, {'ContentType': 'application/json'}
+        return json.dumps({'locationSuccess': False}), 69, {'ContentType': 'application/json'}
 
 
 @app.route('/twilio/send/', methods=['POST'])
 def send_message():
 
     if request.method == 'GET':
-        return json.dumps({'success': False}), 405, {'ContentType': 'application/json'}
+        return json.dumps({'locationSuccess': False}), 405, {'ContentType': 'application/json'}
 
     try:
         message = request.headers.get('message')
@@ -338,10 +338,10 @@ def send_message():
             to=to_number
         )
 
-        return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+        return json.dumps({'locationSuccess': True}), 200, {'ContentType': 'application/json'}
 
     except Exception:
-        return json.dumps({'success': False}), 500, {'ContentType': 'application/json'}
+        return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
 if __name__ == '__main__':
