@@ -1,6 +1,7 @@
 
 let myUID = document.getElementById(`uid`).getAttribute(`content`);
 
+// TODO: Require confirmation? Should this even be a feature...
 let changeEmail = () => {
 
     let user = firebase.auth().currentUser;
@@ -30,44 +31,54 @@ let changeEmail = () => {
 };
 
 let changeProfilePic = () => {
+
     const profilePic = $('#photo').get(0).files[0];
     let oldName;
 
     if (profilePic != null){
 
+        // This hopefully always grabs the file extension correctly
         const newTypeExtension = profilePic.type.split(`/`)[1].toLowerCase();
 
         if (newTypeExtension !== `png` && newTypeExtension !== `jpg` && newTypeExtension !== `jpeg`){
-            alert(`Wrong image format!`);
+            alert(newTypeExtension + ` is not a supported format.`);
             return;
         }
 
+        // First we get the file extension for the user's current (old) profile picture
         ref.child(`users`).child(myUID).child(`profile_pic_format`).once(`value`, function (snapshot) {
 
             const oldTypeExtension = snapshot.val();
-
             oldName = `profile.` + oldTypeExtension;
 
-        }).then(function () {
+        })
+            // After we get the old profile picture name we delete it
+            .then(function () {
 
             const thisStorageRef = storageRef.child(`users`).child(myUID);
 
-            thisStorageRef.child(oldName).delete().then(function() {
+            thisStorageRef.child(oldName).delete()
+
+            // After deleting, we upload the new picture
+                .then(function() {
 
                 const newName = `profile.` + newTypeExtension;
                 const metadata = { contentType: profilePic.type };
 
-                thisStorageRef.child(newName).put(profilePic, metadata).then(function() {
+                thisStorageRef.child(newName).put(profilePic, metadata)
 
-                    console.log(`uploaded!`);
+                    // After uploading the picture we update their profile pic format DB entry
+                    .then(function() {
 
-                }).then(function () {
-
-                    ref.child(`users`).child(myUID).child(`profile_pic_format`).set(newTypeExtension);
+                        ref.child(`users`).child(myUID).child(`profile_pic_format`).set(newTypeExtension);
+                        console.log(`uploaded!`);
 
                 })
             })
         });
+    }
+    else {
+        alert(`No picture uploaded!`);
     }
 };
 
@@ -79,7 +90,9 @@ let passwordReset = () => {
     let emailAddress = user.email;
 
     auth.sendPasswordResetEmail(emailAddress).then(function() {
-      // Email sent.
+
+        alert(`Email sent!`);
+
     }).catch(function(error) {
 
         console.log(error);

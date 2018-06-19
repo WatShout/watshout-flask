@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/static/css/profile.css">
     <link rel="stylesheet" href="/static/css/pills.min.css">
 
-    <title>Settings | WatShout</title>
+    <title>settings | watshout</title>
 
 </head>
 <body>
@@ -55,14 +55,8 @@
             <a href="/me/">Back to profile</a>
 
             <p id="currentemail">Current email: {{ email }}</p>
-            <br />
-            <br />
             <input id="newemail" type="text" placeholder="New email...">
-            <br />
-            <br />
             <button type="submit" onclick="changeEmail()">Change email</button>
-            <br />
-            <br />
 
             {% if profile_pic %}
                 <img id="myImg" src={{ profile_pic }} />
@@ -70,27 +64,15 @@
                 <img id="myImg" src="#" />
             {% endif %}
 
-            <br />
-            <br />
             Please only .png, .jpg, .jpeg
-            <br />
-            <br />
             <input id="photo" type='file' />
-            <br />
-            <br />
             <input type="button" value="Change picture" onclick="changeProfilePic()">
-            <br />
-            <br />
-            <input value="Reset password" type="button" onclick="passwordReset()">
+            <input value="Send password reset email" type="button" onclick="passwordReset()">
 
         </div>
-
-
     </div>
 
-
 </div>
-
 
 </div>
 
