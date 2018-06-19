@@ -9,12 +9,9 @@
 
  */
 
-let getTheirUID = () => document.getElementById(`uid`).getAttribute(`content`);
-
-let theirUID = getTheirUID();
+let theirUID = document.getElementById(`uid`).getAttribute(`content`);
 
 let startingPosition = {lat: 37.4419, lng: -122.1430};
-
 const map = new google.maps.Map(document.getElementById(`my-map`), {
 
     zoom: 1,
@@ -24,6 +21,7 @@ const map = new google.maps.Map(document.getElementById(`my-map`), {
 
 });
 
+// Gets a list of a user's activity IDs
 let getActivityIDs = () => {
 
     try {
@@ -36,7 +34,8 @@ let getActivityIDs = () => {
 
 let activity_ids = getActivityIDs();
 
-
+// Returns an array of all activity IDs because the Jinja2 template returns one long string
+// ['that', 'looks', 'like', 'this']
 let getActivityList = (linkString) => {
 
     // Removes whitespace
@@ -62,7 +61,7 @@ let getActivityList = (linkString) => {
 
 let addPreviousActivities = (id, activityArray) => {
 
-    pathShown = {};
+    let pathShown = {};
 
     for (let i = 0; i < activityArray.length; i++){
 
@@ -85,7 +84,7 @@ let addPreviousActivities = (id, activityArray) => {
 
 };
 
-
+// Overlays the path for an activity on the map
 let createPath = (snapshot, event_name) => {
 
     if (!pathShown[event_name]){
@@ -149,6 +148,7 @@ let getThisActivity = (id, event_name) => {
 
 };
 
+// Unlinks Strava account and re-adds the 'link with Strava' button
 let unlinkStrava = () => {
 
     ref.child(`users`).child(myUID).child(`strava_token`).once(`value`, function(snapshot) {
@@ -165,6 +165,7 @@ let unlinkStrava = () => {
 
 };
 
+// Code only runs if the user has more than 0 activities
 if (activity_ids.length !== 0){
     addPreviousActivities(theirUID, getActivityList(activity_ids));
 }

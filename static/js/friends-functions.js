@@ -1,14 +1,17 @@
 
+// Gets the current user's ID from the meta tag in Jinja2
 let myUID = document.getElementById(`uid`).getAttribute(`content`);
 
+// Removes a child from the DOM
 let removeChild = (id) => {
     let element = document.getElementById(id);
     element.parentNode.removeChild(element);
 };
 
+// Populates the 'pending' friend request list
 let getFriendRequests = () => {
 
-
+    // User has pending friend requests
     ref.child(`friend_requests`).child(myUID).orderByChild(`request_type`).equalTo(`received`).on(`child_added`, function (snapshot) {
 
         const theirUID = snapshot.key;
@@ -19,9 +22,9 @@ let getFriendRequests = () => {
             document.getElementById(`pending`).innerHTML += confirmLink + `<br />`;
 
         });
-
     });
 
+    // If friend request to user is revoked
     ref.child(`friend_requests`).child(myUID).orderByChild(`request_type`).equalTo(`received`).on(`child_removed`, function (snapshot) {
 
         let theirUID = snapshot.key;
@@ -29,12 +32,9 @@ let getFriendRequests = () => {
 
     });
 
-
 };
 
 let getFriendsList = () => {
-
-    let allHTML = ``;
 
     ref.child(`friend_data`).child(myUID).on(`child_added`, function (snapshot) {
 
@@ -42,18 +42,9 @@ let getFriendsList = () => {
 
         ref.child(`users`).child(theirUID).child(`email`).once(`value`, function (snapshot) {
 
-            theirEmail = snapshot.val();
+            let theirEmail = snapshot.val();
 
-            let thisLink = `<a id="` + theirUID + `" href="/users/` + theirUID + `">` + theirEmail + `</a><br />`;
-
-            // This should only run on friends page
-            try {
-                document.getElementById(`accepted`).innerHTML += thisLink;
-            } catch (TypeError){
-
-            }
-
-            allHTML += thisLink;
+            document.getElementById(`accepted`).innerHTML += theirEmail + `<br />`;
 
         });
     });
@@ -68,7 +59,7 @@ let getFriendsList = () => {
 
 };
 
-
+// Sends a friend request
 let askFriend = () => {
 
     let friendEmail = document.getElementById(`search`).value;
@@ -94,6 +85,7 @@ let askFriend = () => {
 
 };
 
+// Happens when user clicks on pending friend request link
 let confirmFriend = (theirUID) => {
 
     let currentTime = Date.now();

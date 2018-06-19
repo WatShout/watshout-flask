@@ -15,9 +15,9 @@
 // FirebaseUI config.
 let uiConfig = {
 
+    // Goes to main app upon auth confirmation
     signInSuccessUrl: `/`,
     signInOptions: [
-        // Leave the lines as is for the providers you want to offer your users.
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID
     ],
@@ -28,8 +28,6 @@ let uiConfig = {
 
 // Initialize the FirebaseUI Widget using Firebase.
 let ui = new firebaseui.auth.AuthUI(firebase.auth());
-
-// The start method will wait until the DOM is loaded.
 ui.start('#firebaseui-auth-container', uiConfig);
 
 let initApp = () => {
@@ -39,10 +37,11 @@ let initApp = () => {
 
         if (user) {
 
-            // User is signed in (signInSuccessUrl is used)
-
             let uid = user.uid;
 
+            // If the user is already verified then we first create the 'verified' cookie.
+            // After the 'verified' cookie is received, we create the 'uid' cookie. After that
+            // is received we redirect to the main web app
             if (user.emailVerified){
 
                 $.ajax({
@@ -51,7 +50,6 @@ let initApp = () => {
                     'type' : 'GET',
 
                     'success' : function() {
-                        //console.log(`Created cookie`);
 
                         $.ajax({
 
@@ -73,7 +71,11 @@ let initApp = () => {
                     }
                 });
 
-            } else {
+            }
+
+            // User is not verified. Their 'uid' cookie is created but they will need to follow instructions
+            // to email verify their account. This process takes place on the main webapp page
+            else {
                 $.ajax({
 
                     'url' : '/cookies/uid/create/' + uid,
@@ -88,12 +90,9 @@ let initApp = () => {
                     }
                 });
             }
-
         }
     });
 };
-
-
 
 window.onload = function() {
     initApp();

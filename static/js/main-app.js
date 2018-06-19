@@ -54,14 +54,12 @@ firebase.auth().onAuthStateChanged(function (user) {
                     console.log(`error`)
                 }
             });
-
         }
 
         // If user is verified but doesn't have info, open input nav
         if (hasInfo === `no`) {
             openNav();
         }
-
     }
 
     // User isn't authenticated
@@ -108,7 +106,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
                             // This should fail when the user is currently tracking
                             try {
-                                document.getElementById(`not-tracking` + theirUID).innerHTML = ``;
+                                document.getElementById(`not-tracking` + theirUID).innerHTML = theirName;
                             } catch (TypeError) {
 
                             }
@@ -124,15 +122,13 @@ firebase.auth().onAuthStateChanged(function (user) {
     });
 });
 
-let createHTMLEntry = (theirName, theirUID, theirEmail) => {
+let createHTMLEntry = (theirName, theirUID) => {
 
     return `<div class="deviceinfo" id="` + theirUID + `">` +
-        `<a href="` + `/users/` + theirUID + `">` + theirName + `</a>` + ` (` + theirEmail + `)` +
-        `\n<div id="not-tracking` + theirUID + `">User is not tracking right now</div>` +
+        `\n<div id="not-tracking` + theirUID + `">` + theirName + ` is not tracking right now</div>` +
         `\n<div id="battery` + theirUID + `"></div>` +
         `\n<div id="speed` + theirUID + `"></div>` +
         `</div>`;
-
 };
 
 let changeHTMLTag = (theirUID, label, value) => {
@@ -142,8 +138,7 @@ let changeHTMLTag = (theirUID, label, value) => {
 
     try {
         document.getElementById(lower + theirUID).innerHTML = newValue;
-    } catch (TypeError) {
-    }
+    } catch (TypeError) {}
 };
 
 // Form handler for initial visit information input
@@ -214,7 +209,7 @@ let locationSuccess = (pos) => {
 let panCurrentLocation = () => {
 
     if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(locationSuccess);
+        navigator.geolocation.getCurrentPosition(locationSuccess);
     } else {
         console.log("Not supported");
     }
@@ -245,6 +240,5 @@ $(function () {
 let imageIsLoaded = (e) => {
 
     document.getElementById(`myImg`).src = e.target.result;
-
 
 };
