@@ -150,7 +150,7 @@ def my_page():
     try:
         strava_token = ref.child("users").child(my_uid).get().val()['strava_token']
 
-    # User hasn't authenticated with Strava
+    # User hasn't authenticated with Strava, throw an error
     except KeyError:
         strava_token = "no"
         print("KeyError: No Strava connection")
