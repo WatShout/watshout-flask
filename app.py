@@ -5,6 +5,10 @@ import pyrebase
 from flask import Flask, render_template, request, redirect, url_for, make_response
 from stravalib.client import Client
 
+from pyfcm import FCMNotification
+
+push_service = FCMNotification(api_key="AAAAhTZslrE:APA91bGk1e8XXWROc6sCBZtNX2RAXpXd1BQauM4d2h3ACHf33ypAYBf70oODEwqOwnhPVNvgXRPGqZ0TEMQk7RiJiACZXSdr0Cp5SPwpeEmk2FJVrvDVqxTck5svaw27Sft4y1cSmUs5")
+
 client = Client()
 access_token = None
 
@@ -308,6 +312,32 @@ def user_page(their_uid=None):
                                activity_ids=activity_ids, profile_pic=profile_pic)
     else:
         return "You are not friends with this user"
+
+
+# Sending FCM data payloads
+@app.route('/notifications/data/', methods=['POST'])
+def send_data_notification():
+
+    try:
+        uid = request.form["uid"]
+
+        token = ref.child("users").child(uid).child("firebase_messaging_token").get().val()
+
+        registration_id = token
+
+        message = request.form["message"]
+
+        # Sending a notification with data message payload
+        data_message = {
+            "message": message
+        }
+
+        result = push_service.single_device_data_message(registration_id=registration_id, data_message=data_message)
+
+        return json.dumps({'locationSuccess': True}), 200, {'ContentType': 'application/json'}
+
+    except Exception:
+        return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
 # URL for uploading a Strava activity
