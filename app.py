@@ -5,6 +5,8 @@ import pyrebase
 from urllib.request import urlopen
 from flask import Flask, render_template, request, redirect, url_for, make_response
 from stravalib.client import Client
+import xml.etree.ElementTree as ET
+import xmltodict
 
 from pyfcm import FCMNotification
 
@@ -341,6 +343,45 @@ def send_data_notification():
         return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
+@app.route('/getmapurl/')
+def get_map_url():
+    uid = "Kgqair8dxKZnsE1mReMU3LY5Mmx2"
+    time_stamp = "thu-jun-21-05-57-37-gmt-00-00-2018"
+    file_name = time_stamp + ".gpx"
+
+    url = storageRef.child("users").child(uid).child("gpx").child(file_name).get_url(None)
+
+    url_response = urllib.request.urlopen(url)
+    data = url_response.read()
+    parsed_data = data.decode('utf-8')
+
+    gpx_dict = xmltodict.parse(parsed_data)
+
+    lats = []
+    lons = []
+
+    for each in gpx_dict['gpx']['trk']['trkseg']['trkpt']:
+        lats.append(float(each['@lat']))
+        lons.append(float(each['@lon']))
+
+    coords = [[lat, lon] for lat, lon in zip(lats, lons)]
+
+    # The API seems to automatically calculate the center
+    # avg_lat = sum(lats) / len(lats)
+    # avg_lon = sum(lons) / len(lons)
+    # center = [[avg_lat, avg_lon]]
+
+    base_url = "https://maps.googleapis.com/maps/api/staticmap?zoom=14&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&sensor=true"
+
+    poly_path = "&path=enc:" + polyline.encode(coords, 5)
+
+    final_url = base_url + poly_path
+
+    ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(final_url)
+
+    return final_url
+
+
 # URL for uploading a Strava activity
 @app.route('/mobile/strava/<string:uid>/<string:file_name>/')
 def upload_activity(uid=None, file_name=None):
@@ -399,8 +440,7 @@ def send_json():
         "strings": [
 
             {"title": "richard",
-             "image": "https://maps.googleapis.com/maps/api/staticmap?center=_flwF~g|`Vzoom=13&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&path=enc:_p~iF~ps|U_ulL~ugC_hgN~eq`@&sensor=true"},
-
+             "image": "https://maps.googleapis.com/maps/api/staticmap?zoom=14&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&sensor=true&path=enc:ctceF~fajV|j@?D?"},
             {"title": "erlich",
              "image": "https://maps.googleapis.com/maps/api/staticmap?center=_flwF~g|`Vzoom=13&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&path=enc:_p~iF~ps|U_ulL~ugC_hgN~eq`@&sensor=true"},
 
@@ -419,11 +459,6 @@ def send_json():
     json_data = json.dumps(data)
 
     return json_data
-
-
-@app.route('/polyline/')
-def return_polyline():
-    return polyline.encode([(38.5, -120.2), (40.7, -120.9), (43.2, -126.4)], 5)
 
 
 if __name__ == '__main__':
