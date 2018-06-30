@@ -3,7 +3,6 @@ import urllib.request
 import polyline
 import pyrebase
 from urllib.request import urlopen
-from PIL import Image
 from flask import Flask, render_template, request, redirect, url_for, make_response
 from stravalib.client import Client
 
@@ -424,12 +423,7 @@ def send_json():
 
 @app.route('/polyline/')
 def return_polyline():
-    #return polyline.encode([(38.5, -120.2), (40.7, -120.9), (43.2, -126.4)], 5)
-
-    file = urlopen("https://maps.googleapis.com/maps/api/staticmap?center=_flwF~g|`Vzoom=13&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&path=enc:_p~iF~ps|U_ulL~ugC_hgN~eq`@&sensor=true")
-    img = Image.open(file)
-    img.show()
-    return img
+    return polyline.encode([(38.5, -120.2), (40.7, -120.9), (43.2, -126.4)], 5)
 
 
 if __name__ == '__main__':
