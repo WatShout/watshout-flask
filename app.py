@@ -435,7 +435,7 @@ def send_message():
         return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
-@app.route('/maps/download/<string:uid>', methods=['GET'])
+@app.route('/maps/download/<string:uid>/', methods=['GET'])
 def send_json(uid=None):
 
     friends = list(ref.child("friend_data").child(uid).get().val().keys())
