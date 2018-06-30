@@ -343,8 +343,8 @@ def send_data_notification():
         return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
-@app.route('/getmapurl/')
-def get_map_url():
+@app.route('/maps/create')
+def get_map_url(uid=None):
 
     print(request.form["uid"])
 
@@ -435,8 +435,8 @@ def send_message():
         return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
-@app.route('/json/', methods=['GET'])
-def send_json():
+@app.route('/maps/download/<string:uid>', methods=['GET'])
+def send_json(uid=None):
 
     data = {
 
