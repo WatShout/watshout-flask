@@ -472,7 +472,8 @@ def send_json(uid=None):
         data["activities"].append(
             {
                 "name": value[THEIR_NAME],
-                "image": value[MAP_LINK]
+                "image": value[MAP_LINK],
+                "time": value[TIME]
             }
         )
 
