@@ -438,26 +438,38 @@ def send_message():
 @app.route('/maps/download/<string:uid>', methods=['GET'])
 def send_json(uid=None):
 
+    friends = list(ref.child("friend_data").child(uid).get().val().keys())
+
+    activities_dict = {}
+
+    for theirUID in friends:
+        activities = ref.child("users").child(theirUID)\
+            .child("device").child("past")\
+            .order_by_child("time").limit_to_last(5).get().val()
+
+        if activities is not None:
+            items = list(activities.items())
+            activity_id = items[0][0]
+            time = items[0][1]['time']
+            map_link = items[0][1]['map_link']
+
+            activities_dict[activity_id] = [theirUID, time, map_link]
+
+    # TODO: Sort dict, limit to 10
+
     data = {
-
-        "strings": [
-
-            {"title": "richard",
-             "image": "https://maps.googleapis.com/maps/api/staticmap?zoom=14&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&sensor=true&path=enc:ctceF~fajV|j@?D?"},
-            {"title": "erlich",
-             "image": "https://maps.googleapis.com/maps/api/staticmap?center=_flwF~g|`Vzoom=13&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&path=enc:_p~iF~ps|U_ulL~ugC_hgN~eq`@&sensor=true"},
-
-            {"title": "dinesh",
-             "image": "https://maps.googleapis.com/maps/api/staticmap?center=_flwF~g|`Vzoom=13&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&path=enc:_p~iF~ps|U_ulL~ugC_hgN~eq`@&sensor=true"},
-
-            {"title": "gilfoyle",
-             "image": "https://maps.googleapis.com/maps/api/staticmap?center=_flwF~g|`Vzoom=13&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&path=enc:_p~iF~ps|U_ulL~ugC_hgN~eq`@&sensor=true"},
-
-            {"title": "jared",
-             "image": "https://maps.googleapis.com/maps/api/staticmap?center=_flwF~g|`Vzoom=13&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&path=enc:_p~iF~ps|U_ulL~ugC_hgN~eq`@&sensor=true"}
-
-        ]
+        "activities": []
     }
+
+    for key, value in activities_dict.items():
+        data["activities"].append(
+
+            {
+                "name": value[0],
+                "image": value[2]
+            }
+
+        )
 
     json_data = json.dumps(data)
 
