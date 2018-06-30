@@ -345,6 +345,9 @@ def send_data_notification():
 
 @app.route('/getmapurl/')
 def get_map_url():
+
+    print(request.form["uid"])
+
     uid = "Kgqair8dxKZnsE1mReMU3LY5Mmx2"
     time_stamp = "thu-jun-21-05-57-37-gmt-00-00-2018"
     file_name = time_stamp + ".gpx"
