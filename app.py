@@ -390,5 +390,25 @@ def send_message():
         return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
+@app.route('/json/', methods=['GET'])
+def send_json():
+
+    data = {
+
+        "strings": [
+
+            {"title": "richard"},
+            {"title": "erlich"},
+            {"title": "dinesh"},
+            {"title": "gilfoyle"},
+            {"title": "jared"}
+        ]
+    }
+
+    json_data = json.dumps(data)
+
+    return json_data
+
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=80, debug=True)
