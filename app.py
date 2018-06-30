@@ -470,12 +470,10 @@ def send_json(uid=None):
 
     for key, value in activities_dict.items():
         data["activities"].append(
-
             {
                 "name": value[THEIR_NAME],
                 "image": value[MAP_LINK]
             }
-
         )
 
     json_data = json.dumps(data)
