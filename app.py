@@ -343,13 +343,11 @@ def send_data_notification():
         return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
-@app.route('/maps/create')
-def get_map_url(uid=None):
+@app.route('/create-map/', methods=['POST'])
+def get_map_url():
 
-    print(request.form["uid"])
-
-    uid = "Kgqair8dxKZnsE1mReMU3LY5Mmx2"
-    time_stamp = "thu-jun-21-05-57-37-gmt-00-00-2018"
+    uid = request.form['uid']
+    time_stamp = request.form['time_stamp']
     file_name = time_stamp + ".gpx"
 
     url = storageRef.child("users").child(uid).child("gpx").child(file_name).get_url(None)
