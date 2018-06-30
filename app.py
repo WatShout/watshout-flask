@@ -438,6 +438,11 @@ def send_message():
 @app.route('/maps/download/<string:uid>/', methods=['GET'])
 def send_json(uid=None):
 
+    THEIR_UID = 0
+    TIME = 1
+    MAP_LINK = 2
+    THEIR_NAME = 3
+
     friends = list(ref.child("friend_data").child(uid).get().val().keys())
 
     activities_dict = {}
@@ -447,13 +452,15 @@ def send_json(uid=None):
             .child("device").child("past")\
             .order_by_child("time").limit_to_last(5).get().val()
 
+        their_name = ref.child("users").child(theirUID).child("name").get().val()
+
         if activities is not None:
             items = list(activities.items())
             activity_id = items[0][0]
             time = items[0][1]['time']
             map_link = items[0][1]['map_link']
 
-            activities_dict[activity_id] = [theirUID, time, map_link]
+            activities_dict[activity_id] = [theirUID, time, map_link, their_name]
 
     # TODO: Sort dict, limit to 10
 
@@ -465,8 +472,8 @@ def send_json(uid=None):
         data["activities"].append(
 
             {
-                "name": value[0],
-                "image": value[2]
+                "name": value[THEIR_NAME],
+                "image": value[MAP_LINK]
             }
 
         )
