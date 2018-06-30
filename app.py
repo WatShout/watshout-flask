@@ -453,14 +453,16 @@ def send_json(uid=None):
         their_name = ref.child("users").child(theirUID).child("name").get().val()
 
         if activities is not None:
-            items = list(activities.items())
-            activity_id = items[0][0]
-            time = items[0][1]['time']
-            map_link = items[0][1]['map_link']
+            for key, value in activities.items():
+                activity_id = key
+                time = value['time']
+                map_link = value['map_link']
 
-            activities_dict[activity_id] = [theirUID, time, map_link, their_name]
+                activities_dict[activity_id] = [theirUID, time, map_link, their_name]
 
     # TODO: Sort dict, limit to 10
+
+    print(activities_dict)
 
     data = {
         "activities": []
