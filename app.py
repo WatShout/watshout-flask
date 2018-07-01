@@ -7,6 +7,7 @@ from flask import Flask, render_template, request, redirect, url_for, make_respo
 from stravalib.client import Client
 import xml.etree.ElementTree as ET
 import xmltodict
+import collections
 
 from pyfcm import FCMNotification
 
@@ -451,6 +452,8 @@ def send_json(uid=None):
             .order_by_child("time").limit_to_last(5).get().val()
 
         their_name = ref.child("users").child(theirUID).child("name").get().val()
+
+        activities = collections.OrderedDict(reversed(list(activities.items())))
 
         if activities is not None:
             for key, value in activities.items():
