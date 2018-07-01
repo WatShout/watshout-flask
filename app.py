@@ -437,53 +437,62 @@ def send_message():
 @app.route('/maps/download/<string:uid>/', methods=['GET'])
 def send_json(uid=None):
 
-    THEIR_UID = 0
-    TIME = 1
-    MAP_LINK = 2
-    THEIR_NAME = 3
-
     friends = list(ref.child("friend_data").child(uid).get().val().keys())
 
     activities_dict = {}
 
-    for theirUID in friends:
-        activities = ref.child("users").child(theirUID)\
+    for their_uid in friends:
+        snapshot = ref.child("users").child(their_uid)\
             .child("device").child("past")\
             .order_by_child("time").limit_to_last(5).get().val()
 
-        their_name = ref.child("users").child(theirUID).child("name").get().val()
+        their_name = ref.child("users").child(their_uid).child("name").get().val()
 
-        if activities is not None:
+        if snapshot is not None:
+            activities_dict.update(parse_activity_snapshot(snapshot, their_uid, their_name))
 
-            activities = collections.OrderedDict(reversed(list(activities.items())))
+    # TODO: Sort activities_dict
 
-            for key, value in activities.items():
-                activity_id = key
-                time = value['time']
-                map_link = value['map_link']
+    json_data = create_json_activities_list(activities_dict)
 
-                activities_dict[activity_id] = [theirUID, time, map_link, their_name]
+    return json_data
 
-    # TODO: Sort dict, limit to 10
 
-    print(activities_dict)
+def parse_activity_snapshot(snapshot, their_uid, their_name):
 
-    data = {
-        "activities": []
-    }
+    activities_dict = {}
+
+    snapshot = collections.OrderedDict(reversed(list(snapshot.items())))
+
+    for key, value in snapshot.items():
+        activity_id = key
+        time = value['time']
+        map_link = value['map_link']
+
+        activities_dict[activity_id] = [their_uid, time, map_link, their_name]
+
+    return activities_dict
+
+
+def create_json_activities_list(activities_dict):
+
+    their_uid = 0
+    time = 1
+    map_link = 2
+    their_name = 3
+
+    data = {"activities": []}
 
     for key, value in activities_dict.items():
         data["activities"].append(
             {
-                "name": value[THEIR_NAME],
-                "image": value[MAP_LINK],
-                "time": value[TIME]
+                "name": value[their_name],
+                "image": value[map_link],
+                "time": value[time]
             }
         )
 
-    json_data = json.dumps(data)
-
-    return json_data
+    return json.dumps(data)
 
 
 if __name__ == '__main__':
