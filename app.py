@@ -453,9 +453,10 @@ def send_json(uid=None):
 
         their_name = ref.child("users").child(theirUID).child("name").get().val()
 
-        activities = collections.OrderedDict(reversed(list(activities.items())))
-
         if activities is not None:
+
+            activities = collections.OrderedDict(reversed(list(activities.items())))
+
             for key, value in activities.items():
                 activity_id = key
                 time = value['time']
