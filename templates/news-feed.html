@@ -1,5 +1,5 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -8,28 +8,23 @@
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
-
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
 
     <script defer src="/static/js/config.js"></script>
-
-    <script defer src="/static/js/friends-functions.js"></script>
+    <script defer src="/static/js/news-feed.js"></script>
 
     <link rel="stylesheet" href="/static/css/profile.css">
     <link rel="stylesheet" href="/static/css/pills.min.css">
 
     <link rel="icon" href="/static/res/favicon.png" type="image/gif">
-    <title>friends | watshout</title>
+    <title>news feed | watshout</title>
 
 </head>
-
-
 <body>
 
 {% if uid %}
     <meta id="uid" content="{{ uid }}">
 {% endif %}
-
-<div id="wrapper">
 
     <div class="topnav">
 
@@ -45,41 +40,23 @@
 
         </div>
 
-        {% if my_email %}
-        <a href="javascript:signOut();" id="logout">{{ my_email }}</a>
+        {% if email %}
+            <a href="javascript:signOut();" id="logout">{{ email }}</a>
         {% endif %}
 
     </div>
 
-    <div id="main-row">
+        <div style="text-align: center;">
 
-        <div id="accepted">
-            Current Friends
-            <br />
-
-            <div id="friendreplace">
-
-                <!--
-
-                {% for item in friend_links %}
-                 {{ item|safe }}
+            <table>
+                {% for activity in activities %}
+                    <tr>
+                        <td>{{ activity['name'] }}</td>
+                        <td><img src="{{ activity["image"] }}"/></td>
+                    </tr>
                 {% endfor %}
-                -->
-
-            </div>
-
+            </table>
         </div>
-
-        <div id="pending">
-            Pending Friend Requests
-            <br />
-        </div>
-
-    </div>
-
-</div>
-
 
 </body>
-
 </html>

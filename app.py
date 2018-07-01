@@ -2,6 +2,7 @@ import json
 import urllib.request
 import polyline
 import pyrebase
+import requests
 from urllib.request import urlopen
 from flask import Flask, render_template, request, redirect, url_for, make_response
 from stravalib.client import Client
@@ -195,6 +196,22 @@ def my_friends():
         friend_links = []
 
     return render_template('friends-page.html', uid=my_uid, my_email=my_email)
+
+
+# News feed
+@app.route('/feed/')
+def news_feed():
+    my_uid, verified = get_cookies(request)
+    redirect_link = check_user_exists(my_uid, verified)
+
+    if redirect_link is not None:
+        return redirect_link
+
+    my_user_entry = get_user_entry(my_uid)
+
+    json_data = requests.get('https://watshout.herokuapp.com/maps/download/' + my_uid + '/').json()["activities"]
+
+    return render_template('news-feed.html', uid=my_uid, activities=json_data, email=my_user_entry["email"])
 
 
 # User changing their own settings
@@ -455,7 +472,7 @@ def send_json(uid=None):
 
     json_data = create_json_activities_list(activities_dict)
 
-    return json_data
+    return json_data, 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
 def parse_activity_snapshot(snapshot, their_uid, their_name):
