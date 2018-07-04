@@ -49,12 +49,16 @@
         <div style="text-align: center;">
 
             <table>
-                {% for activity in activities %}
-                    <tr>
-                        <td>{{ activity['name'] }}</td>
-                        <td><img src="{{ activity["image"] }}"/></td>
-                    </tr>
-                {% endfor %}
+                {% if activities %}
+                    {% for activity in activities %}
+                        <tr>
+                            <td>{{ activity['name'] }}</td>
+                            <td><img src="{{ activity["image"] }}"/></td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <p>Your friends have no previous activities</p>
+                {% endif %}
             </table>
         </div>
 
