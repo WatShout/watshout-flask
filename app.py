@@ -1,16 +1,14 @@
+import collections
 import json
 import urllib.request
+
 import polyline
 import pyrebase
 import requests
-from urllib.request import urlopen
-from flask import Flask, render_template, request, redirect, url_for, make_response
-from stravalib.client import Client
-import xml.etree.ElementTree as ET
 import xmltodict
-import collections
-
+from flask import Flask, render_template, request, redirect, url_for, make_response
 from pyfcm import FCMNotification
+from stravalib.client import Client
 
 push_service = FCMNotification(api_key="AAAAhTZslrE:APA91bGk1e8XXWROc6sCBZtNX2RAXpXd1BQauM4d2h3ACHf33ypAYBf70oODEwqOwnhPVNvgXRPGqZ0TEMQk7RiJiACZXSdr0Cp5SPwpeEmk2FJVrvDVqxTck5svaw27Sft4y1cSmUs5")
 
@@ -493,7 +491,7 @@ def parse_activity_snapshot(snapshot, their_uid, their_name):
 
 def create_json_activities_list(activities_dict):
 
-    their_uid = 0
+    their_uid = 0 # Not used
     time = 1
     map_link = 2
     their_name = 3
