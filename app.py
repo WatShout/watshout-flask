@@ -452,7 +452,10 @@ def send_message():
 @app.route('/maps/download/<string:uid>/', methods=['GET'])
 def send_json(uid=None):
 
-    friends = list(ref.child("friend_data").child(uid).get().val().keys())
+    try:
+        friends = list(ref.child("friend_data").child(uid).get().val().keys())
+    except AttributeError:
+        friends = []
 
     activities_dict = {}
 
