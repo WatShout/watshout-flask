@@ -459,6 +459,8 @@ def send_json(uid=None):
 
     activities_dict = {}
 
+    print(friends)
+
     for their_uid in friends:
         snapshot = ref.child("users").child(their_uid)\
             .child("device").child("past")\
@@ -483,6 +485,7 @@ def parse_activity_snapshot(snapshot, their_uid, their_name):
     snapshot = collections.OrderedDict(reversed(list(snapshot.items())))
 
     for key, value in snapshot.items():
+
         activity_id = key
         time = value['time']
         map_link = value['map_link']
