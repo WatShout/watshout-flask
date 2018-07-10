@@ -15,6 +15,7 @@
 // 'value' is in the name of the dictionary
 // e.g. profilePicsDict[UID] = url for profile picture
 let markerDict = {};
+let polyLineDict = {};
 let coordDict = {};
 let profilePicsDict = {};
 let infoWindowDict = {};
@@ -119,12 +120,8 @@ let createLine = (coordList, theirUID, map) => {
 
     let currentColor;
 
-    // If a color isn't specified then line is blue
-    if (colorsDict[theirUID] == null){
-        currentColor = '#0000FF'
-    } else {
-        currentColor = color;
-    }
+    // TODO: Custom color logic
+    currentColor = '#0000FF';
 
     if (coordList.length > 0) {
 
@@ -138,7 +135,22 @@ let createLine = (coordList, theirUID, map) => {
 
         currentLine.setMap(map);
 
+        polyLineDict[theirUID] = currentLine;
+
     }
+
+};
+
+let removeMarker = (theirUID) => {
+
+    console.log(`Marker: ` + markerDict[theirUID]);
+    console.log(`Polyline: ` + polyLineDict[theirUID]);
+
+    let markerLength = markerDict[theirUID].length;
+
+    markerDict[theirUID][markerLength - 1].setVisible(false);
+
+    polyLineDict[theirUID].setMap(null);
 
 };
 

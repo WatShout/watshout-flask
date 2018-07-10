@@ -76,7 +76,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         coordDict[theirUID] = [];
 
         // For each friend currently in an activity this plots all the points
-        // made up to the point the web page was loaded
         ref.child(`users`).child(theirUID).once(`value`, function (snapshot) {
 
             // Get the current friends's profile picture
@@ -113,6 +112,19 @@ firebase.auth().onAuthStateChanged(function (user) {
                             changeHTMLTag(theirUID, `speed`, snapshot.val()[`speed`]);
 
                         });
+
+                        // Set listener for when activity is over
+                        ref.child(`users`).child(theirUID).child(`device`)
+                            .on(`child_removed`, function (snapshot) {
+
+                                if (snapshot.key === `current`){
+
+                                    // TODO: Implement this
+                                    removeMarker(theirUID);
+
+                                }
+
+                        })
                     }
                 });
         });

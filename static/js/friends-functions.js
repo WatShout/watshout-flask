@@ -19,7 +19,13 @@ let getFriendRequests = () => {
         ref.child(`users`).child(theirUID).child(`email`).once(`value`, function (snapshot) {
             theirEmail = snapshot.val();
             let confirmLink = `<a id="` + theirUID + `" href="#" onclick="confirmFriend('` + theirUID + `')">` + theirEmail + `</a>`;
-            document.getElementById(`pending`).innerHTML += confirmLink + `<br />`;
+            
+            try {
+                document.getElementById(`pending`).innerHTML += confirmLink + `<br />`;
+            } catch (TypeEror) {
+                console.log(`Main page: getFriendRequests()`);
+            }
+
 
         });
     });
@@ -44,7 +50,12 @@ let getFriendsList = () => {
 
             let theirEmail = snapshot.val();
 
-            document.getElementById(`accepted`).innerHTML += theirEmail + `<br />`;
+            try {
+                document.getElementById(`accepted`).innerHTML += theirEmail + `<br />`;
+            } catch (TypeError){
+                console.log(`Main page: getFriendsList()`)
+            }
+
 
         });
     });
