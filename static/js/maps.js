@@ -134,7 +134,6 @@ let createLine = (coordList, theirUID, map) => {
         });
 
         currentLine.setMap(map);
-
         polyLineDict[theirUID] = currentLine;
 
     }
