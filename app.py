@@ -497,7 +497,7 @@ def parse_activity_snapshot(snapshot, their_uid, their_name):
 
 def create_json_activities_list(activities_dict):
 
-    their_uid = 0 # Not used
+    their_uid = 0  # Not used
     time = 1
     map_link = 2
     their_name = 3
