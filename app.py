@@ -1,7 +1,7 @@
 import collections
 import json
 import urllib.request
-
+import pandas
 import polyline
 import pyrebase
 import requests
@@ -476,6 +476,24 @@ def send_json(uid=None):
     json_data = create_json_activities_list(activities_dict)
 
     return json_data, 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+
+
+@app.route('/maps/calendar/download/<string:uid>/', methods=['GET'])
+def get_calendar_json(uid=None):
+
+    activities_dict = ref.child("users").child(uid).child("device").child("past").get().val()
+
+    data = {"activities": []}
+
+    for key, value in activities_dict.items():
+
+        data["activities"].append(
+            {
+                "time": str(pandas.to_datetime(value['time'], unit='ms')),
+                "image": value['map_link']
+            }
+        )
+    return json.dumps(data)
 
 
 def parse_activity_snapshot(snapshot, their_uid, their_name):
