@@ -485,15 +485,17 @@ def get_calendar_json(uid=None):
 
     data = {"activities": []}
 
-    for key, value in activities_dict.items():
+    if activities_dict is not None:
+        for key, value in activities_dict.items():
 
-        data["activities"].append(
-            {
-                #"time": str(pandas.to_datetime(value['time'], unit='ms')),
-                "time": value['time'],
-                "image": value['map_link']
-            }
-        )
+            data["activities"].append(
+                {
+                    #"time": str(pandas.to_datetime(value['time'], unit='ms')),
+                    "time": value['time'],
+                    "image": value['map_link']
+                }
+            )
+
     return json.dumps(data)
 
 
@@ -523,14 +525,15 @@ def create_json_activities_list(activities_dict):
 
     data = {"activities": []}
 
-    for key, value in activities_dict.items():
-        data["activities"].append(
-            {
-                "name": value[their_name],
-                "image": value[map_link],
-                "time": value[time]
-            }
-        )
+    if activities_dict is not None:
+        for key, value in activities_dict.items():
+            data["activities"].append(
+                {
+                    "name": value[their_name],
+                    "image": value[map_link],
+                    "time": value[time]
+                }
+            )
 
     return json.dumps(data)
 
