@@ -490,7 +490,7 @@ def get_calendar_json(uid=None):
 
             data["activities"].append(
                 {
-                    #"time": str(pandas.to_datetime(value['time'], unit='ms')),
+                    # "time": str(pandas.to_datetime(value['time'], unit='ms')),
                     "time": value['time'],
                     "image": value['map_link']
                 }
