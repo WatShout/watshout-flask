@@ -14,7 +14,7 @@ let config = {
     authDomain: "watshout-test.firebaseapp.com",
     databaseURL: "https://watshout-test.firebaseio.com",
     projectId: "watshout-test",
-    storageBucket: "watshout-test.appspot.com",
+    storageBucket: "gs://watshout-test.appspot.com",
     messagingSenderId: "644503016905"
 };
 firebase.initializeApp(config);

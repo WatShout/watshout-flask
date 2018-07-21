@@ -26,7 +26,7 @@ config = {
     "authDomain": "watshout-test.firebaseapp.com",
     "databaseURL": "https://watshout-test.firebaseio.com",
     "projectID": "watshout-test",
-    "storageBucket": "gs://watshout-test.appspot.com",
+    "storageBucket": "watshout-test.appspot.com",
     "serviceAccount": "serviceAccountCredentials.json"
 }
 
