@@ -10,12 +10,12 @@
  */
 
 let config = {
-  apiKey: "AIzaSyCEFFfLVU_lFaUt8bYL0E0zYtkeYsepU4A",
-  authDomain: "watshout-app.firebaseapp.com",
-  databaseURL: "https://watshout-app.firebaseio.com",
-  projectId: "watshout-app",
-  storageBucket: "gs://watshout-app.appspot.com",
-  messagingSenderId: "572143736497"
+    apiKey: "AIzaSyDyP50TBSm5yugoczwXY4tXpJ_KMtP5Djo",
+    authDomain: "watshout-test.firebaseapp.com",
+    databaseURL: "https://watshout-test.firebaseio.com",
+    projectId: "watshout-test",
+    storageBucket: "gs://watshout-test.appspot.com",
+    messagingSenderId: "644503016905"
 };
 firebase.initializeApp(config);
 
