@@ -56,7 +56,7 @@ let getFriendsList = () => {
 
             } catch (TypeError){
 
-                console.log(`Main page: getFriendsList()`);
+                // console.log(`Main page: getFriendsList()`);
 
             }
 
