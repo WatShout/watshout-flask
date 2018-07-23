@@ -23,8 +23,6 @@ let closeNav = () => {
     document.getElementById(`myNav`).style.width = `0%`;
 };
 
-closeNav();
-
 firebase.auth().onAuthStateChanged(function (user) {
 
     if (user) {
@@ -69,9 +67,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
         // If user is verified but doesn't have info, open input nav
         if (hasInfo === `no`) {
-            openNav();
-        } else {
-            closeNav();
+            location.href = `/new/`;
         }
     }
 
@@ -178,69 +174,6 @@ let createHTMLEntry = (theirInitials, theirUID, theirColor) => {
     //return `<a id="panTo` + theirUID + `" class="deviceinfo" href="#">` + theirInitials + `</a>`;
 
     //return`<a style="width: 100%;height: 100%; background: ` + theirColor + `;" id="panTo` + theirUID + `"` + ` href="#" onclick="console.log('hi')">` + theirInitials + `</a>`;
-};
-
-let changeHTMLTag = (theirUID, label, value) => {
-
-    let lower = label.toLowerCase();
-    let newValue = label + ": " + value;
-
-    try {
-        document.getElementById(lower + theirUID).innerHTML = newValue;
-    } catch (TypeError) {}
-};
-
-// Form handler for initial visit information input
-let submitForm = () => {
-
-    document.getElementById(`error`).innerHTML = ``;
-
-    let age = document.getElementById(`age`).value;
-
-    let profilePic = $('#photo').get(0).files[0];
-
-    let errorText = ``;
-
-    if (age.length === 0) {
-        errorText += `Please enter your age <br />`;
-    }
-
-    if (profilePic == null) {
-        errorText += `Please upload a photo <br />`;
-    }
-
-    if (errorText.length > 0) {
-        document.getElementById(`error`).innerHTML = errorText;
-        return;
-    }
-
-    const typeExtension = profilePic.type.split(`/`)[1].toLowerCase();
-
-    if (typeExtension !== `png` && typeExtension !== `jpg` && typeExtension !== `jpeg`) {
-        alert(`Wrong image format!`);
-        return;
-    }
-
-    const name = `profile.` + typeExtension;
-    const metadata = {contentType: profilePic.type};
-
-    ref.child(`users`).child(userID).child(`profile_pic_format`).set(typeExtension);
-
-    let thisReference = storageRef.child(`users`).child(userID).child(name);
-
-    thisReference.put(profilePic, metadata)
-        .then(function () {
-
-            document.getElementById(`logout`).innerHTML = userEmail;
-
-            ref.child(`users`).child(userID).update({
-                "name": userName,
-                "age": parseInt(age),
-                "email": userEmail
-            }).then(function () {
-                closeNav();
-            })
-        })
 };
 
 let getInitials = (name) => {

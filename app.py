@@ -88,6 +88,14 @@ def main_page():
     return render_template('main-app.html', uid=my_uid, my_email=my_email, has_info=has_info)
 
 
+@app.route('/new/')
+def initialize_account():
+    my_uid, verified = get_cookies(request)
+    check_user_exists(my_uid, verified)
+
+    return render_template('initialize-account.html', uid=my_uid)
+
+
 # Creates a verified cookie for user
 @app.route('/cookies/verified/create/')
 def create_verification_cookie():

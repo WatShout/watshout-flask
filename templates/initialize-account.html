@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+        <!-- The order in which these load is important -->
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
+
+        <script defer src="/static/js/config.js"></script>
+
+        <script defer src="/static/js/initialize-account.js"></script>
+
+
+    <title>Title</title>
+
+    <style>
+
+        .loader {
+          border: 16px solid #f3f3f3;
+          border-radius: 50%;
+          border-top: 16px solid #3498db;
+          width: 120px;
+          height: 120px;
+          -webkit-animation: spin 2s linear infinite; /* Safari */
+          animation: spin 2s linear infinite;
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+    {% if uid %}
+        <meta id="uid" content="{{ uid }}">
+    {% endif %}
+
+    {% if my_email %}
+        <meta id="email" content="{{ my_email }}">
+    {% endif %}
+
+      <h2>Input user information</h2>
+
+      <div id="error"></div>
+
+      Age: <input type="date" id="age">
+
+      <br />
+
+      <input id="photo" type='file' />
+
+      <br />
+
+      Please only .png, .jpg, .jpeg
+
+      <br />
+
+      <img id="myImg" src="#" alt="your image" />
+
+      <br />
+      <input value="Submit" type="button" onclick="submitForm()">
+
+      <div id="test"></div>
+
+</body>
+</html>

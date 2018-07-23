@@ -77,6 +77,17 @@ let addPoint = (snapshot, theirUID, map, name) => {
 
     });
 
+    let iconOptions = {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 6,
+        strokeColor: 'white',
+        strokeOpacity: 0.6,
+        strokeWeight: 1.0,
+        fillColor: colorsDict[theirUID],
+        fillOpacity: 1.0
+    };
+    currentMarker.setIcon(iconOptions);
+
     document.getElementById(`panTo` + theirUID).onclick = function () {
 
             let latLng = new google.maps.LatLng(values["lat"], values["lon"]);
