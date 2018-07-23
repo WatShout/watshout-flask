@@ -28,6 +28,7 @@ const map = new google.maps.Map(document.getElementById(`map`), {
     center: startingPosition,
     clickableIcons: false,
     disableDefaultUI: true,
+    gestureHandling: 'cooperative'
 
 });
 
@@ -73,11 +74,15 @@ let addPoint = (snapshot, theirUID, map, name) => {
         position: currentLocation,
         map: map,
         // No icon
-        icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 0
-        }
+
     });
+
+    document.getElementById(`panTo` + theirUID).onclick = function () {
+
+            let latLng = new google.maps.LatLng(values["lat"], values["lon"]);
+            map.panTo(latLng);
+
+    };
 
     coordDict[theirUID].push(currentLocation);
 
@@ -96,7 +101,16 @@ let addPoint = (snapshot, theirUID, map, name) => {
     infoWindowDict[theirUID] = new google.maps.InfoWindow({
           content: contentString
     });
-    infoWindowDict[theirUID].open(map, currentMarker);
+    // infoWindowDict[theirUID].open(map, currentMarker);
+
+    currentMarker.addListener('mouseover', function() {
+        infoWindowDict[theirUID].open(map, currentMarker);
+    });
+
+// assuming you also want to hide the infowindow when user mouses-out
+    currentMarker.addListener('mouseout', function() {
+        infoWindowDict[theirUID].close();
+    });
 
     let length = markerDict[theirUID].length;
 
@@ -121,7 +135,7 @@ let createLine = (coordList, theirUID, map) => {
     let currentColor;
 
     // TODO: Custom color logic
-    currentColor = '#0000FF';
+    currentColor = colorsDict[theirUID];
 
     if (coordList.length > 0) {
 

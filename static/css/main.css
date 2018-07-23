@@ -37,12 +37,23 @@ body {
     background-color: #ffffff;
 }
 
-.deviceinfo {
+.deviceinfoTest {
     background-color: #f8ffb2;
     border: 1px solid #939393;
     padding-top: 20px;
     padding-bottom: 20px;
 
+}
+
+.deviceinfo {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  font-size: 9px;
+  color: #000;
+  line-height: 75px;
+  text-align: center;
+    display: block;
 }
 
 #wrapper {
@@ -141,6 +152,11 @@ body {
     color: #000000;
 }
 
+#myNav {
+    width: 0%;
+}
+
+
 #myImg {
     max-width: 500px;
 }
@@ -161,4 +177,14 @@ body {
 #rightwindow {
     float: right;
     margin-left: 5px;
+}
+
+.overlay{
+    height: 100%;
+    width: 75px;
+    margin-left: 50px;
+    margin-top: 10%;
+    background-color: rgba(255, 255, 255, 0);
+    z-index:1;
+    position:absolute;
 }

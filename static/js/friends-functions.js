@@ -51,11 +51,14 @@ let getFriendsList = () => {
             let theirEmail = snapshot.val();
 
             try {
-                document.getElementById(`accepted`).innerHTML += theirEmail + `<br />`;
-            } catch (TypeError){
-                console.log(`Main page: getFriendsList()`)
-            }
 
+                document.getElementById(`accepted`).innerHTML += theirEmail + `<br />`;
+
+            } catch (TypeError){
+
+                console.log(`Main page: getFriendsList()`);
+
+            }
 
         });
     });

@@ -14,6 +14,17 @@ let userID;
 let userEmail;
 let userName;
 
+// Functions for initial log in pop-up
+let openNav = () => {
+    document.getElementById(`myNav`).style.width = `100%`;
+};
+
+let closeNav = () => {
+    document.getElementById(`myNav`).style.width = `0%`;
+};
+
+closeNav();
+
 firebase.auth().onAuthStateChanged(function (user) {
 
     if (user) {
@@ -59,6 +70,8 @@ firebase.auth().onAuthStateChanged(function (user) {
         // If user is verified but doesn't have info, open input nav
         if (hasInfo === `no`) {
             openNav();
+        } else {
+            closeNav();
         }
     }
 
@@ -87,29 +100,37 @@ firebase.auth().onAuthStateChanged(function (user) {
                     let theirName = snapshot.val()[`name`];
                     let theirEmail = snapshot.val()[`email`];
                     let theirDevice = snapshot.val()[`device`];
-                    colorsDict[theirUID] = snapshot.val()[`color`];
+                    let theirColor = getRandomColor();
+                    colorsDict[theirUID] = theirColor;
 
                     if (theirDevice != null) {
-
-                        document.getElementById(`devices`).innerHTML += createHTMLEntry(theirName, theirUID, theirEmail);
 
                         // Set child listener for when friend location updates
                         ref.child(`users`).child(theirUID).child(`device`)
                             .child(`current`).on(`child_added`, function (snapshot) {
 
+                            if (document.getElementById(`panTo` + theirUID) == null){
+
+                                document.getElementById(`devices`).appendChild(createHTMLEntry(getInitials(theirName), theirUID, theirColor));
+
+                                //document.getElementById('devices').appendChild(createHTMLEntry(getInitials(theirName), theirUID,
+                                //    theirColor));
+
+                            }
+
                             addPoint(snapshot, theirUID, map, theirName);
                             createLine(coordDict[theirUID], theirUID, map);
 
+
+                            /*
                             // This should fail when the user is currently tracking
                             try {
                                 document.getElementById(`not-tracking` + theirUID).innerHTML = theirName;
                             } catch (TypeError) {
 
                             }
+                            */
 
-                            // Update the 'card' on left hand side
-                            changeHTMLTag(theirUID, `battery`, snapshot.val()[`battery`]);
-                            changeHTMLTag(theirUID, `speed`, snapshot.val()[`speed`]);
 
                         });
 
@@ -122,6 +143,9 @@ firebase.auth().onAuthStateChanged(function (user) {
                                     // TODO: Implement this
                                     removeMarker(theirUID);
 
+                                    // Set name card to say 'is not tracking right now'
+                                    document.getElementById(theirUID).innerHTML = ``;
+
                                 }
 
                         })
@@ -131,13 +155,29 @@ firebase.auth().onAuthStateChanged(function (user) {
     });
 });
 
-let createHTMLEntry = (theirName, theirUID) => {
+let createHTMLEntry = (theirInitials, theirUID, theirColor) => {
 
-    return `<div class="deviceinfo" id="` + theirUID + `">` +
-        `\n<div id="not-tracking` + theirUID + `">` + theirName + ` is not tracking right now</div>` +
-        `\n<div id="battery` + theirUID + `"></div>` +
-        `\n<div id="speed` + theirUID + `"></div>` +
-        `</div>`;
+    console.log(theirInitials);
+    console.log(theirColor);
+    console.log(theirUID);
+
+    let a = document.createElement('a');
+    let linkText = document.createTextNode(theirInitials);
+    a.appendChild(linkText);
+    a.href = "#";
+    document.body.appendChild(a);
+    a.id = `panTo` + theirUID;
+    a.className = `deviceinfo`;
+    a.onclick = function () {
+        console.log(`Hasn't been changed`);
+    };
+    a.style.background = theirColor;
+
+    return a;
+
+    //return `<a id="panTo` + theirUID + `" class="deviceinfo" href="#">` + theirInitials + `</a>`;
+
+    //return`<a style="width: 100%;height: 100%; background: ` + theirColor + `;" id="panTo` + theirUID + `"` + ` href="#" onclick="console.log('hi')">` + theirInitials + `</a>`;
 };
 
 let changeHTMLTag = (theirUID, label, value) => {
@@ -203,6 +243,15 @@ let submitForm = () => {
         })
 };
 
+let getInitials = (name) => {
+
+    let matches = name.match(/\b(\w)/g);// ['J','S','O','N']
+    let acronym = matches.join('');
+
+    return acronym;
+
+};
+
 // Functions for panning the map to the current user's location
 let locationSuccess = (pos) => {
     let crd = pos.coords;
@@ -225,15 +274,14 @@ let panCurrentLocation = () => {
 
 };
 
-// Functions for initial log in pop-up
-let openNav = () => {
-    document.getElementById(`myNav`).style.width = `100%`;
+let getRandomColor = () => {
+  let letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 };
-
-let closeNav = () => {
-    document.getElementById(`myNav`).style.width = `0%`;
-};
-
 
 // These handle displaying the selected image on the screen
 $(function () {
