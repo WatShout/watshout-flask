@@ -22,11 +22,11 @@ app = Flask(__name__, static_url_path="/static")
 
 # Note: Everything is authenticated because of the service account
 config = {
-    "apiKey": "AIzaSyCEFFfLVU_lFaUt8bYL0E0zYtkeYsepU4A",
-    "authDomain": "watshout-app.firebaseapp.com",
-    "databaseURL": "https://watshout-app.firebaseio.com",
-    "projectID": "watshout-app",
-    "storageBucket": "watshout-app.appspot.com",
+    "apiKey": "AIzaSyDyP50TBSm5yugoczwXY4tXpJ_KMtP5Djo",
+    "authDomain": "watshout-test.firebaseapp.com",
+    "databaseURL": "https://watshout-test.firebaseio.com",
+    "projectID": "watshout-test",
+    "storageBucket": "watshout-test.appspot.com",
     "serviceAccount": "serviceAccountCredentials.json"
 }
 
