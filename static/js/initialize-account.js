@@ -63,15 +63,37 @@ let submitForm = () => {
 
     let thisReference = storageRef.child(`users`).child(userID).child(name);
 
-    thisReference.put(profilePic, metadata)
-        .then(function () {
+    let uploadTask = thisReference.put(profilePic, metadata);
 
-            ref.child(`users`).child(userID).update({
-                "name": userName,
-                "age": parseInt(age),
-                "email": userEmail
-            }).then(function () {
-                location.href = `/`;
-            })
+    uploadTask.on('state_changed', function(snapshot){
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                console.log(progress);
+                break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                console.log(progress);
+                break;
+        }
+    }, function(error) {
+        // Handle unsuccessful uploads
+    }, function() {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+
+        ref.child(`users`).child(userID).update({
+            "name": userName,
+            "age": parseInt(age),
+            "email": userEmail
+        }).then(function () {
+            location.href = `/`;
         })
+
+    });
+
 };
