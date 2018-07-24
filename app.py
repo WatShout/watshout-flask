@@ -396,7 +396,7 @@ def get_map_url():
     # avg_lon = sum(lons) / len(lons)
     # center = [[avg_lat, avg_lon]]
 
-    base_url = "https://maps.googleapis.com/maps/api/staticmap?zoom=14&size=600x300&maptype=roadmap&key=AIzaSyCWobaV5cYUhGJChYDEVro7JVF5299dzz0&sensor=true"
+    base_url = "https://maps.googleapis.com/maps/api/staticmap?zoom=14&size=600x300&maptype=roadmap&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s&sensor=true"
 
     poly_path = "&path=enc:" + polyline.encode(coords, 5)
 
