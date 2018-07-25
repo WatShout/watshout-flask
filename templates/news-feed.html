@@ -16,51 +16,66 @@
     <link rel="stylesheet" href="/static/css/profile.css">
     <link rel="stylesheet" href="/static/css/pills.min.css">
 
+    <!-- drawer.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.min.css">
+    <!-- jquery & iScroll -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js"></script>
+    <!-- drawer.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js"></script>
+
     <link rel="icon" href="/static/res/favicon.png" type="image/gif">
     <title>news feed | watshout</title>
 
 </head>
-<body>
 
 {% if uid %}
     <meta id="uid" content="{{ uid }}">
 {% endif %}
 
-    <div class="topnav">
 
-        <a href="/" id="home">Home</a>
-        <a href="/feed/" id="feed">Feed</a>
-        <a href="/me/" id="profile">Profile</a>
-        <a href="/me/friends/" id="friends">Friends</a>
+<body class="drawer drawer--left">
+<header role="banner">
+    <button type="button" class="drawer-toggle drawer-hamburger">
+        <span class="sr-only">toggle navigation</span>
+        <span class="drawer-hamburger-icon"></span>
+    </button>
+    <nav class="drawer-nav" role="navigation">
+        <ul class="drawer-menu">
 
-        <div id="search-container">
+            <li><a class="drawer-brand" href="#">watshout</a></li>
+            <li><a class="drawer-menu-item" href="/" id="home">Home</a></li>
+            <li><a class="drawer-menu-item" href="/feed/" id="feed">Feed</a></li>
+            <li><a class="drawer-menu-item" href="/me/" id="profile">Profile</a></li>
+            <li><a class="drawer-menu-item" href="/me/friends/" id="friends">Friends</a></li>
 
-            <input id="search" type="text" placeholder="Search..">
-            <button id="submit" type="submit" onclick="askFriend()">Add Friend</button>
 
-        </div>
+        </ul>
+    </nav>
+</header>
+<main role="main">
 
-        {% if email %}
-            <a href="javascript:signOut();" id="logout">{{ email }}</a>
-        {% endif %}
+    <div style="text-align: center;">
 
+        <table>
+            {% if activities %}
+                {% for activity in activities %}
+                    <tr>
+                        <td>{{ activity['name'] }}</td>
+                        <td><img src="{{ activity["image"] }}"/></td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <p>Your friends have no previous activities</p>
+            {% endif %}
+        </table>
     </div>
-
-        <div style="text-align: center;">
-
-            <table>
-                {% if activities %}
-                    {% for activity in activities %}
-                        <tr>
-                            <td>{{ activity['name'] }}</td>
-                            <td><img src="{{ activity["image"] }}"/></td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <p>Your friends have no previous activities</p>
-                {% endif %}
-            </table>
-        </div>
-
+</main>
 </body>
+
+<script>
+    $(document).ready(function() {
+        $('.drawer').drawer();
+    });
+</script>
+
 </html>

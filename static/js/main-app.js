@@ -134,13 +134,17 @@ firebase.auth().onAuthStateChanged(function (user) {
                         ref.child(`users`).child(theirUID).child(`device`)
                             .on(`child_removed`, function (snapshot) {
 
+                                console.log(`outside loop`);
+
                                 if (snapshot.key === `current`){
+
+                                    console.log(`inside loop`);
 
                                     // TODO: Implement this
                                     removeMarker(theirUID);
 
                                     // Set name card to say 'is not tracking right now'
-                                    document.getElementById(theirUID).innerHTML = ``;
+                                    document.getElementById(`panTo` + theirUID).innerHTML = ``;
 
                                 }
 
@@ -152,10 +156,6 @@ firebase.auth().onAuthStateChanged(function (user) {
 });
 
 let createHTMLEntry = (theirInitials, theirUID, theirColor) => {
-
-    console.log(theirInitials);
-    console.log(theirColor);
-    console.log(theirUID);
 
     let a = document.createElement('a');
     let linkText = document.createTextNode(theirInitials);

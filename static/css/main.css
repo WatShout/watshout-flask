@@ -38,6 +38,11 @@ body {
     background-color: #ffffff;
 }
 
+.devices {
+    z-index: 1;
+    position: absolute;
+}
+
 .deviceinfo {
     text-decoration: none;
     width: 75px;
@@ -48,7 +53,9 @@ body {
     line-height: 75px;
     text-align: center;
     display: block;
+    z-index: 1;
 }
+
 
 #wrapper {
     height: 100vh;
@@ -56,7 +63,7 @@ body {
 }
 
 #main-content {
-    height: 90vh;
+    height: 100vh;
     float: bottom;
 }
 
@@ -181,3 +188,4 @@ body {
     z-index:1;
     position:absolute;
 }
+

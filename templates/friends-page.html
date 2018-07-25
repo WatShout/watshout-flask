@@ -17,6 +17,13 @@
     <link rel="stylesheet" href="/static/css/profile.css">
     <link rel="stylesheet" href="/static/css/pills.min.css">
 
+    <!-- drawer.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.min.css">
+    <!-- jquery & iScroll -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js"></script>
+    <!-- drawer.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js"></script>
+
     <link rel="icon" href="/static/res/favicon.png" type="image/gif">
     <title>friends | watshout</title>
 
@@ -29,27 +36,27 @@
     <meta id="uid" content="{{ uid }}">
 {% endif %}
 
-<div id="wrapper">
+<body class="drawer drawer--left">
+<header role="banner">
+    <button type="button" class="drawer-toggle drawer-hamburger">
+        <span class="sr-only">toggle navigation</span>
+        <span class="drawer-hamburger-icon"></span>
+    </button>
+    <nav class="drawer-nav" role="navigation">
+        <ul class="drawer-menu">
 
-    <div class="topnav">
+            <li><a class="drawer-brand" href="#">watshout</a></li>
+            <li><a class="drawer-menu-item" href="/" id="home">Home</a></li>
+            <li><a class="drawer-menu-item" href="/feed/" id="feed">Feed</a></li>
+            <li><a class="drawer-menu-item" href="/me/" id="profile">Profile</a></li>
+            <li><a class="drawer-menu-item" href="/me/friends/" id="friends">Friends</a></li>
 
-        <a href="/" id="home">Home</a>
-        <a href="/feed/" id="feed">Feed</a>
-        <a href="/me/" id="profile">Profile</a>
-        <a href="/me/friends/" id="friends">Friends</a>
 
-        <div id="search-container">
+        </ul>
+    </nav>
+</header>
+<main role="main">
 
-            <input id="search" type="text" placeholder="Search..">
-            <button id="submit" type="submit" onclick="askFriend()">Add Friend</button>
-
-        </div>
-
-        {% if my_email %}
-        <a href="javascript:signOut();" id="logout">{{ my_email }}</a>
-        {% endif %}
-
-    </div>
 
     <div id="main-row">
 
@@ -76,8 +83,14 @@
         </div>
 
     </div>
+</main>
+</body>
 
-</div>
+<script>
+    $(document).ready(function() {
+        $('.drawer').drawer();
+    });
+</script>
 
 
 </body>

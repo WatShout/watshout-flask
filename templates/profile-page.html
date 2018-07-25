@@ -1,112 +1,124 @@
 <html>
 
-    <head>
+<head>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-        <!-- The order in which these load is important -->
-        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
-        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
-        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
-        <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
+    <!-- The order in which these load is important -->
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
 
-        <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyP50TBSm5yugoczwXY4tXpJ_KMtP5Djo"></script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyP50TBSm5yugoczwXY4tXpJ_KMtP5Djo"></script>
 
-        <script defer src="/static/js/config.js"></script>
-        <script defer src="/static/js/profile-page.js"></script>
+    <script defer src="/static/js/config.js"></script>
+    <script defer src="/static/js/profile-page.js"></script>
 
-        <script defer src="/static/js/friends-functions.js"></script>
+    <script defer src="/static/js/friends-functions.js"></script>
 
-        <link rel="stylesheet" href="/static/css/profile.css">
-        <link rel="stylesheet" href="/static/css/pills.min.css">
+    <link rel="stylesheet" href="/static/css/profile.css">
+    <link rel="stylesheet" href="/static/css/pills.min.css">
 
-        <link rel="icon" href="/static/res/favicon.png" type="image/gif">
-        <title>{{ name }} | watshout</title>
+    <!-- drawer.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.min.css">
+    <!-- jquery & iScroll -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js"></script>
+    <!-- drawer.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js"></script>
 
-    </head>
+    <link rel="icon" href="/static/res/favicon.png" type="image/gif">
+    <title>{{ name }} | watshout</title>
 
-    <body>
+</head>
 
-        <!-- Stores UID for easy access by profile-page.js -->
-        {% if uid %}
-            <meta id="uid" content="{{ uid }}">
-        {% endif %}
+<body>
 
-        {% if activity_ids %}
-            <meta id="activity_ids" content="{{ activity_ids }}">
-        {% endif %}
+<!-- Stores UID for easy access by profile-page.js -->
+{% if uid %}
+    <meta id="uid" content="{{ uid }}">
+{% endif %}
 
-        <div id="wrapper">
+{% if activity_ids %}
+    <meta id="activity_ids" content="{{ activity_ids }}">
+{% endif %}
 
-            <div class="topnav">
 
-            <a href="/" id="home">Home</a>
-            <a href="/feed/" id="feed">Feed</a>
-            <a href="/me/" id="profile">Profile</a>
-            <a href="/me/friends/" id="friends">Friends</a>
+<body class="drawer drawer--left">
+<header role="banner">
+    <button type="button" class="drawer-toggle drawer-hamburger">
+        <span class="sr-only">toggle navigation</span>
+        <span class="drawer-hamburger-icon"></span>
+    </button>
+    <nav class="drawer-nav" role="navigation">
+        <ul class="drawer-menu">
 
-                <div id="search-container">
+            <li><a class="drawer-brand" href="#">watshout</a></li>
+            <li><a class="drawer-menu-item" href="/" id="home">Home</a></li>
+            <li><a class="drawer-menu-item" href="/feed/" id="feed">Feed</a></li>
+            <li><a class="drawer-menu-item" href="/me/" id="profile">Profile</a></li>
+            <li><a class="drawer-menu-item" href="/me/friends/" id="friends">Friends</a></li>
 
-                    <input id="search" type="text" placeholder="Search..">
-                    <button id="submit" type="submit" onclick="askFriend()">Add Friend</button>
 
-                </div>
+        </ul>
+    </nav>
+</header>
+<main role="main">
 
-                {% if my_email %}
-                    <a href="javascript:signOut();" id="logout">{{ my_email }}</a>
+    <div id="main-row">
+
+        <div id="personalinfo">
+
+            {% if name %}
+                <h1>{{ name }}</h1>
+            {% endif %}
+
+            {% if email %}
+                <h3>{{ email }}</h3>
+            {% endif %}
+
+            {% if profile_pic %}
+                <img id="profile" src="{{ profile_pic }}">
+            {% endif %}
+
+
+            <a href="/me/settings">Edit Profile</a>
+
+
+            {% if strava_token %}
+                {% if strava_token == 'no' %}
+
+                    <div id="strava_info">
+
+                        <a href="strava/login" ><img src="/static/res/small_strava_button.png"></a>
+
+                    </div>
+
+                {% else %}
+
+                    <div id="strava_info">
+
+                        <a id="unlink" href="#" onclick="unlinkStrava()">Un-link Strava account</a>
+
+                    </div>
+
                 {% endif %}
-
-            </div>
-
-            <div id="main-row">
-
-                <div id="personalinfo">
-
-                    {% if name %}
-                        <h1>{{ name }}</h1>
-                    {% endif %}
-
-                    {% if email %}
-                        <h3>{{ email }}</h3>
-                    {% endif %}
-
-                    {% if profile_pic %}
-                    <img id="profile" src="{{ profile_pic }}">
-                     {% endif %}
-
-
-                    <a href="/me/settings">Edit Profile</a>
-
-
-                    {% if strava_token %}
-                        {% if strava_token == 'no' %}
-
-                            <div id="strava_info">
-
-                                <a href="strava/login" ><img src="/static/res/small_strava_button.png"></a>
-
-                            </div>
-
-                            {% else %}
-
-                                <div id="strava_info">
-
-                                    <a id="unlink" href="#" onclick="unlinkStrava()">Un-link Strava account</a>
-
-                                </div>
-
-                        {% endif %}
-                    {% endif %}
-
-
-                </div>
-
-
-            </div>
+            {% endif %}
 
 
         </div>
 
-    </body>
+
+    </div>
+</main>
+</body>
+
+<script>
+    $(document).ready(function() {
+        $('.drawer').drawer();
+    });
+</script>
+
+</body>
 
 </html>
