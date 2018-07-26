@@ -140,7 +140,7 @@ def my_page():
 
     email = my_user_entry['email']
     name = my_user_entry['name']
-    age = my_user_entry['age']
+    birthday = my_user_entry['birthday']
 
     profile_pic_format = my_user_entry['profile_pic_format']
     profile_pic = storageRef.child('users/' + my_uid + '/profile.' + profile_pic_format).get_url(None)
@@ -170,7 +170,7 @@ def my_page():
         strava_token = "no"
         print("KeyError: No Strava connection")
 
-    return render_template('profile-page.html', email=email, my_email=email, name=name, age=age, uid=my_uid,
+    return render_template('profile-page.html', email=email, my_email=email, name=name, birthday=birthday, uid=my_uid,
                            activity_ids=activity_ids, strava_token=strava_token,
                            profile_pic=profile_pic)
 
@@ -314,7 +314,7 @@ def user_page(their_uid=None):
 
         email = ref.child("users").child(their_uid).get().val()['email']
         name = ref.child("users").child(their_uid).get().val()['name']
-        age = ref.child("users").child(their_uid).get().val()['age']
+        birthday = ref.child("users").child(their_uid).get().val()['birthday']
 
         profile_pic_format = ref.child("users").child(their_uid).get().val()['profile_pic_format']
         profile_pic = storageRef.child('users/' + their_uid + '/profile.' + profile_pic_format).get_url(None)
@@ -335,8 +335,8 @@ def user_page(their_uid=None):
             activity_ids = ""
             print("KeyError: No activities")
 
-        return render_template('profile-page.html', my_email=my_email, email=email, name=name, age=age, uid=their_uid,
-                               activity_ids=activity_ids, profile_pic=profile_pic)
+        return render_template('profile-page.html', my_email=my_email, email=email, name=name, birthday=birthday,
+                               uid=their_uid, activity_ids=activity_ids, profile_pic=profile_pic)
     else:
         return "You are not friends with this user"
 
