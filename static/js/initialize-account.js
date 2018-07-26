@@ -26,11 +26,20 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 let submitForm = () => {
 
-    document.getElementById(`test`).innerHTML += `<div class="loader"></div>`;
+    document.getElementById(`test`).innerHTML += `<img src="https://loading.io/spinners/fidget-spinner/lg.fidget-spinner.gif"/>`;
 
     document.getElementById(`error`).innerHTML = ``;
 
-    let age = document.getElementById(`age`).value;
+
+    let date = $('#age').val().split("-");
+
+    let day = date[2];
+    let month = date[1];
+    let year = date[0];
+
+    let birthday = month + "-" + day + "-" + year;
+
+    console.log(birthday);
 
     let profilePic = $('#photo').get(0).files[0];
 
@@ -59,7 +68,14 @@ let submitForm = () => {
     const name = `profile.` + typeExtension;
     const metadata = {contentType: profilePic.type};
 
-    ref.child(`users`).child(userID).child(`profile_pic_format`).set(typeExtension);
+    //ref.child(`users`).child(userID).child(`profile_pic_format`).set(typeExtension);
+
+    ref.child(`users`).child(userID).update({
+            "profile_pic_format": typeExtension,
+            "name": userName,
+            "birthday": String(birthday),
+            "email": userEmail
+        });
 
     let thisReference = storageRef.child(`users`).child(userID).child(name);
 
@@ -70,6 +86,9 @@ let submitForm = () => {
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log('Upload is ' + progress + '% done');
+
+        document.getElementById(`progress`).innerHTML = progress;
+
         switch (snapshot.state) {
             case firebase.storage.TaskState.PAUSED: // or 'paused'
                 console.log('Upload is paused');
@@ -86,13 +105,8 @@ let submitForm = () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
 
-        ref.child(`users`).child(userID).update({
-            "name": userName,
-            "age": parseInt(age),
-            "email": userEmail
-        }).then(function () {
-            location.href = `/`;
-        })
+        location.href = `/`;
+
 
     });
 
