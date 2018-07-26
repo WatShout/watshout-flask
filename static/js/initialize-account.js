@@ -78,7 +78,7 @@ let submitForm = () => {
     let uploadTask;
 
     if (profilePic == null){
-        fetch('https://upload.wikimedia.org/wikipedia/commons/7/77/Delete_key1.jpg')
+        fetch(`https://raw.githubusercontent.com/WatShout/watshout-flask/master/static/res/default_profile_pic.jpg?token=ADRBh0YrJ5ow-uuqWk1gEmwcU8rFzfEBks5bY3evwA%3D%3D`)
             .then(res => res.blob()) // Gets the response and returns it as a blob
             .then(blob => {
                 // Here's where you get access to the blob
