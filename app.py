@@ -457,6 +457,31 @@ def send_message():
         return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
+@app.route('/friends/<string:uid>', methods=['GET'])
+def get_friends_list(uid=None):
+
+    try:
+        friend_uid_list = list(ref.child("friend_data").child(uid).get().val().keys())
+    except AttributeError:
+        friend_uid_list = []
+
+    data = {"friends": []}
+
+    for uid in friend_uid_list:
+        name = ref.child("users").child(uid).child("name").get().val()
+        profile_pic_format = ref.child("users").child(uid).child("profile_pic_format").get().val()
+        profile_pic = storageRef.child("users").child(uid).child("profile." + profile_pic_format).get_url(None)
+        uid = uid
+
+        data["friends"].append({
+            "name": name,
+            "profile_pic": profile_pic,
+            "uid": uid
+        })
+
+    return json.dumps(data), 200, {'ContentType': 'application/json'}
+
+
 @app.route('/maps/download/<string:uid>/', methods=['GET'])
 def send_json(uid=None):
 
