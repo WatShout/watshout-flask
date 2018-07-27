@@ -457,7 +457,7 @@ def send_message():
         return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
-@app.route('/friends/<string:uid>', methods=['GET'])
+@app.route('/friends/<string:uid>/', methods=['GET'])
 def get_friends_list(uid=None):
 
     try:
