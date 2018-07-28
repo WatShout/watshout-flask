@@ -457,6 +457,32 @@ def send_message():
         return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
+@app.route('/friend_requests/<string:uid>/', methods=['GET'])
+def get_friend_requests_list(uid=None):
+
+    try:
+        friend_request_uid_list = list(ref.child("friend_requests").child(uid).order_by_child("request_type").equal_to("received").get().val())
+
+    except IndexError:
+        friend_request_uid_list = []
+
+    data = {"friend_requests": []}
+
+    for uid in friend_request_uid_list:
+        name = ref.child("users").child(uid).child("name").get().val()
+        profile_pic_format = ref.child("users").child(uid).child("profile_pic_format").get().val()
+        profile_pic = storageRef.child("users").child(uid).child("profile." + profile_pic_format).get_url(None)
+        uid = uid
+
+        data["friend_requests"].append({
+            "name": name,
+            "profile_pic": profile_pic,
+            "uid": uid
+        })
+
+    return json.dumps(data), 200, {'ContentType': 'application/json'}
+
+
 @app.route('/friends/<string:uid>/', methods=['GET'])
 def get_friends_list(uid=None):
 
