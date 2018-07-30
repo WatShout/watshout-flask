@@ -3,12 +3,17 @@ import json
 import urllib.request
 import pandas
 import polyline
+from flask_sslify import SSLify
 import pyrebase
 import requests
 import xmltodict
 from flask import Flask, render_template, request, redirect, url_for, make_response
 from pyfcm import FCMNotification
 from stravalib.client import Client
+
+
+DEBUG = False
+
 
 push_service = FCMNotification(api_key="AAAAhTZslrE:APA91bGk1e8XXWROc6sCBZtNX2RAXpXd1BQauM4d2h3ACHf33ypAYBf70oODEwqOwnhPVNvgXRPGqZ0TEMQk7RiJiACZXSdr0Cp5SPwpeEmk2FJVrvDVqxTck5svaw27Sft4y1cSmUs5")
 
@@ -19,6 +24,9 @@ from twilio.rest import Client
 twilio_client = Client('AC78e6f5f0eee70cd307d2c801965890f8', '29be32eb089f379f6622e7365b280727')
 
 app = Flask(__name__, static_url_path="/static")
+
+if not DEBUG:
+    sslify = SSLify(app)
 
 # Note: Everything is authenticated because of the service account
 config = {
@@ -35,8 +43,6 @@ firebase = pyrebase.initialize_app(config)
 # Get a reference to the database service
 ref = firebase.database()
 storageRef = firebase.storage()
-
-DEBUG = False
 
 
 # Gets UID and verified cookies from HTTP request
@@ -530,10 +536,19 @@ def send_json(uid=None):
             .child("device").child("past")\
             .order_by_child("time").limit_to_last(5).get().val()
 
+        print(their_uid)
+
         their_name = ref.child("users").child(their_uid).child("name").get().val()
+
+        print(their_name)
 
         if snapshot is not None:
             activities_dict.update(parse_activity_snapshot(snapshot, their_uid, their_name))
+
+    try:
+        print(activities_dict)
+    except:
+        print("Error!")
 
     # TODO: Sort activities_dict
 
@@ -603,4 +618,4 @@ def create_json_activities_list(activities_dict):
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=80, debug=True)
+    app.run(host='127.0.0.1', port=80, debug=DEBUG)
