@@ -385,22 +385,27 @@ def get_map_url():
     lats = []
     lons = []
 
-    for each in gpx_dict['gpx']['trk']['trkseg']['trkpt']:
-        lats.append(float(each['@lat']))
-        lons.append(float(each['@lon']))
+    try:
+        for each in gpx_dict['gpx']['trk']['trkseg']['trkpt']:
+            lats.append(float(each['@lat']))
+            lons.append(float(each['@lon']))
 
-    coords = [[lat, lon] for lat, lon in zip(lats, lons)]
+            coords = [[lat, lon] for lat, lon in zip(lats, lons)]
 
-    # The API seems to automatically calculate the center
-    # avg_lat = sum(lats) / len(lats)
-    # avg_lon = sum(lons) / len(lons)
-    # center = [[avg_lat, avg_lon]]
+            # The API seems to automatically calculate the center
+            # avg_lat = sum(lats) / len(lats)
+            # avg_lon = sum(lons) / len(lons)
+            # center = [[avg_lat, avg_lon]]
 
-    base_url = "https://maps.googleapis.com/maps/api/staticmap?zoom=14&size=600x300&maptype=roadmap&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s&sensor=true"
+            base_url = "https://maps.googleapis.com/maps/api/staticmap?zoom=14&size=600x300&maptype=roadmap&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s&sensor=true"
 
-    poly_path = "&path=enc:" + polyline.encode(coords, 5)
+            poly_path = "&path=enc:" + polyline.encode(coords, 5)
 
-    final_url = base_url + poly_path
+            final_url = base_url + poly_path
+
+    except KeyError:
+        final_url = "https://www.mapsofworld.com/usa/usa-maps/outline-map-usa.jpg"
+
 
     ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(final_url)
 
