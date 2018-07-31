@@ -193,8 +193,27 @@ let locationSuccess = (pos) => {
         lng: crd.longitude
     };
 
+    createLocationCookies(crd.latitude, crd.longitude);
+
     map.panTo(currentLocation);
     map.setZoom(16);
+};
+
+let createLocationCookies = (lat, lng) => {
+
+    $.ajax({
+
+        'url': '/cookies/set_location/'+ lat + ',' + lng + '/',
+        'type': 'GET',
+
+        'success': function () {
+            //console.log(`Created cookie`);
+        },
+        'error': function (error) {
+            console.log(error)
+        }
+    });
+
 };
 
 let panCurrentLocation = () => {

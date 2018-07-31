@@ -83,6 +83,11 @@ def main_page():
 
     my_user_entry = get_user_entry(my_uid)
 
+    lat = request.cookies.get('last_latitude')
+    lng = request.cookies.get('last_longitude')
+
+    print(lat)
+
     if my_user_entry is not None:
         has_info = "yes"
         my_email = my_user_entry["email"]
@@ -91,7 +96,8 @@ def main_page():
         has_info = "no"
         my_email = ""
 
-    return render_template('main-app.html', uid=my_uid, my_email=my_email, has_info=has_info)
+    return render_template('main-app.html', uid=my_uid, my_email=my_email, has_info=has_info,
+                           lat=lat, lng=lng)
 
 
 @app.route('/new/')
@@ -118,6 +124,18 @@ def whitelist():
     else:
         return app.send_static_file("whitelist.html")
 
+
+@app.route('/cookies/set_location/<string:coords>/')
+def set_default_location(coords=None):
+
+    lat = coords.split(',')[0]
+    lng = coords.split(',')[1]
+
+    res = make_response()
+    res.set_cookie('last_latitude', lat, max_age=60 * 60 * 24 * 7 * 365)
+    res.set_cookie('last_longitude', lng, max_age=60 * 60 * 24 * 7 * 365)
+
+    return res
 
 # Creates a verified cookie for user
 @app.route('/cookies/verified/create/')

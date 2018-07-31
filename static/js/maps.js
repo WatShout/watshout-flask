@@ -21,11 +21,20 @@ let profilePicsDict = {};
 let infoWindowDict = {};
 let colorsDict = {};
 
-// Initializes the Google Map.
-let startingPosition = {lat: 37.4419, lng: -122.1430};
+let lat;
+let lng;
+
+try {
+    lat = document.getElementById(`lat`).getAttribute(`content`);
+    lng = document.getElementById(`lng`).getAttribute(`content`);
+} catch (e) {
+    lat = 37.4419;
+    lng = -122.1430;
+}
+
 const map = new google.maps.Map(document.getElementById(`map`), {
-    zoom: 14,
-    center: startingPosition,
+    zoom: 16,
+    center: new google.maps.LatLng(lat,lng),
     clickableIcons: false,
     disableDefaultUI: true,
     gestureHandling: 'cooperative'
