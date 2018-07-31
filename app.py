@@ -7,7 +7,7 @@ from flask_sslify import SSLify
 import pyrebase
 import requests
 import xmltodict
-from flask import Flask, render_template, request, redirect, url_for, make_response
+from flask import Flask, render_template, request, redirect, url_for, make_response, abort
 from pyfcm import FCMNotification
 from stravalib.client import Client
 
@@ -100,6 +100,23 @@ def initialize_account():
     check_user_exists(my_uid, verified)
 
     return render_template('initialize-account.html', uid=my_uid)
+
+
+@app.route('/whitelist/')
+def whitelist():
+    my_uid, verified = get_cookies(request)
+    check_user_exists(my_uid, verified)
+
+    my_user_entry = get_user_entry(my_uid)
+
+    email = my_user_entry['email']
+
+    domain = email[-12:-4]
+
+    if domain != "watshout":
+        return abort(403)
+    else:
+        return app.send_static_file("whitelist.html")
 
 
 # Creates a verified cookie for user
