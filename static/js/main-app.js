@@ -29,9 +29,13 @@ firebase.auth().onAuthStateChanged(function (user) {
 
         panCurrentLocation();
 
+        let cookieUID = document.getElementById(`uid`).getAttribute(`content`);
+
         userID = user.uid;
         userEmail = user.email;
         userName = user.displayName;
+
+        checkIfCookieAltered(userID, cookieUID);
 
         let hasInfo = document.getElementById(`has_info`).getAttribute(`content`);
 

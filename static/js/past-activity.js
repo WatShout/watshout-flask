@@ -18,6 +18,16 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         let myUID = user.uid;
 
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                let browserUID = user.uid;
+                let serverUID = document.getElementById(`uid`).getAttribute(`content`);
+
+                checkIfCookieAltered(browserUID, serverUID);
+
+            }
+        });
+
         // User is viewing their own ride
         if (myUID === theirUID){
 
