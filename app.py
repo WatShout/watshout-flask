@@ -375,7 +375,7 @@ def user_page(their_uid=None):
             print("KeyError: No activities")
 
         return render_template('profile-page.html', my_email=my_email, email=email, name=name, birthday=birthday,
-                               uid=uid, their_uid=their_uid, activity_ids=activity_ids, profile_pic=profile_pic)
+                               uid=my_uid, their_uid=their_uid, activity_ids=activity_ids, profile_pic=profile_pic)
     else:
         return "You are not friends with this user"
 
