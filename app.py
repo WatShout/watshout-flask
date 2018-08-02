@@ -84,8 +84,6 @@ def main_page():
     lat = request.cookies.get('last_latitude')
     lng = request.cookies.get('last_longitude')
 
-    print(lat)
-
     if my_user_entry is not None:
         has_info = "yes"
         my_email = my_user_entry["email"]
@@ -375,7 +373,7 @@ def user_page(their_uid=None):
             print("KeyError: No activities")
 
         return render_template('profile-page.html', my_email=my_email, email=email, name=name, birthday=birthday,
-                               uid=their_uid, activity_ids=activity_ids, profile_pic=profile_pic)
+                               uid=my_uid, their_uid=their_uid, activity_ids=activity_ids, profile_pic=profile_pic)
     else:
         return "You are not friends with this user"
 

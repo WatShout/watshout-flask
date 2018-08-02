@@ -23,6 +23,7 @@ const database = firebase.database();
 const ref = database.ref();
 const storageRef = firebase.storage().ref();
 
+
 let signOut = () => {
 
     //console.log(firebase.auth().currentUser.uid);
@@ -56,4 +57,12 @@ let signOut = () => {
     });
 };
 
+let checkIfCookieAltered = (browser, server) => {
+
+    if (browser.trim() !== server.trim()) {
+
+        signOut();
+    }
+
+};
 

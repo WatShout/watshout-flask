@@ -2,6 +2,16 @@
 // Gets the current user's ID from the meta tag in Jinja2
 let myUID = document.getElementById(`uid`).getAttribute(`content`);
 
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+        let browserUID = user.uid;
+        let serverUID = document.getElementById(`uid`).getAttribute(`content`);
+
+        checkIfCookieAltered(browserUID, serverUID);
+
+    }
+});
+
 // Removes a child from the DOM
 let removeChild = (id) => {
     let element = document.getElementById(id);

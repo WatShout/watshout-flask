@@ -9,7 +9,17 @@
 
  */
 
-let theirUID = document.getElementById(`uid`).getAttribute(`content`);
+let theirUID = document.getElementById(`their_uid`).getAttribute(`content`);
+
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+        let browserUID = user.uid;
+        let serverUID = document.getElementById(`uid`).getAttribute(`content`);
+
+        checkIfCookieAltered(browserUID, serverUID);
+
+    }
+});
 
 let startingPosition = {lat: 37.4419, lng: -122.1430};
 const map = new google.maps.Map(document.getElementById(`my-map`), {
