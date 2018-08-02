@@ -11,9 +11,7 @@ from flask import Flask, render_template, request, redirect, url_for, make_respo
 from pyfcm import FCMNotification
 from stravalib.client import Client
 
-
 DEBUG = False
-
 
 push_service = FCMNotification(api_key="AAAAhTZslrE:APA91bGk1e8XXWROc6sCBZtNX2RAXpXd1BQauM4d2h3ACHf33ypAYBf70oODEwqOwnhPVNvgXRPGqZ0TEMQk7RiJiACZXSdr0Cp5SPwpeEmk2FJVrvDVqxTck5svaw27Sft4y1cSmUs5")
 
