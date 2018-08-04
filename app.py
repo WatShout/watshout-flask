@@ -73,6 +73,10 @@ def check_user_exists(uid, verified):
         return None
 
 
+@app.route('/privacy/')
+def privacy_policy():
+    return "WatShout will not misuse your data"
+
 # Main web app
 @app.route('/')
 def main_page():
