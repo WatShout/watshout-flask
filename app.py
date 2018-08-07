@@ -457,7 +457,7 @@ def get_map_url():
 
 
 # URL for uploading a Strava activity
-@app.route('/mobile/strava/<string:uid>/<string:file_name>/')
+@app.route('/strava/upload/<string:uid>/<string:file_name>/')
 def upload_activity(uid=None, file_name=None):
     try:
 
@@ -482,7 +482,7 @@ def upload_activity(uid=None, file_name=None):
         return json.dumps({'locationSuccess': False}), 69, {'ContentType': 'application/json'}
 
 
-@app.route('/friend_requests/<string:uid>/', methods=['GET'])
+@app.route('/friendrequests/<string:uid>/', methods=['GET'])
 def get_friend_requests_list(uid=None):
 
     try:
@@ -533,7 +533,7 @@ def get_friends_list(uid=None):
     return json.dumps(data), 200, {'ContentType': 'application/json'}
 
 
-@app.route('/maps/download/<string:uid>/', methods=['GET'])
+@app.route('/newsfeed/<string:uid>/', methods=['GET'])
 def send_json(uid=None):
 
     try:
@@ -571,7 +571,7 @@ def send_json(uid=None):
     return json_data, 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
-@app.route('/maps/calendar/download/<string:uid>/', methods=['GET'])
+@app.route('/history/<string:uid>/', methods=['GET'])
 def get_calendar_json(uid=None):
 
     activities_dict = ref.child("users").child(uid).child("device").child("past").get().val()
