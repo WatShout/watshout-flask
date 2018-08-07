@@ -32,15 +32,20 @@ try {
     lng = -122.1430;
 }
 
+
 const map = new google.maps.Map(document.getElementById(`map`), {
     zoom: 16,
-    center: new google.maps.LatLng(lat,lng),
+    center: new google.maps.LatLng(lat, lng),
     clickableIcons: false,
     disableDefaultUI: true,
-    gestureHandling: 'cooperative'
-
+    gestureHandling: 'cooperative',
+    mapTypeControlOptions: {
+            mapTypeIds: ['Color Map', 'BW Map']
+          }
 });
 
+map.mapTypes.set('BW Map', bw_map);
+map.setMapTypeId('BW Map');
 
 // Takes a snapshot and returns a dictionary of values
 let getValuesFromSnapshot = (snapshot) => {
@@ -99,8 +104,11 @@ let addPoint = (snapshot, theirUID, map, name) => {
 
     document.getElementById(`panTo` + theirUID).onclick = function () {
 
-            let latLng = new google.maps.LatLng(values["lat"], values["lon"]);
-            map.panTo(latLng);
+        map.mapTypes.set('Color Map', color_map);
+        map.setMapTypeId('Color Map');
+
+        let latLng = new google.maps.LatLng(values["lat"], values["lon"]);
+        map.panTo(latLng);
 
     };
 
@@ -119,7 +127,7 @@ let addPoint = (snapshot, theirUID, map, name) => {
 
     // Set user's current InfoWindow then opens it
     infoWindowDict[theirUID] = new google.maps.InfoWindow({
-          content: contentString
+        content: contentString
     });
     // infoWindowDict[theirUID].open(map, currentMarker);
 

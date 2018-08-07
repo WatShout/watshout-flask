@@ -13,6 +13,8 @@ from stravalib.client import Client
 
 DEBUG = False
 
+BASE_ENDPOINT_URL = "https://watshout-test.appspot.com"
+
 push_service = FCMNotification(api_key="AAAAhTZslrE:APA91bGk1e8XXWROc6sCBZtNX2RAXpXd1BQauM4d2h3ACHf33ypAYBf70oODEwqOwnhPVNvgXRPGqZ0TEMQk7RiJiACZXSdr0Cp5SPwpeEmk2FJVrvDVqxTck5svaw27Sft4y1cSmUs5")
 
 client = Client()
@@ -77,6 +79,7 @@ def check_user_exists(uid, verified):
 def privacy_policy():
     return "WatShout will not misuse your data"
 
+
 # Main web app
 @app.route('/')
 def main_page():
@@ -136,6 +139,7 @@ def set_default_location(coords=None):
     res.set_cookie('last_longitude', lng, max_age=60 * 60 * 24 * 7 * 365)
 
     return res
+
 
 # Creates a verified cookie for user
 @app.route('/cookies/verified/create/')
@@ -256,7 +260,7 @@ def news_feed():
 
     my_user_entry = get_user_entry(my_uid)
 
-    json_data = requests.get('https://watshout.herokuapp.com/maps/download/' + my_uid + '/').json()["activities"]
+    json_data = requests.get(BASE_ENDPOINT_URL + '/maps/download/' + my_uid + '/').json()["activities"]
 
     return render_template('news-feed.html', uid=my_uid, activities=json_data, email=my_user_entry["email"])
 
@@ -294,7 +298,7 @@ def strava_login():
         return render_template('email-verify.html', uid=my_uid)
 
     if not DEBUG:
-        uri = 'https://watshout.herokuapp.com/me/strava/authorized/'
+        uri = BASE_ENDPOINT_URL + '/me/strava/authorized/'
     else:
         uri = 'http://127.0.0.1:5000/me/strava/authorized/'
 
@@ -445,8 +449,7 @@ def get_map_url():
             final_url = base_url + poly_path
 
     except KeyError:
-        final_url = "https://www.mapsofworld.com/usa/usa-maps/outline-map-usa.jpg"
-
+        final_url = "https://dubsism.files.wordpress.com/2017/12/image-not-found.png?w=1094"
 
     ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(final_url)
 
@@ -477,30 +480,6 @@ def upload_activity(uid=None, file_name=None):
     except Exception as e:
         print(e)
         return json.dumps({'locationSuccess': False}), 69, {'ContentType': 'application/json'}
-
-
-# URL for sending a SMS message
-@app.route('/twilio/send/', methods=['POST'])
-def send_message():
-
-    if request.method == 'GET':
-        return json.dumps({'locationSuccess': False}), 405, {'ContentType': 'application/json'}
-
-    try:
-        message = request.headers.get('message')
-        to_number = request.headers.get('to_number')
-        twilio_number = '+18312788199'
-
-        twilio_message = twilio_client.messages.create(
-            body=message,
-            from_=twilio_number,
-            to=to_number
-        )
-
-        return json.dumps({'locationSuccess': True}), 200, {'ContentType': 'application/json'}
-
-    except Exception:
-        return json.dumps({'locationSuccess': False}), 500, {'ContentType': 'application/json'}
 
 
 @app.route('/friend_requests/<string:uid>/', methods=['GET'])
