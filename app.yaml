@@ -2,11 +2,6 @@ runtime: python37
 api_version: 1
 
 handlers:
-- url: /api/*
-  script: api.app
-
-- url: /cookies/*
-  script: cookies.app
-
-- url: /*
+# We only need one handler because everything Flask Blueprints manage all routing
+- url: .*
   script: main.app

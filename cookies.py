@@ -1,9 +1,9 @@
-from flask import Flask, make_response
+from flask import make_response, Blueprint
 
-app = Flask(__name__)
+cookies = Blueprint('cookies', __name__)
 
 
-@app.route('/cookies/set_location/<string:coords>/')
+@cookies.route('/cookies/set_location/<string:coords>/')
 def set_default_location(coords=None):
 
     lat = coords.split(',')[0]
@@ -17,7 +17,7 @@ def set_default_location(coords=None):
 
 
 # Creates a verified cookie for user
-@app.route('/cookies/verified/create/')
+@cookies.route('/cookies/verified/create/')
 def create_verification_cookie():
     res = make_response()
     res.set_cookie('verified', 'true', max_age=60 * 60 * 24 * 7 * 365)
@@ -25,7 +25,7 @@ def create_verification_cookie():
 
 
 # Creates UID cookie for user
-@app.route('/cookies/uid/create/<string:uid>')
+@cookies.route('/cookies/uid/create/<string:uid>')
 def create_uid_cookie(uid=None):
     res = make_response()
     res.set_cookie('uid', uid, max_age=60 * 60 * 24 * 7 * 365)
@@ -33,13 +33,9 @@ def create_uid_cookie(uid=None):
 
 
 # Deletes cookie upon logout
-@app.route('/cookies/delete/<string:uid>')
+@cookies.route('/cookies/delete/<string:uid>')
 def delete_uid_cookie(uid=None):
     res = make_response()
     res.set_cookie('uid', uid, max_age=0)
     res.set_cookie('verified', 'true', max_age=0)
     return res
-
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0')

@@ -1,20 +1,18 @@
 import json
 import urllib.request
-from flask_sslify import SSLify
+
 import polyline
 import xmltodict
-from flask import Flask, request
+from flask import request, Blueprint
 
-from config import ref, storageRef, DEBUG, BASE_CREATE_MAP_URL, strava_client
+from config import ref, storageRef, BASE_CREATE_MAP_URL, strava_client
 from helper_functions import create_json_activities_list, parse_activity_snapshot
 
-app = Flask(__name__, static_url_path="/static")
-
-if not DEBUG:
-    sslify = SSLify(app)
+api = Blueprint('api', __name__)
 
 
-@app.route('/api/createmap/', methods=['POST'])
+# Creates a static Google Maps image with running path plotted
+@api.route('/api/createmap/', methods=['POST'])
 def get_map_url():
 
     uid = request.form['uid']
@@ -22,6 +20,9 @@ def get_map_url():
     file_name = time_stamp + ".gpx"
 
     url = storageRef.child("users").child(uid).child("gpx").child(file_name).get_url(None)
+
+    # TODO: Change this
+    ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set("Test Location run")
 
     url_response = urllib.request.urlopen(url)
     data = url_response.read()
@@ -43,16 +44,17 @@ def get_map_url():
 
             final_url = BASE_CREATE_MAP_URL + poly_path
 
-    except KeyError:
+    except Exception as e:
         final_url = "https://dubsism.files.wordpress.com/2017/12/image-not-found.png?w=1094"
+        print(e)
 
-    ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(final_url)
-
-    return final_url
+    finally:
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(final_url)
+        return final_url
 
 
 # URL for uploading a Strava activity
-@app.route('/api/strava/upload/<string:uid>/<string:file_name>/')
+@api.route('/api/strava/upload/<string:uid>/<string:file_name>/', methods=['GET'])
 def upload_activity(uid=None, file_name=None):
     try:
 
@@ -71,13 +73,14 @@ def upload_activity(uid=None, file_name=None):
 
         strava_client.upload_activity(parsed_data, 'gpx')
 
-        return json.dumps({'locationSuccess': True}), 200, {'ContentType': 'application/json'}
+        return json.dumps({'locationSuccess': True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
-    except Exception as e:
-        return json.dumps({'locationSuccess': False}), 403, {'ContentType': 'application/json'}
+    except KeyError:
+        return json.dumps({'locationSuccess': False}), 403, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
-@app.route('/api/friendrequests/<string:uid>/', methods=['GET'])
+# Retrieves a friends list as JSON
+@api.route('/api/friendrequests/<string:uid>/', methods=['GET'])
 def get_friend_requests_list(uid=None):
 
     try:
@@ -100,10 +103,11 @@ def get_friend_requests_list(uid=None):
             "uid": uid
         })
 
-    return json.dumps(data), 200, {'ContentType': 'application/json'}
+    return json.dumps(data), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
-@app.route('/api/friends/<string:uid>/', methods=['GET'])
+# Gets list of current friends as JSON
+@api.route('/api/friends/<string:uid>/', methods=['GET'])
 def get_friends_list(uid=None):
 
     try:
@@ -125,10 +129,11 @@ def get_friends_list(uid=None):
             "uid": uid
         })
 
-    return json.dumps(data), 200, {'ContentType': 'application/json'}
+    return json.dumps(data), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
-@app.route('/api/newsfeed/<string:uid>/', methods=['GET'])
+# Retrieves some number (TBD) of recent activities completed by friends
+@api.route('/api/newsfeed/<string:uid>/', methods=['GET'])
 def send_json(uid=None):
 
     try:
@@ -155,7 +160,8 @@ def send_json(uid=None):
     return json_data, 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
-@app.route('/api/history/<string:uid>/', methods=['GET'])
+# Gets every activity completed by the user as JSON
+@api.route('/api/history/<string:uid>/', methods=['GET'])
 def get_calendar_json(uid=None):
 
     activities_dict = ref.child("users").child(uid).child("device").child("past").get().val()
@@ -165,16 +171,18 @@ def get_calendar_json(uid=None):
     if activities_dict is not None:
         for key, value in activities_dict.items():
 
-            data["activities"].append(
-                {
-                    #  "time": str(pandas.to_datetime(value['time'], unit='ms')),
-                    "time": value['time'],
-                    "image": value['map_link']
-                }
-            )
+            current_data = {"time": value['time']}
 
-    return json.dumps(data)
+            try:
+                current_data["image"] = value['map_link']
+            except KeyError:
+                current_data["image"] = None
 
+            try:
+                current_data["event_name"] = value['event_name']
+            except KeyError:
+                current_data["event_name"] = None
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+            data["activities"].append(current_data)
+
+    return json.dumps(data), 200, {'Content-Type': 'text/javascript; charset=utf-8'}

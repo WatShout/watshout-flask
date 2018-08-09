@@ -1,6 +1,7 @@
 from config import ref
 from flask import redirect, url_for, render_template
 import collections
+import json
 
 
 # Gets UID and verified cookies from HTTP request
@@ -43,9 +44,18 @@ def parse_activity_snapshot(snapshot, their_uid, their_name):
 
         activity_id = key
         time = value['time']
-        map_link = value['map_link']
 
-        activities_dict[activity_id] = [their_uid, time, map_link, their_name]
+        try:
+            map_link = value['map_link']
+        except KeyError:
+            map_link = None
+
+        try:
+            event_name = value['event_name']
+        except KeyError:
+            event_name = None
+
+        activities_dict[activity_id] = [their_uid, time, map_link, their_name, event_name]
 
     return activities_dict
 
@@ -56,6 +66,7 @@ def create_json_activities_list(activities_dict):
     time = 1
     map_link = 2
     their_name = 3
+    event_name = 4
 
     data = {"activities": []}
 
@@ -65,7 +76,8 @@ def create_json_activities_list(activities_dict):
                 {
                     "name": value[their_name],
                     "image": value[map_link],
-                    "time": value[time]
+                    "time": value[time],
+                    "event_name": value[event_name]
                 }
             )
 

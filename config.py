@@ -20,7 +20,7 @@ storageRef = firebase.storage()
 strava_client = Client()
 access_token = None
 
-DEBUG = False
+DEBUG = True
 
 BASE_ENDPOINT_URL = "https://watshout-test.appspot.com"
 
