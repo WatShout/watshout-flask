@@ -5,7 +5,7 @@ import polyline
 import xmltodict
 from flask import Flask, request
 
-from config import ref, storageRef, client, DEBUG
+from config import ref, storageRef, DEBUG, BASE_CREATE_MAP_URL, strava_client
 from helper_functions import create_json_activities_list, parse_activity_snapshot
 
 app = Flask(__name__, static_url_path="/static")
@@ -39,16 +39,9 @@ def get_map_url():
 
             coords = [[lat, lon] for lat, lon in zip(lats, lons)]
 
-            # The API seems to automatically calculate the center
-            # avg_lat = sum(lats) / len(lats)
-            # avg_lon = sum(lons) / len(lons)
-            # center = [[avg_lat, avg_lon]]
-
-            base_url = "https://maps.googleapis.com/maps/api/staticmap?zoom=14&size=600x300&maptype=roadmap&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s&sensor=true"
-
             poly_path = "&path=enc:" + polyline.encode(coords, 5)
 
-            final_url = base_url + poly_path
+            final_url = BASE_CREATE_MAP_URL + poly_path
 
     except KeyError:
         final_url = "https://dubsism.files.wordpress.com/2017/12/image-not-found.png?w=1094"
@@ -66,7 +59,7 @@ def upload_activity(uid=None, file_name=None):
         id = file_name
 
         strava_token = ref.child("users").child(uid).child("strava_token").get().val()
-        client.access_token = strava_token
+        strava_client.access_token = strava_token
 
         file_name = file_name + ".gpx"
 
@@ -76,12 +69,12 @@ def upload_activity(uid=None, file_name=None):
         data = url_response.read()
         parsed_data = data.decode('utf-8')
 
-        client.upload_activity(parsed_data, 'gpx')
+        strava_client.upload_activity(parsed_data, 'gpx')
 
         return json.dumps({'locationSuccess': True}), 200, {'ContentType': 'application/json'}
+
     except Exception as e:
-        print(e)
-        return json.dumps({'locationSuccess': False}), 69, {'ContentType': 'application/json'}
+        return json.dumps({'locationSuccess': False}), 403, {'ContentType': 'application/json'}
 
 
 @app.route('/api/friendrequests/<string:uid>/', methods=['GET'])
@@ -145,26 +138,15 @@ def send_json(uid=None):
 
     activities_dict = {}
 
-    print(friends)
-
     for their_uid in friends:
         snapshot = ref.child("users").child(their_uid)\
             .child("device").child("past")\
             .order_by_child("time").limit_to_last(5).get().val()
 
-        print(their_uid)
-
         their_name = ref.child("users").child(their_uid).child("name").get().val()
-
-        print(their_name)
 
         if snapshot is not None:
             activities_dict.update(parse_activity_snapshot(snapshot, their_uid, their_name))
-
-    try:
-        print(activities_dict)
-    except:
-        print("Error!")
 
     # TODO: Sort activities_dict
 

@@ -2,11 +2,11 @@ runtime: python37
 api_version: 1
 
 handlers:
-- url: /api/.*
+- url: /api/*
   script: api.app
 
-- url: /cookies/.*
+- url: /cookies/*
   script: cookies.app
 
-- url: /.*
+- url: /*
   script: main.app

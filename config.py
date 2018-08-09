@@ -17,10 +17,13 @@ firebase = pyrebase.initialize_app(config)
 ref = firebase.database()
 storageRef = firebase.storage()
 
-client = Client()
+strava_client = Client()
 access_token = None
 
 DEBUG = False
 
 BASE_ENDPOINT_URL = "https://watshout-test.appspot.com"
+
+BASE_CREATE_MAP_URL = "https://maps.googleapis.com/maps/api/staticmap?zoom=14&size=600x300&maptype=roadmap&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s&sensor=true"
+
 

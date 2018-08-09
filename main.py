@@ -1,14 +1,10 @@
 import requests
 from flask import Flask, render_template, request, redirect, url_for, abort
 
-from config import ref, storageRef, client, access_token, DEBUG, BASE_ENDPOINT_URL
+from config import ref, storageRef, strava_client, access_token, DEBUG, BASE_ENDPOINT_URL
 from helper_functions import get_cookies, get_user_entry, check_user_exists
+
 app = Flask(__name__, static_url_path="/static")
-
-
-@app.route('/privacy/')
-def privacy_policy():
-    return "WatShout will not misuse your data"
 
 
 # Main web app
@@ -32,6 +28,11 @@ def main_page():
 
     return render_template('main-app.html', uid=my_uid, my_email=my_email, has_info=has_info,
                            lat=lat, lng=lng)
+
+
+@app.route('/privacy/')
+def privacy_policy():
+    return "WatShout will not misuse your data"
 
 
 @app.route('/new/')
@@ -97,7 +98,7 @@ def my_page():
     # User has no activities/devices
     except KeyError:
         activity_ids = ""
-        print("KeyError: No activities")
+        print("User '" + email + "' has no activities")
 
     # Get the user's Strava auth token
     try:
@@ -106,7 +107,7 @@ def my_page():
     # User hasn't authenticated with Strava, throw an error
     except KeyError:
         strava_token = "no"
-        print("KeyError: No Strava connection")
+        print("User '" + email + "' is not connected with Strava")
 
     return render_template('profile-page.html', email=email, my_email=email, name=name, birthday=birthday, uid=my_uid,
                            activity_ids=activity_ids, strava_token=strava_token,
@@ -125,19 +126,6 @@ def my_friends():
     my_user_entry = get_user_entry(my_uid)
 
     my_email = my_user_entry['email']
-
-    try:
-        my_friends = ref.child("friend_data").child(my_uid).get().val()
-
-        friend_links = []
-
-        for their_uid in my_friends:
-            their_email = ref.child("users").child(their_uid).child("email").get().val()
-            link = '<a id="' + their_uid + '" href="/users/' + their_uid + '">' + their_email + '</a>'
-            friend_links.append(link)
-
-    except TypeError:
-        friend_links = []
 
     return render_template('friends-page.html', uid=my_uid, my_email=my_email)
 
@@ -196,8 +184,9 @@ def strava_login():
         uri = 'http://127.0.0.1:5000/me/strava/authorized/'
 
     authorize_url = None
+
     if not access_token:
-        authorize_url = client.authorization_url(
+        authorize_url = strava_client.authorization_url(
             client_id=26116,
             redirect_uri=uri,
             approval_prompt='auto',
@@ -219,12 +208,12 @@ def strava_authorized():
     if verified is None:
         return render_template('email-verify.html', uid=my_uid)
 
-    access_token = client.exchange_code_for_token(
+    access_token = strava_client.exchange_code_for_token(
         client_id=26116,
         client_secret='04ba9a4ac548cdc94c375baf65ceb95eca3af533',
         code=code)
 
-    client.access_token = access_token
+    strava_client.access_token = access_token
 
     # client.upload_activity(test_run, 'gpx')
 
@@ -257,26 +246,9 @@ def user_page(their_uid=None):
         profile_pic_format = ref.child("users").child(their_uid).get().val()['profile_pic_format']
         profile_pic = storageRef.child('users/' + their_uid + '/profile.' + profile_pic_format).get_url(None)
 
-        # Try to build a list of user's activities
-        try:
-            device = ref.child("users").child(their_uid).get().val()['device']['past']
+        # TODO: Use api endpoint to get list of user's activities
 
-            activity_ids = []
-
-            # Gets the activity 'ID' and adds it to a list
-            # (that is parsed as a string)
-            for key, value in device.items():
-                activity_ids.append(key)
-
-        # User has no activities/devices
-        except KeyError:
-            activity_ids = ""
-            print("KeyError: No activities")
-
-        return render_template('profile-page.html', my_email=my_email, email=email, name=name, birthday=birthday,
-                               uid=my_uid, their_uid=their_uid, activity_ids=activity_ids, profile_pic=profile_pic)
-    else:
-        return "You are not friends with this user"
+    return "Work in progress"
 
 
 if __name__ == "__main__":
