@@ -1,23 +1,12 @@
-#runtime: python
-#api_version: '1'
-#env: flexible
-#threadsafe: true
-#default_expiration: 1s
-
-#manual_scaling:
-#  instances: 1
-
-#resources:
-#  cpu: 1
-#  memory_gb: 0.5
-#  disk_size_gb: 10
-
 runtime: python37
 api_version: 1
-#threadsafe: true
-
-#entrypoint: python3 -m flask run
 
 handlers:
+- url: /api/.*
+  script: api.app
+
+- url: /cookies/.*
+  script: cookies.app
+
 - url: /.*
   script: main.app
