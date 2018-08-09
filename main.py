@@ -1,7 +1,6 @@
 import collections
 import json
 import urllib.request
-import pandas
 import polyline
 from flask_sslify import SSLify
 import pyrebase
@@ -260,7 +259,7 @@ def news_feed():
 
     my_user_entry = get_user_entry(my_uid)
 
-    json_data = requests.get(BASE_ENDPOINT_URL + '/maps/download/' + my_uid + '/').json()["activities"]
+    json_data = requests.get(BASE_ENDPOINT_URL + '/newsfeed/' + my_uid + '/').json()["activities"]
 
     return render_template('news-feed.html', uid=my_uid, activities=json_data, email=my_user_entry["email"])
 
@@ -631,5 +630,8 @@ def create_json_activities_list(activities_dict):
     return json.dumps(data)
 
 
-if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=80, debug=DEBUG)
+#if __name__ == '__main__':
+#app.run(host='127.0.0.1', port=80, debug=DEBUG)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
