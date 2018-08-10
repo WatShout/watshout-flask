@@ -178,7 +178,7 @@ def strava_login():
 
     my_uid = request.cookies.get('uid')
     if my_uid is None:
-        return redirect(url_for('login'))
+        return redirect(url_for('web_app.login'))
 
     verified = request.cookies.get('verified')
     if verified is None:
@@ -208,7 +208,7 @@ def strava_authorized():
 
     my_uid = request.cookies.get('uid')
     if my_uid is None:
-        return redirect(url_for('login'))
+        return redirect(url_for('web_app.login'))
 
     verified = request.cookies.get('verified')
     if verified is None:

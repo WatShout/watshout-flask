@@ -22,10 +22,10 @@ def check_user_exists(uid, verified):
     user_entry = ref.child("users").child(uid).get().val()
 
     if uid is None:
-        return redirect(url_for('login'))
+        return redirect(url_for('web_app.login'))
 
     elif user_entry is None:
-        return redirect(url_for('main_page'))
+        return redirect(url_for('web_app.main_page'))
 
     elif verified is None:
         return render_template('email-verify.html', uid=uid)
@@ -72,7 +72,7 @@ def parse_activity_snapshot(snapshot, their_uid, their_name):
 
 def create_json_activities_list(activities_dict):
 
-    their_uid = 0  # Not used
+    their_uid = 0
     time = 1
     map_link = 2
     their_name = 3
@@ -86,6 +86,7 @@ def create_json_activities_list(activities_dict):
         for key, value in activities_dict.items():
             data["activities"].append(
                 {
+                    "uid": value[their_uid],
                     "name": value[their_name],
                     "image": value[map_link],
                     "time": value[time],
