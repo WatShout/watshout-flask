@@ -1,61 +1,40 @@
 import json
 import urllib.request
 
-import polyline
-import xmltodict
 from flask import request, Blueprint
 
-from config import ref, storageRef, BASE_CREATE_MAP_URL, strava_client
-from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng
+from config import ref, storageRef, strava_client
+from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng, \
+    create_map_url
 
 api = Blueprint('api', __name__)
 
 
 # Creates a static Google Maps image with running path plotted
-@api.route('/api/createmap/', methods=['POST'])
-def get_map_url():
+@api.route('/api/addactivity/', methods=['POST'])
+def add_activity():
 
     uid = request.form['uid']
     time_stamp = request.form['time_stamp']
     file_name = time_stamp + ".gpx"
 
-    url = storageRef.child("users").child(uid).child("gpx").child(file_name).get_url(None)
-
-    # TODO: Change this
-    ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set("Test Location run")
-
-    url_response = urllib.request.urlopen(url)
-    data = url_response.read()
-    parsed_data = data.decode('utf-8')
-
-    gpx_dict = xmltodict.parse(parsed_data)
-
-    lats = []
-    lons = []
-
-    # Placeholder until actual map gets created
-    final_url = "https://dubsism.files.wordpress.com/2017/12/image-not-found.png?w=1094"
+    gpx_url = storageRef.child("users").child(uid).child("gpx").child(file_name).get_url(None)
 
     try:
-        for each in gpx_dict['gpx']['trk']['trkseg']['trkpt']:
-            lats.append(float(each['@lat']))
-            lons.append(float(each['@lon']))
+        map_data = create_map_url(gpx_url)
+        map_url = map_data["url"]
+        first_lat = map_data["first_lat"]
+        first_lon = map_data["first_lon"]
 
-            coords = [[lat, lon] for lat, lon in zip(lats, lons)]
+        city_name = get_location_from_latlng(first_lat, first_lon)
+        event_name = city_name + " run"
 
-            poly_path = "&path=color:0xff0000ff|enc:" + polyline.encode(coords, 5)
-
-            final_url = BASE_CREATE_MAP_URL + poly_path
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(event_name)
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(map_url)
+        return json.dumps({'success': True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
     except Exception as e:
-        print(e)
-
-    finally:
-        city_name = get_location_from_latlng(lats[0], lons[0])
-        event_name = city_name + " run"
-        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(event_name)
-        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(final_url)
-        return final_url
+        return json.dumps({'success': False, 'error': e}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
 # URL for uploading a Strava activity

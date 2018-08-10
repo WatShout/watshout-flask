@@ -3,6 +3,42 @@ from flask import redirect, url_for, render_template
 import collections
 import json
 import requests
+import urllib.request
+import xmltodict
+import polyline
+from config import BASE_CREATE_MAP_URL
+
+
+def create_map_url(gpx_url):
+    url_response = urllib.request.urlopen(gpx_url)
+    data = url_response.read()
+    parsed_data = data.decode('utf-8')
+
+    gpx_dict = xmltodict.parse(parsed_data)
+
+    lats = []
+    lons = []
+
+    return_data = {}
+
+    try:
+        for each in gpx_dict['gpx']['trk']['trkseg']['trkpt']:
+            lats.append(float(each['@lat']))
+            lons.append(float(each['@lon']))
+
+        coords = [[lat, lon] for lat, lon in zip(lats, lons)]
+
+        poly_path = "&path=color:0xff0000ff|enc:" + polyline.encode(coords, 5)
+
+        return_data["url"] = BASE_CREATE_MAP_URL + poly_path
+        return_data["first_lat"] = lats[0]
+        return_data["first_lon"] = lons[0]
+
+        return return_data
+
+    except Exception as e:
+        print(e)
+        return "https://dubsism.files.wordpress.com/2017/12/image-not-found.png?w=1094"
 
 
 def get_location_from_latlng(lat, lng):
