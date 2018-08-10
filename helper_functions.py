@@ -2,6 +2,23 @@ from config import ref
 from flask import redirect, url_for, render_template
 import collections
 import json
+import requests
+
+
+def get_location_from_latlng(lat, lng):
+
+    latlng = str(lat) + "," + str(lng)
+
+    url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlng + "&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s"
+    request = requests.get(url)
+
+    city_name = request.json()["results"][1]["address_components"][2]["long_name"]
+
+    # Strip formatting
+    city_name.replace('"', '')
+    city_name.replace("'", "")
+
+    return city_name
 
 
 # Gets UID and verified cookies from HTTP request

@@ -6,7 +6,7 @@ import xmltodict
 from flask import request, Blueprint
 
 from config import ref, storageRef, BASE_CREATE_MAP_URL, strava_client
-from helper_functions import create_json_activities_list, parse_activity_snapshot
+from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng
 
 api = Blueprint('api', __name__)
 
@@ -33,6 +33,9 @@ def get_map_url():
     lats = []
     lons = []
 
+    # Placeholder until actual map gets created
+    final_url = "https://dubsism.files.wordpress.com/2017/12/image-not-found.png?w=1094"
+
     try:
         for each in gpx_dict['gpx']['trk']['trkseg']['trkpt']:
             lats.append(float(each['@lat']))
@@ -45,10 +48,12 @@ def get_map_url():
             final_url = BASE_CREATE_MAP_URL + poly_path
 
     except Exception as e:
-        final_url = "https://dubsism.files.wordpress.com/2017/12/image-not-found.png?w=1094"
         print(e)
 
     finally:
+        city_name = get_location_from_latlng(lats[0], lons[0])
+        event_name = city_name + " run"
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(event_name)
         ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(final_url)
         return final_url
 

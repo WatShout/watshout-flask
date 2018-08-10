@@ -8,7 +8,7 @@ config = {
     "databaseURL": "https://watshout-test.firebaseio.com",
     "projectID": "watshout-test",
     "storageBucket": "watshout-test.appspot.com",
-    "serviceAccount": "serviceAccountCredentials.json"
+    "serviceAccount": "service_account_credentials.json"
 }
 
 firebase = pyrebase.initialize_app(config)
