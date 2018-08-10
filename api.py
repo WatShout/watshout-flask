@@ -40,7 +40,7 @@ def get_map_url():
 
             coords = [[lat, lon] for lat, lon in zip(lats, lons)]
 
-            poly_path = "&path=enc:" + polyline.encode(coords, 5)
+            poly_path = "&path=color:0xff0000ff|enc:" + polyline.encode(coords, 5)
 
             final_url = BASE_CREATE_MAP_URL + poly_path
 
@@ -111,13 +111,13 @@ def get_friend_requests_list(uid=None):
 def get_friends_list(uid=None):
 
     try:
-        friend_uid_list = list(ref.child("friend_data").child(uid).get().val().keys())
+        friend_uid_list = list(ref.child("friend_data").child(uid).get().val().items())
     except AttributeError:
         friend_uid_list = []
 
     data = {"friends": []}
 
-    for uid in friend_uid_list:
+    for uid, since in friend_uid_list:
         name = ref.child("users").child(uid).child("name").get().val()
         profile_pic_format = ref.child("users").child(uid).child("profile_pic_format").get().val()
         profile_pic = storageRef.child("users").child(uid).child("profile." + profile_pic_format).get_url(None)
@@ -126,7 +126,8 @@ def get_friends_list(uid=None):
         data["friends"].append({
             "name": name,
             "profile_pic": profile_pic,
-            "uid": uid
+            "uid": uid,
+            "since": since
         })
 
     return json.dumps(data), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
@@ -182,6 +183,16 @@ def get_calendar_json(uid=None):
                 current_data["event_name"] = value['event_name']
             except KeyError:
                 current_data["event_name"] = None
+
+            try:
+                current_data["distance"] = value['distance']
+            except KeyError:
+                current_data["distance"] = None
+
+            try:
+                current_data["time_elapsed"] = value['time_elapsed']
+            except KeyError:
+                current_data["time_elapsed"] = None
 
             data["activities"].append(current_data)
 
