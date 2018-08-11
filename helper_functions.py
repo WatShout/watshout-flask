@@ -148,7 +148,7 @@ def create_json_activities_list(activities_dict):
                 {
                     "uid": value[their_uid],
                     "name": value[their_name],
-                    "image": value[map_link],
+                    "map_link": value[map_link],
                     "time": value[time],
                     "event_name": value[event_name],
                     "distance": value[distance],

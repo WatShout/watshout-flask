@@ -84,6 +84,8 @@ def add_activity():
         return json.dumps({'success': True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
     except Exception as e:
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
+            "Run")
         return json.dumps({'success': False, 'error': e}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
@@ -176,7 +178,9 @@ def send_json(uid=None):
 
     activities_dict = {}
 
-    for their_uid in friends:
+    for friend in friends:
+
+        their_uid = friend[0]
         snapshot = ref.child("users").child(their_uid) \
             .child("device").child("past") \
             .order_by_child("time").limit_to_last(5).get().val()
