@@ -1,5 +1,8 @@
 import pyrebase
 from stravalib.client import Client
+from pyfcm import FCMNotification
+
+push_service = FCMNotification(api_key="AAAAlg9flck:APA91bG_O_Thp_7rLL-pINzrbL_MOZvws2bE25EfUt7pDWZY5cfyce6P3kidGqRr2VQRUCDUSBTJtdpJc33V0s7kUlMdRpumwLg-m2W32H69BztbdZgGnJH6TvQUhjbVIv7HncLrFMW69ot6pkPWDJTsRycUEkWqBA")
 
 # Note: Everything is authenticated because of the service account
 config = {
@@ -20,7 +23,7 @@ storageRef = firebase.storage()
 strava_client = Client()
 access_token = None
 
-DEBUG = True
+DEBUG = False
 
 BASE_ENDPOINT_URL = "https://watshout-test.appspot.com"
 

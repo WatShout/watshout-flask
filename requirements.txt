@@ -4,7 +4,7 @@ flask==1.0.2
 pyrebase==3.0.27
 stravalib==0.9.4
 python-dateutil==2.7.3
-pyfcm==1.4.5
+pyfcm
 polyline==1.3.2
 xmltodict==0.11.0
 flask_sslify==0.1.5

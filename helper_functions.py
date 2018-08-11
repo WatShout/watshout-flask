@@ -9,6 +9,10 @@ import polyline
 from config import BASE_CREATE_MAP_URL
 
 
+def get_friend_uid_list(my_uid):
+    return list(ref.child("friend_data").child(my_uid).get().val().items())
+
+
 def create_map_url(gpx_url):
     url_response = urllib.request.urlopen(gpx_url)
     data = url_response.read()
