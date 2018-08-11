@@ -52,13 +52,16 @@ def get_location_from_latlng(lat, lng):
     url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlng + "&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s"
     request = requests.get(url)
 
-    city_name = request.json()["results"][1]["address_components"][2]["long_name"]
+    try:
+        city_name = request.json()["results"][1]["address_components"][2]["long_name"]
 
-    # Strip formatting
-    city_name.replace('"', '')
-    city_name.replace("'", "")
+        # Strip formatting
+        city_name.replace('"', '')
+        city_name.replace("'", "")
 
-    return city_name
+        return city_name
+    except IndexError:
+        return ""
 
 
 # Gets UID and verified cookies from HTTP request
