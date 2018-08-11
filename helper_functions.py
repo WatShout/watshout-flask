@@ -32,7 +32,7 @@ def create_map_url(gpx_url):
 
         coords = [[lat, lon] for lat, lon in zip(lats, lons)]
 
-        poly_path = "&path=color:0xff0000ff|enc:" + polyline.encode(coords, 5)
+        poly_path = polyline.encode(coords, 5)
 
         return_data["url"] = BASE_CREATE_MAP_URL + poly_path
         return_data["first_lat"] = lats[0]

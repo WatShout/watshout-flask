@@ -68,9 +68,10 @@ def add_activity():
 
     gpx_url = storageRef.child("users").child(uid).child("gpx").child(file_name).get_url(None)
 
+    # Note: Map URL creation has been offloaded to the Android app
     try:
         map_data = create_map_url(gpx_url)
-        map_url = map_data["url"]
+        # map_url = map_data["url"]
         first_lat = map_data["first_lat"]
         first_lon = map_data["first_lon"]
 
@@ -79,7 +80,7 @@ def add_activity():
 
         ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
             event_name)
-        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(map_url)
+        # ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(map_url)
         return json.dumps({'success': True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
     except Exception as e:
