@@ -125,7 +125,13 @@ def parse_activity_snapshot(snapshot, their_uid, their_name):
         except KeyError:
             time_elapsed = None
 
-        activities_dict[activity_id] = [their_uid, time, map_link, their_name, event_name, distance, time_elapsed]
+        try:
+            pace = value['pace']
+        except KeyError:
+            pace = None
+
+        activities_dict[activity_id] = [their_uid, time, map_link, their_name, event_name, distance, time_elapsed, pace,
+                                        activity_id]
 
     return activities_dict
 
@@ -139,6 +145,8 @@ def create_json_activities_list(activities_dict):
     event_name = 4
     distance = 5
     time_elapsed = 6
+    pace = 7
+    activity_id = 8
 
     data = {"activities": []}
 
@@ -152,7 +160,9 @@ def create_json_activities_list(activities_dict):
                     "time": value[time],
                     "event_name": value[event_name],
                     "distance": value[distance],
-                    "time_elapsed": value[time_elapsed]
+                    "time_elapsed": value[time_elapsed],
+                    "pace": value[pace],
+                    "activity_id": key
                 }
             )
 

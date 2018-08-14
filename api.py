@@ -6,7 +6,7 @@ import polyline
 
 from config import ref, storageRef, strava_client, push_service, gmaps, BASE_CREATE_MAP_URL
 from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng, \
-    create_map_url, get_friend_uid_list
+     create_map_url, get_friend_uid_list
 
 api = Blueprint('api', __name__)
 
@@ -231,9 +231,9 @@ def get_calendar_json(uid=None):
             current_data = {"time": value['time']}
 
             try:
-                current_data["image"] = value['map_link']
+                current_data["map_link"] = value['map_link']
             except KeyError:
-                current_data["image"] = None
+                current_data["map_link"] = None
 
             try:
                 current_data["event_name"] = value['event_name']
@@ -249,6 +249,16 @@ def get_calendar_json(uid=None):
                 current_data["time_elapsed"] = value['time_elapsed']
             except KeyError:
                 current_data["time_elapsed"] = None
+
+            try:
+                current_data["pace"] = value['pace']
+            except KeyError:
+                current_data["pace"] = None
+
+            try:
+                current_data["activity_id"] = key
+            except KeyError:
+                current_data["activity_id"] = None
 
             data["activities"].append(current_data)
 
