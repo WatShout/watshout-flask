@@ -2,12 +2,32 @@ import json
 import urllib.request
 
 from flask import request, Blueprint
+import polyline
 
-from config import ref, storageRef, strava_client, push_service
+from config import ref, storageRef, strava_client, push_service, gmaps, BASE_CREATE_MAP_URL
 from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng, \
     create_map_url, get_friend_uid_list
 
 api = Blueprint('api', __name__)
+
+
+@api.route('/api/createroadsnap/', methods=['GET', 'POST'])
+def create_road_snap():
+    coordinate_string = request.form['coordinates']
+    coordinate_list = coordinate_string.split("|")
+
+    result = gmaps.snap_to_roads(path=coordinate_list, interpolate=True)
+
+    lats = []
+    lons = []
+
+    for location in result:
+        lats.append(float(location['location']['latitude']))
+        lons.append(float(location['location']['longitude']))
+
+    coords = [[lat, lon] for lat, lon in zip(lats, lons)]
+
+    return BASE_CREATE_MAP_URL + polyline.encode(coords, 5)
 
 
 # Send notification to friends when user starts running

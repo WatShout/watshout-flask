@@ -1,8 +1,11 @@
 import pyrebase
 from stravalib.client import Client
 from pyfcm import FCMNotification
+import googlemaps
 
 push_service = FCMNotification(api_key="AAAAlg9flck:APA91bG_O_Thp_7rLL-pINzrbL_MOZvws2bE25EfUt7pDWZY5cfyce6P3kidGqRr2VQRUCDUSBTJtdpJc33V0s7kUlMdRpumwLg-m2W32H69BztbdZgGnJH6TvQUhjbVIv7HncLrFMW69ot6pkPWDJTsRycUEkWqBA")
+
+gmaps = googlemaps.Client(key="AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s")
 
 # Note: Everything is authenticated because of the service account
 config = {
