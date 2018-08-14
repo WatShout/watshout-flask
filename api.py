@@ -25,6 +25,7 @@ def create_road_snap():
         lats.append(float(location['location']['latitude']))
         lons.append(float(location['location']['longitude']))
 
+    # Figure out how this works
     coords = [[lat, lon] for lat, lon in zip(lats, lons)]
 
     return BASE_CREATE_MAP_URL + polyline.encode(coords, 5)
