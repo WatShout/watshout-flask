@@ -6,9 +6,33 @@ import polyline
 
 from config import ref, storageRef, strava_client, push_service, gmaps, BASE_CREATE_MAP_URL
 from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng, \
-     create_map_url, get_friend_uid_list, get_km_from_coord_string
+     create_map_url, get_friend_uid_list, get_km_from_coord_string, JSON_SUCCESS, JSON_FAIL
 
 api = Blueprint('api', __name__)
+
+
+# Performs the three email checks
+# 1) .edu
+# 2) watshout.com
+# 3) whitelist
+@api.route('/api/authorized/', methods=['GET', 'POST'])
+def check_user():
+    email = request.form['email']
+    email = email.lower()
+
+    if email[-4:] == "edu" or email[-12:] == "watshout.com":
+        return JSON_SUCCESS
+    else:
+        try:
+            result = ref.child("whitelisted_emails").order_by_child("email").equal_to(email).get().val()
+
+            if len(result) > 0:
+                return JSON_SUCCESS
+            else:
+                return JSON_FAIL
+
+        except IndexError:
+            return JSON_FAIL
 
 
 # Not in use right now

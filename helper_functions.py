@@ -9,6 +9,8 @@ import polyline
 from config import BASE_CREATE_MAP_URL
 from haversine import haversine
 
+JSON_SUCCESS = json.dumps({"success": True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+JSON_FAIL = json.dumps({"success": False}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 def get_km_from_coord_string(coord_string):
     items = coord_string.split('|')
