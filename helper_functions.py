@@ -7,6 +7,24 @@ import urllib.request
 import xmltodict
 import polyline
 from config import BASE_CREATE_MAP_URL
+from haversine import haversine
+
+
+def get_km_from_coord_string(coord_string):
+    items = coord_string.split('|')
+
+    tuples = []
+
+    distance = 0
+
+    for item in items:
+        tuples.append((float(item.split(",")[0]), float(item.split(",")[1])))
+
+    for i in range(len(tuples)):
+        if i != len(tuples) - 1:
+            distance += haversine(tuples[i], tuples[i + 1], miles=False)
+
+    return distance
 
 
 def get_friend_uid_list(my_uid):
