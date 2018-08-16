@@ -8,16 +8,11 @@ app = Flask(__name__, static_url_path="/static")
 web_app = Blueprint('web_app', __name__)
 
 
-@web_app.route('/api/')
-def test():
-    return "Test"
-
-
 # Main web app
 @web_app.route('/')
 def main_page():
     my_uid, verified = get_cookies(request)
-    check_user_exists(my_uid, verified)
+    redirect_link = check_user_exists(my_uid, verified)
 
     my_user_entry = get_user_entry(my_uid)
 
