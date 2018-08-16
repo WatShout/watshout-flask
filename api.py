@@ -6,29 +6,71 @@ import polyline
 
 from config import ref, storageRef, strava_client, push_service, gmaps, BASE_CREATE_MAP_URL
 from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng, \
-     create_map_url, get_friend_uid_list
+     create_map_url, get_friend_uid_list, get_km_from_coord_string, JSON_SUCCESS, JSON_FAIL
 
 api = Blueprint('api', __name__)
 
 
+# Performs the three email checks
+# 1) .edu
+# 2) watshout.com
+# 3) whitelist
+@api.route('/api/authorized/', methods=['GET', 'POST'])
+def check_user():
+    email = request.form['email']
+    email = email.lower()
+
+    if email[-4:] == "edu" or email[-12:] == "watshout.com":
+        return JSON_SUCCESS
+    else:
+        try:
+            result = ref.child("whitelisted_emails").order_by_child("email").equal_to(email).get().val()
+
+            if len(result) > 0:
+                return JSON_SUCCESS
+            else:
+                return JSON_FAIL
+
+        except IndexError:
+            return JSON_FAIL
+
+
+# Not in use right now
 @api.route('/api/createroadsnap/', methods=['GET', 'POST'])
 def create_road_snap():
     coordinate_string = request.form['coordinates']
     coordinate_list = coordinate_string.split("|")
+
+    distance = get_km_from_coord_string(coordinate_string)
 
     result = gmaps.snap_to_roads(path=coordinate_list, interpolate=True)
 
     lats = []
     lons = []
 
-    for location in result:
-        lats.append(float(location['location']['latitude']))
-        lons.append(float(location['location']['longitude']))
+    if len(result) > 0:
 
-    # Figure out how this works
-    coords = [[lat, lon] for lat, lon in zip(lats, lons)]
+        try:
 
-    return BASE_CREATE_MAP_URL + polyline.encode(coords, 5)
+            for location in result:
+                lats.append(float(location['location']['latitude']))
+                lons.append(float(location['location']['longitude']))
+
+            # Figure out how this works
+            coords = [[lat, lon] for lat, lon in zip(lats, lons)]
+
+            return_data = {
+                "map_url": BASE_CREATE_MAP_URL + polyline.encode(coords, 5),
+                "distance_km": distance
+            }
+
+            return return_data
+
+        except Exception as e:
+            return json.dumps({"error": e}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
+
+    else:
+        return json.dumps({"success": False}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
 # Send notification to friends when user starts running
