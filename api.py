@@ -20,7 +20,7 @@ def check_user():
     email = request.form['email']
     email = email.lower()
 
-    if email[-4:] == "edu" or email[-12:] == "watshout.com":
+    if email[-4:] == ".edu" or email[-12:] == "watshout.com":
         return JSON_SUCCESS
     else:
         try:
@@ -67,7 +67,7 @@ def create_road_snap():
             return return_data
 
         except Exception as e:
-            return json.dumps({"error": e}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
+            return json.dumps({"error": str(e)}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
 
     else:
         return json.dumps({"success": False}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
@@ -249,9 +249,11 @@ def send_json(uid=None):
             .order_by_child("time").limit_to_last(5).get().val()
 
         their_name = ref.child("users").child(their_uid).child("name").get().val()
+        extension = ref.child("users").child(their_uid).child("profile_pic_format").get().val()
+        profile_pic_url = storageRef.child("users").child(their_uid).child("profile." + extension).get_url(None)
 
         if snapshot is not None:
-            activities_dict.update(parse_activity_snapshot(snapshot, their_uid, their_name))
+            activities_dict.update(parse_activity_snapshot(snapshot, their_uid, their_name, profile_pic_url))
 
     # TODO: Sort activities_dict
 
@@ -264,6 +266,9 @@ def send_json(uid=None):
 @api.route('/api/history/<string:uid>/', methods=['GET'])
 def get_calendar_json(uid=None):
     activities_dict = ref.child("users").child(uid).child("device").child("past").get().val()
+
+    extension = ref.child("users").child(uid).child("profile_pic_format").get().val()
+    profile_pic_url = storageRef.child("users").child(uid).child("profile." + extension).get_url(None)
 
     data = {"activities": []}
 
@@ -301,6 +306,11 @@ def get_calendar_json(uid=None):
                 current_data["activity_id"] = key
             except KeyError:
                 current_data["activity_id"] = None
+
+            try:
+                current_data["profile_pic_url"] = profile_pic_url
+            except KeyError:
+                current_data["profile_pic_url"] = None
 
             data["activities"].append(current_data)
 

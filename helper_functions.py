@@ -114,7 +114,7 @@ def check_user_exists(uid, verified):
         return None
 
 
-def parse_activity_snapshot(snapshot, their_uid, their_name):
+def parse_activity_snapshot(snapshot, their_uid, their_name, their_url):
 
     activities_dict = {}
 
@@ -151,7 +151,7 @@ def parse_activity_snapshot(snapshot, their_uid, their_name):
             pace = None
 
         activities_dict[activity_id] = [their_uid, time, map_link, their_name, event_name, distance, time_elapsed, pace,
-                                        activity_id]
+                                        activity_id, their_url]
 
     return activities_dict
 
@@ -167,6 +167,7 @@ def create_json_activities_list(activities_dict):
     time_elapsed = 6
     pace = 7
     activity_id = 8
+    their_url = 9
 
     data = {"activities": []}
 
@@ -182,7 +183,8 @@ def create_json_activities_list(activities_dict):
                     "distance": value[distance],
                     "time_elapsed": value[time_elapsed],
                     "pace": value[pace],
-                    "activity_id": key
+                    "activity_id": key,
+                    "profile_pic_url": value[their_url]
                 }
             )
 
