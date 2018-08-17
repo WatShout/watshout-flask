@@ -6,7 +6,7 @@ import polyline
 
 from config import ref, storageRef, strava_client, push_service, gmaps, BASE_CREATE_MAP_URL
 from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng, \
-     create_map_url, get_friend_uid_list, get_km_from_coord_string, JSON_SUCCESS, JSON_FAIL
+     create_map_url, get_friend_uid_list, get_km_from_coord_string, JSON_SUCCESS, JSON_FAIL, get_weather
 
 api = Blueprint('api', __name__)
 
@@ -123,7 +123,7 @@ def send_friend_request():
 
 
 # Creates a static Google Maps image with running path plotted
-@api.route('/api/addactivity/', methods=['POST'])
+@api.route('/api/addactivity/', methods=['GET', 'POST'])
 def add_activity():
     uid = request.form['uid']
     time_stamp = request.form['time_stamp']
@@ -134,16 +134,20 @@ def add_activity():
     # Note: Map URL creation has been offloaded to the Android app
     try:
         map_data = create_map_url(gpx_url)
-        # map_url = map_data["url"]
         first_lat = map_data["first_lat"]
         first_lon = map_data["first_lon"]
 
         city_name = get_location_from_latlng(first_lat, first_lon)
         event_name = city_name + " run"
 
-        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
-            event_name)
-        # ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("map_link").set(map_url)
+        weather_type, weather_id = get_weather(first_lat, first_lon)
+
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).set({
+            "weather_type": weather_type,
+            "weather_id": weather_id,
+            "event_name": event_name
+        })
+
         return json.dumps({'success': True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
     except Exception as e:

@@ -12,6 +12,21 @@ from haversine import haversine
 JSON_SUCCESS = json.dumps({"success": True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 JSON_FAIL = json.dumps({"success": False}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
+
+def get_weather(lat, lon):
+
+    lat = str(lat)
+    lon = str(lon)
+
+    url = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&APPID=3808ef19b97a332963fc43804d1fa93e"
+    request = requests.get(url)
+
+    weather_type = request.json()["weather"][0]["main"]
+    id = request.json()["weather"][0]["id"]
+
+    return id, weather_type
+
+
 def get_km_from_coord_string(coord_string):
     items = coord_string.split('|')
 
