@@ -24,7 +24,9 @@ def get_weather(lat, lon):
     weather_type = request.json()["weather"][0]["main"]
     id = request.json()["weather"][0]["id"]
 
-    return id, weather_type
+    temp_celcius = request.json()["main"]["temp"] - 273.15
+
+    return id, weather_type, temp_celcius
 
 
 def get_km_from_coord_string(coord_string):
@@ -48,7 +50,7 @@ def get_friend_uid_list(my_uid):
     return list(ref.child("friend_data").child(my_uid).get().val().items())
 
 
-def create_map_url(gpx_url):
+def create_map_url(gpx_url, uid):
     url_response = urllib.request.urlopen(gpx_url)
     data = url_response.read()
     parsed_data = data.decode('utf-8')
@@ -76,8 +78,7 @@ def create_map_url(gpx_url):
         return return_data
 
     except Exception as e:
-        print(e)
-        return "https://dubsism.files.wordpress.com/2017/12/image-not-found.png?w=1094"
+        return "String"
 
 
 def get_location_from_latlng(lat, lng):
@@ -165,8 +166,23 @@ def parse_activity_snapshot(snapshot, their_uid, their_name, their_url):
         except KeyError:
             pace = None
 
+        try:
+            temp_celcius = value['temp_celcius']
+        except KeyError:
+            temp_celcius = None
+
+        try:
+            weather_type = value['weather_type']
+        except KeyError:
+            weather_type = None
+
+        try:
+            weather_id = value['weather_id']
+        except KeyError:
+            weather_id = None
+
         activities_dict[activity_id] = [their_uid, time, map_link, their_name, event_name, distance, time_elapsed, pace,
-                                        activity_id, their_url]
+                                        activity_id, their_url, temp_celcius, weather_type, weather_id]
 
     return activities_dict
 
@@ -183,6 +199,9 @@ def create_json_activities_list(activities_dict):
     pace = 7
     activity_id = 8
     their_url = 9
+    temp_celcius = 10
+    weather_type = 11
+    weather_id = 12
 
     data = {"activities": []}
 
@@ -199,7 +218,10 @@ def create_json_activities_list(activities_dict):
                     "time_elapsed": value[time_elapsed],
                     "pace": value[pace],
                     "activity_id": key,
-                    "profile_pic_url": value[their_url]
+                    "profile_pic_url": value[their_url],
+                    "temp_celcius": value[temp_celcius],
+                    "weather_type": value[weather_type],
+                    "weather_id": value[weather_id]
                 }
             )
 

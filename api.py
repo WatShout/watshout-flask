@@ -133,24 +133,28 @@ def add_activity():
 
     # Note: Map URL creation has been offloaded to the Android app
     try:
-        map_data = create_map_url(gpx_url)
+        map_data = create_map_url(gpx_url, uid)
         first_lat = map_data["first_lat"]
         first_lon = map_data["first_lon"]
 
         city_name = get_location_from_latlng(first_lat, first_lon)
         event_name = city_name + " run"
 
-        weather_type, weather_id = get_weather(first_lat, first_lon)
+        weather_id, weather_type, temp_celcius = get_weather(first_lat, first_lon)
 
-        ref.child("users").child(uid).child("device").child("past").child(time_stamp).set({
-            "weather_type": weather_type,
-            "weather_id": weather_id,
-            "event_name": event_name
-        })
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("weather_type").set(
+            weather_type)
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("weather_id").set(
+            weather_id)
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
+            event_name)
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("temp_celcius").set(
+            temp_celcius)
 
         return json.dumps({'success': True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
     except Exception as e:
+        print(e)
         ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
             "Run")
         return json.dumps({'success': False, 'error': e}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
@@ -281,30 +285,14 @@ def get_calendar_json(uid=None):
 
             current_data = {"time": value['time']}
 
-            try:
-                current_data["map_link"] = value['map_link']
-            except KeyError:
-                current_data["map_link"] = None
+            attributes_list = ["map_link", "event_name", "distance", "time_elapsed", "pace",
+                               "temp_celcius", "weather_type", "weather_id"]
 
-            try:
-                current_data["event_name"] = value['event_name']
-            except KeyError:
-                current_data["event_name"] = None
-
-            try:
-                current_data["distance"] = value['distance']
-            except KeyError:
-                current_data["distance"] = None
-
-            try:
-                current_data["time_elapsed"] = value['time_elapsed']
-            except KeyError:
-                current_data["time_elapsed"] = None
-
-            try:
-                current_data["pace"] = value['pace']
-            except KeyError:
-                current_data["pace"] = None
+            for attrib in attributes_list:
+                try:
+                    current_data[attrib] = value[attrib]
+                except KeyError:
+                    current_data[attrib] = None
 
             try:
                 current_data["activity_id"] = key

@@ -38,6 +38,22 @@ let initApp = () => {
         if (user) {
 
             let uid = user.uid;
+            let email = user.email;
+
+            $.ajax({
+
+
+                'url' : '/api/authorized/',
+                'type' : 'GET',
+
+                'success' : function(data) {
+                    console.log("worked");
+                },
+                'error' : function() {
+                    console.log("didnt work");
+                }
+
+            });
 
             // If the user is already verified then we first create the 'verified' cookie.
             // After the 'verified' cookie is received, we create the 'uid' cookie. After that
