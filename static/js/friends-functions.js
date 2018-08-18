@@ -99,6 +99,24 @@ let askFriend = () => {
             ref.child(`friend_requests`).child(myUID).child(theirID)
                 .set({"request_type": "sent"});
 
+
+            $.ajax({
+
+                'url' : '/api/sendfriendnotification/',
+                'type' : 'POST',
+                'data' : {my_uid: myUID, their_uid: theirID},
+
+                'success': function(){
+                    console.log("Notification sent");
+                },
+                'error': function() {
+                    console.log("Error sending notification");
+                }
+
+
+            })
+
+
         } else {
 
             alert(`Invalid email`);
