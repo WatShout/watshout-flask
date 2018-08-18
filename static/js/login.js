@@ -44,68 +44,85 @@ let initApp = () => {
 
 
                 'url' : '/api/authorized/',
-                'type' : 'GET',
+                'type' : 'POST',
+                'data': {email: email},
 
                 'success' : function(data) {
-                    console.log("worked");
+                    let obj = JSON.parse(data);
+                    let auth = obj["success"];
+
+                    if (!auth){
+                        alert("Watshout is currently in a closed beta. You will now be redirected so you can"
+                        + " apply to be part of it");
+                        window.location.replace("https://watshout.com/whitelist/");
+
+                        ref.child("users").child(uid).remove();
+                        firebase.auth().currentUser.delete();
+
+
+
+                    } else {
+                        // If the user is already verified then we first create the 'verified' cookie.
+                        // After the 'verified' cookie is received, we create the 'uid' cookie. After that
+                        // is received we redirect to the main web app
+                        if (user.emailVerified){
+
+                            $.ajax({
+
+                                'url' : '/cookies/verified/create/',
+                                'type' : 'GET',
+
+                                'success' : function() {
+
+                                    $.ajax({
+
+                                        'url' : '/cookies/uid/create/' + uid,
+                                        'type' : 'GET',
+
+                                        'success' : function() {
+                                            console.log(`Created both cookies`);
+                                            window.location.replace(`/`);
+                                        },
+                                        'error' : function() {
+                                            console.log(`Verified, but failed UID cookie`)
+                                        }
+                                    });
+
+                                },
+                                'error' : function() {
+                                    console.log(`Failed verify cookie`)
+                                }
+                            });
+
+                        }
+
+                        // User is not verified. Their 'uid' cookie is created but they will need to follow instructions
+                        // to email verify their account. This process takes place on the main webapp page
+                        else {
+                            $.ajax({
+
+                                'url' : '/cookies/uid/create/' + uid,
+                                'type' : 'GET',
+
+                                'success' : function() {
+                                    console.log(`success`);
+                                    window.location.replace(`/`);
+                                },
+                                'error' : function() {
+                                    console.log(`Created UID cookie only`)
+                                }
+                            });
+                        }
+                    }
+
                 },
-                'error' : function() {
-                    console.log("didnt work");
+                'error' : function(e) {
+                    console.log(e);
                 }
 
             });
 
-            // If the user is already verified then we first create the 'verified' cookie.
-            // After the 'verified' cookie is received, we create the 'uid' cookie. After that
-            // is received we redirect to the main web app
-            if (user.emailVerified){
 
-                $.ajax({
-
-                    'url' : '/cookies/verified/create/',
-                    'type' : 'GET',
-
-                    'success' : function() {
-
-                        $.ajax({
-
-                            'url' : '/cookies/uid/create/' + uid,
-                            'type' : 'GET',
-
-                            'success' : function() {
-                                console.log(`Created both cookies`);
-                                window.location.replace(`/`);
-                            },
-                            'error' : function() {
-                                console.log(`Verified, but failed UID cookie`)
-                            }
-                        });
-
-                    },
-                    'error' : function() {
-                        console.log(`Failed verify cookie`)
-                    }
-                });
-
-            }
-
-            // User is not verified. Their 'uid' cookie is created but they will need to follow instructions
-            // to email verify their account. This process takes place on the main webapp page
-            else {
-                $.ajax({
-
-                    'url' : '/cookies/uid/create/' + uid,
-                    'type' : 'GET',
-
-                    'success' : function() {
-                        console.log(`success`);
-                        window.location.replace(`/`);
-                    },
-                    'error' : function() {
-                        console.log(`Created UID cookie only`)
-                    }
-                });
-            }
         }
     });
 };
