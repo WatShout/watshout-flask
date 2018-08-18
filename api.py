@@ -117,6 +117,7 @@ def send_friend_request():
     try:
         result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title,
                                                    message_body=message_body)
+
         return json.dumps({'result': result}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
     except Exception as e:
         return json.dumps({'success': False, 'error': e}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
