@@ -1,15 +1,22 @@
 
-let addToDatabase = () => {
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
 
-    let email = document.getElementById(`email`).value.toLowerCase();
+        let addToDatabase = () => {
 
-    document.getElementById(`email`).value = ``;
+            let email = document.getElementById(`email`).value.toLowerCase();
 
-    ref.child("whitelisted_emails").push({
-        email: email
-    })
+            document.getElementById(`email`).value = ``;
 
-};
+            ref.child("whitelisted_emails").push({
+                email: email
+            })
+        };
+
+    }
+});
+
+
 
 let populateEmailList = () => {
 
@@ -18,8 +25,6 @@ let populateEmailList = () => {
         document.getElementById(`approved`).innerHTML += `<br />` + snapshot.val()[`email`];
 
     });
-
-
 };
 
 populateEmailList();

@@ -47,7 +47,11 @@ def get_km_from_coord_string(coord_string):
 
 
 def get_friend_uid_list(my_uid):
-    return list(ref.child("friend_data").child(my_uid).get().val().items())
+    try:
+        return list(ref.child("friend_data").child(my_uid).get().val().items())
+
+    except AttributeError:
+        return []
 
 
 def create_map_url(gpx_url, uid):
