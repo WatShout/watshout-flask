@@ -1,40 +1,36 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <!-- The order in which these load is important -->
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-messaging.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
 
-    <link rel="manifest" href="/static/manifest.json">
+    <script defer src="/watshout-flask/static/js/config.js"></script>
+    <script defer src="/watshout-flask/static/js/news-feed.js"></script>
 
-    <script defer src="/static/js/config.js"></script>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyP50TBSm5yugoczwXY4tXpJ_KMtP5Djo"></script>
+    <link rel="stylesheet" href="/watshout-flask/static/css/profile.css">
+    <link rel="stylesheet" href="/watshout-flask/static/css/pills.min.css">
 
-    <script defer src="/static/js/map_styles.js"></script>
-    <script defer src="/static/js/maps.js"></script>
-    <script defer src="/static/js/main-app.js"></script>
+    <link rel="stylesheet" href="NewsFeed.css">
 
-    <script defer src="/static/js/friends-functions.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <link rel="stylesheet" href="/static/css/pills.min.css">
-    <link rel="stylesheet" href="/static/css/NewsFeed.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    <link rel="icon" href="/static/res/favicon.png" type="image/gif">
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- drawer.css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.min.css">
     <!-- jquery & iScroll -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js"></script>
     <!-- drawer.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js"></script>
-
-    <title>watshout</title>
+    <link rel="icon" href="/watshout-flask/static/res/favicon.png" type="image/gif">
+    <title>news feed | watshout</title>
 
 </head>
 
@@ -54,17 +50,30 @@
     <meta id="lng" content="{{ lng }}">
 {% endif %}
 
-<body id="whole-body">
 
+<body id="whole-body">
     <!-- Google Map -->
     <div id="map" style="width:100%;height:100%;"></div>
-
+    <script>
+        function myMap() {
+            var mapOptions = {
+                center: new google.maps.LatLng(37.4275, -122.1697),
+                zoom: 15,
+                //mapTypeId: google.maps.MapTypeId.HYBRID,
+                mapTypeControlOptions: {
+                    mapTypeIds: []
+                }
+            }
+            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgoFIn4pMSsadqDj5adc8V58Ct_MeNjmU&callback=myMap"></script>
     <div id="nav-header">
         <button id="nav-toggle">
         <div class="hamburger"></div><div class="hamburger"></div><div class="hamburger"></div>
         </button>
         <img id="nav-logo" src="/static/res/favicon.png">
-        <button id="contacts-toggle"><img id="triangle-icon" src="/static/res/triangle-1.png"></button>
+        <button id="contacts-toggle"><img id="triangle-icon" src="/triangle-1.png"></button>
     </div>
     <nav id="drawer-nav" role="navigation">
         <table class="nav-menu">
@@ -78,16 +87,46 @@
     <!-- current runners (expanded); hardcoded -->
     <div id="active-runners-exp" class="all-runners">
         <!--for each active runner-->
-
-        <div class="box">
-
+        <div class="runner-block runner-1">
+            <div class="ar-circle"><div id="circ"></div></div>
+            <table class="ar-data">
+                <tr><td class="ar-name" colspan="2">Name</td><tr>
+                <tr>
+                    <td class="ar-duration">0:00</td>
+                    <td class="ar-heart-rate">90bpm</td>
+                </tr>
+            </table>
         </div>
-
+        <!--(end loop)-->
+        <div class="runner-block runner-2">
+            <div class="ar-circle">
+                <div id="circ"></div>
+            </div>
+            <table class="ar-data">
+                <tr><td class="ar-name" colspan="2">Name</td><tr>
+                <tr>
+                    <td class="ar-duration">0:00</td>
+                    <td class="ar-heart-rate">90bpm</td>
+                </tr>
+            </table>
+        </div>
+        <div class="runner-block runner-3">
+            <div class="ar-circle">
+                <div id="circ"></div>
+            </div>
+            <table class="ar-data">
+                <tr><td class="ar-name" colspan="2">Name</td><tr>
+                <tr>
+                    <td class="ar-duration">0:00</td>
+                    <td class="ar-heart-rate">90bpm</td>
+                </tr>
+            </table>
+        </div>
     </div>
     <!-- current runners (condensed); hardcoded -->
     <div id="active-runners-cond" class="all-runners">
         <!--for each active runner-->
-        <!-- <div class="runner-circ runner-1"><div class="initials">EH</div></div> -->
+        <div class="runner-circ runner-1"><div class="initials">EH</div></div>
     </div>
     <script type="text/javascript">
         //sets initial display to none
@@ -100,7 +139,6 @@
         });
 
     </script>
-
 
 <div id="news-feed-container">
     <!-- loop through each result in news feed query-->
@@ -181,7 +219,4 @@
 -->
 </body>
 
-
-
 </html>
-

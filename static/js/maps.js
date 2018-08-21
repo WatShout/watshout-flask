@@ -39,13 +39,7 @@ const map = new google.maps.Map(document.getElementById(`map`), {
     clickableIcons: false,
     disableDefaultUI: true,
     gestureHandling: 'cooperative',
-    mapTypeControlOptions: {
-            mapTypeIds: ['Color Map', 'BW Map']
-          }
 });
-
-map.mapTypes.set('BW Map', bw_map);
-map.setMapTypeId('BW Map');
 
 // Takes a snapshot and returns a dictionary of values
 let getValuesFromSnapshot = (snapshot) => {
@@ -100,12 +94,17 @@ let addPoint = (snapshot, theirUID, map, name) => {
         fillColor: colorsDict[theirUID],
         fillOpacity: 1.0
     };
+
     currentMarker.setIcon(iconOptions);
 
-    document.getElementById(`panTo` + theirUID).onclick = function () {
+    document.getElementById(theirUID + `cond-link`).onclick = function () {
 
-        map.mapTypes.set('Color Map', color_map);
-        map.setMapTypeId('Color Map');
+        let latLng = new google.maps.LatLng(values["lat"], values["lon"]);
+        map.panTo(latLng);
+
+    };
+
+    document.getElementById(theirUID + `exp-link`).onclick = function () {
 
         let latLng = new google.maps.LatLng(values["lat"], values["lon"]);
         map.panTo(latLng);

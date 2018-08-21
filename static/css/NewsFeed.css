@@ -1,0 +1,264 @@
+html, body {
+	height: 100%;
+	font-family: "proxima-nova", sans-serif;
+}
+
+#nav-header, .nav-menu, .runner-block, .runner-circ {
+	width: 200px;
+	margin-top: 15px;
+}
+
+#nav-header {
+	position: fixed;
+	top: 0;
+}
+
+.nav-menu {
+	position: fixed;
+	top: 45px;
+}
+
+#nav-header {
+	background-color: #D8D8D8;
+	height: 40px;
+	margin-left: 20px;
+	margin-top: 20px;
+}
+
+#contacts-toggle {
+	float: right;
+	height: 100%;
+	border: none;
+	background-color: #D8D8D8;
+	padding: 0;
+}
+
+.hamburger {
+	width: 20px;
+	height: 4px;
+	background-color: black;
+	margin-bottom: 3px;
+	margin-top: 3px;
+	border-radius: 5px;
+}
+
+#nav-toggle {
+	float: left;
+	margin-top: 5px;
+	margin-left: 5px;
+	border: none;
+	background-color: #D8D8D8;
+}
+
+#nav-toggle:hover {cursor: pointer;}
+
+button:focus {outline: none;}
+
+#nav-toggle:active {transform: translateY(2px)}
+
+#nav-logo {
+	height: 100%;
+}
+
+#triangle-icon {
+	height: 100%;
+	background-color: darkgrey;
+}
+
+#triangle-icon:hover {
+	cursor: pointer;
+}
+
+/* pretty sure this doesn't do anything */
+#drawer-nav {
+	visibility: visible;
+}
+
+.nav-menu-row {
+	height: 45px;
+	background-color: #D8D8D8;
+	border-top: 1px solid #B8B8B8;
+}
+
+.nav-menu {
+	margin-left: 20px;
+	border-collapse: collapse;
+	display: none;
+}
+
+.nav-menu-item {
+	text-decoration: none;
+	color: black;
+	padding-left: 10px;
+}
+
+.nav-menu-item:hover {
+	text-decoration: none;
+	color: black;
+}
+
+.nav-menu-row:hover {
+	background-color: #E8E8E8;
+	cursor: pointer;
+}
+
+.runner-block {
+	height: 80px;
+	margin-left: 20px;
+	border-radius: 5px;
+}
+
+.runner-circ {
+	height: 80px;
+	margin-left: 20px;
+	border-radius: 40px;
+	width: 80px;
+	text-align: center;
+	display: table;
+}
+
+.all-runners {
+	position: absolute;
+	top: 60px;
+}
+
+.down-shift {
+	top: 240px;
+}
+
+.initials {
+	display: table-cell;
+	vertical-align: middle;
+	color: #E8E8E8;
+	font-family: "proxima-nova", sans-serif;
+	font-size: 30px;
+}
+
+/* horizontally flips arrow */
+.active {
+	-webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+/* hard-coded colors for active runners */
+.runner-1 {background-color: rgba(179, 42, 0, 0.6);}
+.runner-2 {background-color: rgba(57, 0, 98, 0.6);}
+.runner-3 {background-color: rgba(0, 68, 0, 0.6);}
+
+.ar-circle {
+	display: inline-block;
+	height: 100%;
+}
+
+#circ {
+	height: 50px;
+	width: 50px;
+	border-radius: 25px;
+	background-color: #E8E8E8;
+	margin-top: 15px;
+	margin-left: 10px;
+}
+
+.ar-data {
+	display: table;
+	margin: 10px;
+	height: 60px;
+	width: 120px;
+	float: right;
+	border-collapse: separate;
+	border-spacing: 5px 0;
+	text-align: center;
+}
+
+.ar-name, .ar-duration, .ar-heart-rate {
+	height: 45%;
+	background-color: #E8E8E8;
+}
+
+.news-feed-item {
+	margin-top: 40px;
+	margin-left: 0px;
+}
+
+#map-item-1, #data-item-1 {
+	display: inline-block;
+}
+
+#news-feed-container {
+	margin-bottom: 50px;
+	padding-left: 230px;
+	position: relative;
+	display: block;
+
+}
+
+.news-feed-item {
+	height: 300px;
+	width: 100%;
+	position: relative;
+}
+
+.nf-image-container {
+	width: 450px;
+	position: absolute;
+	top: 0;
+}
+
+.nf-image {
+	width: 100%;
+}
+.news-feed-data {
+	width: 250px;
+	height: 200px;
+	position: relative;
+	left: 470px;
+}
+
+.data-obj {background-color: lightgrey;display:inline-block;}
+
+.nf-prof-box {
+	width: 28%;
+	display: inline-block;
+}
+
+.nf-name-date-box {
+	position: absolute;
+	top: 0;
+	width: 70%;
+	height: 30%;
+	display: inline-block;
+}
+
+.nf-name-box {
+	position: relative;
+	width: 100%;
+	top: 0;
+	height: 45%;
+}
+
+.nf-date-box {
+	width: 100%;
+	height: 45%;
+	position: absolute;
+	bottom: 0;
+}
+
+.nf-title-box {width: 100%;margin-top:5px;}
+
+.nf-prof-box, .nf-title-box, .nf-dist-box, .nf-pace-box, .nf-time-box {height: 30%;}
+
+.nf-dist-box, .nf-pace-box, .nf-time-box {
+	width: 32%;
+	position: relative;
+	top: 5px;
+}
+
+.nf-prof-img {
+	width: 60px;
+	border-radius: 30px;
+	background-color: lightgrey;
+	height: 60px;
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+}

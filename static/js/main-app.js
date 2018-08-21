@@ -109,13 +109,11 @@ firebase.auth().onAuthStateChanged(function (user) {
                         ref.child(`users`).child(theirUID).child(`device`)
                             .child(`current`).on(`child_added`, function (snapshot) {
 
-                            if (document.getElementById(`panTo` + theirUID) == null){
 
-                                document.getElementById(`devices`).appendChild(createHTMLEntry(getInitials(theirName), theirUID, theirColor));
+                            if (document.getElementById(theirUID + `expanded`) == null){
 
-                                //document.getElementById('devices').appendChild(createHTMLEntry(getInitials(theirName), theirUID,
-                                //    theirColor));
-
+                                document.getElementById(`active-runners-exp`).innerHTML += createExpandedHTML(theirName, theirUID, theirColor);
+                                document.getElementById(`active-runners-cond`).innerHTML += createCondensedHTML(getInitials(theirName), theirUID, theirColor);
                             }
 
                             addPoint(snapshot, theirUID, map, theirName);
@@ -159,26 +157,43 @@ firebase.auth().onAuthStateChanged(function (user) {
     });
 });
 
-let createHTMLEntry = (theirInitials, theirUID, theirColor) => {
+let createCondensedHTML = (theirInitials, theirUID, theirColor) => {
 
-    let a = document.createElement('a');
-    let linkText = document.createTextNode(theirInitials);
-    a.appendChild(linkText);
-    a.href = "#";
-    document.body.appendChild(a);
-    a.id = `panTo` + theirUID;
-    a.className = `deviceinfo`;
-    a.onclick = function () {
-        console.log(`Hasn't been changed`);
-    };
-    a.style.background = theirColor;
+    let idName = theirUID + `condensed`;
 
-    return a;
+    let htmlString =
+        `<a href="#" id="` + theirUID + `cond-link">
+            <div id="` + idName + `" class="runner-circ" style="background-color: ` + theirColor + `;">
+                <div class="initials">` + theirInitials + `</div>
+            </div>
+        </a>`;
 
-    //return `<a id="panTo` + theirUID + `" class="deviceinfo" href="#">` + theirInitials + `</a>`;
+    return htmlString;
 
-    //return`<a style="width: 100%;height: 100%; background: ` + theirColor + `;" id="panTo` + theirUID + `"` + ` href="#" onclick="console.log('hi')">` + theirInitials + `</a>`;
 };
+
+let createExpandedHTML = (theirName, theirUID, theirColor) => {
+
+    let idName = theirUID + `expanded`;
+
+    let htmlString =
+        `<a href="#" id="` + theirUID + `exp-link"><div id="` + idName + `">
+            <div class="runner-block">
+                <div class="ar-circle"><div id="circ" style="background-color: ` + theirColor + `;"></div></div>
+                <table class="ar-data">
+                    <tr><td class="ar-name" colspan="2">` + theirName + `</td><tr>
+                    <tr>
+                        <td class="ar-duration">Duration</td>
+                        <td class="ar-heart-rate">HR</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        </a>`;
+
+    return htmlString;
+
+    };
 
 let getInitials = (name) => {
 
@@ -255,3 +270,33 @@ let imageIsLoaded = (e) => {
     document.getElementById(`myImg`).src = e.target.result;
 
 };
+
+// w3schools dropdown for nav menu
+let dropdown = document.getElementById("nav-toggle");
+dropdown.addEventListener("click", function() {
+    var runnerDivs = document.getElementsByClassName("all-runners");
+    for (var i = 0; i < runnerDivs.length; i++) {
+        runnerDivs[i].classList.toggle("down-shift");
+    }
+    var dropdownContent = document.getElementsByClassName("nav-menu")[0];
+    if (dropdownContent.style.display === "table") {
+        dropdownContent.style.display = "none";
+    } else {
+        dropdownContent.style.display = "table";
+    }
+});
+
+let expandButton = document.getElementById("contacts-toggle");
+expandButton.addEventListener("click", function() {
+    //adds class "active" every other click for CSS (currently unused)
+    expandButton.classList.toggle("active");
+    var condensed = document.getElementById("active-runners-cond");
+    var expanded = document.getElementById("active-runners-exp");
+    if (condensed.style.display === "block") {
+        condensed.style.display = "none";
+        expanded.style.display = "block";
+    } else {
+        condensed.style.display = "block";
+        expanded.style.display = "none";
+    }
+});

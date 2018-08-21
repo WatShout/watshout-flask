@@ -26,7 +26,7 @@ def get_weather(lat, lon):
 
     temp_celcius = request.json()["main"]["temp"] - 273.15
 
-    return id, weather_type, temp_celcius
+    return id, weather_type, int(temp_celcius)
 
 
 def get_km_from_coord_string(coord_string):
