@@ -261,4 +261,5 @@ button:focus {outline: none;}
 	text-align: center;
 	display: table-cell;
 	vertical-align: middle;
+	object-fit: fill;
 }

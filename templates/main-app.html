@@ -23,7 +23,7 @@
     <script defer src="/static/js/friends-functions.js"></script>
 
     <link rel="stylesheet" href="/static/css/pills.min.css">
-    <link rel="stylesheet" href="/static/css/NewsFeed.css">
+    <link rel="stylesheet" href="/static/css/newsfeed.css">
 
     <link rel="icon" href="/static/res/favicon.png" type="image/gif">
 
@@ -69,7 +69,6 @@
     <nav id="drawer-nav" role="navigation">
         <table class="nav-menu">
             <tr class="nav-menu-row" data-href="/"><td><a class="nav-menu-item" id="home">Home</a></td></tr>
-            <tr class="nav-menu-row" data-href="/feed/"><td><a class="nav-menu-item" id="feed">Feed</a></td></tr>
             <tr class="nav-menu-row" data-href="/me/"><td><a class="nav-menu-item" id="profile">Profile</a></td></tr>
             <tr class="nav-menu-row" data-href="/me/friends/"><td><a class="nav-menu-item" id="friends">Friends</a></td></tr>
         </table>
@@ -104,81 +103,32 @@
 
 <div id="news-feed-container">
     <!-- loop through each result in news feed query-->
+    {% for activity in activities %}
+
     <div id="nf-item-1" class="news-feed-item">
         <div id="map-item-1" class="nf-image-container">
-            <img src="images/finished.png" class="nf-image">
+            <img src="{{ activity["map_link"] }}" class="nf-image">
         </div>
         <div id="data-item-1" class="news-feed-data">
             <div class="nf-prof-box">
-                <div class="nf-prof-img">prof</div>
+                <div><img class="nf-prof-img" src="{{ activity["profile_pic_url"] }}"/></div>
             </div>
             <div class="nf-name-date-box">
-                <div class="nf-name-box data-obj">Name</div>
-                <div class="nf-date-box data-obj">Date</div>
+                <div class="nf-name-box data-obj">{{ activity["name"] }}</div>
+                <div class="nf-date-box data-obj">{{ activity["formatted_date"] }}</div>
             </div>
-            <div class="nf-title-box data-obj">Title</div>
-            <div class="nf-dist-box data-obj">Distance</div>
-            <div class="nf-pace-box data-obj">Pace</div>
-            <div class="nf-time-box data-obj">Time</div>
+            <div class="nf-title-box data-obj">{{ activity["event_name"] }}</div>
+            <div class="nf-dist-box data-obj">{{ activity["distance"] }}</div>
+            <div class="nf-pace-box data-obj">{{ activity["pace"] }}</div>
+            <div class="nf-time-box data-obj">{{ activity["time_elapsed"] }}</div>
         </div>
     </div>
-    <div id="nf-item-2" class="news-feed-item">
-        <div id="map-item-2" class="nf-image-container">
-            <img src="images/finished.png" class="nf-image">
-        </div>
-        <div id="data-item-2" class="news-feed-data">
-            <div class="nf-prof-box">
-                <div class="nf-prof-img">prof</div>
-            </div>
-            <div class="nf-name-date-box">
-                <div class="nf-name-box data-obj">Name</div>
-                <div class="nf-date-box data-obj">Date</div>
-            </div>
-            <div class="nf-title-box data-obj">Title</div>
-            <div class="nf-dist-box data-obj">Distance</div>
-            <div class="nf-pace-box data-obj">Pace</div>
-            <div class="nf-time-box data-obj">Time</div>
-        </div>
-    </div>
-    <div id="nf-item-3" class="news-feed-item">
-        <div id="map-item-3" class="nf-image-container">
-            <img src="images/finished.png" class="nf-image">
-        </div>
-        <div id="data-item-3" class="news-feed-data">
-            <div class="nf-prof-box">
-                <div class="nf-prof-img">prof</div>
-            </div>
-            <div class="nf-name-date-box">
-                <div class="nf-name-box data-obj">Name</div>
-                <div class="nf-date-box data-obj">Date</div>
-            </div>
-            <div class="nf-title-box data-obj">Title</div>
-            <div class="nf-dist-box data-obj">Distance</div>
-            <div class="nf-pace-box data-obj">Pace</div>
-            <div class="nf-time-box data-obj">Time</div>
-        </div>
-    </div>
+
+    {% endfor %}
+
+
 </div>
-<!--
-<main role="main">
 
-    <div style="text-align: center;">
-
-        <table>
-            {% if activities %}
-                {% for activity in activities %}
-                    <tr>
-                        <td>{{ activity['name'] }}</td>
-                        <td><img src="{{ activity["image"] }}"/></td>
-                    </tr>
-                {% endfor %}
-            {% else %}
-                <p>Your friends have no previous activities</p>
-            {% endif %}
-        </table>
-    </div>
-</main>
--->
 </body>
 
 

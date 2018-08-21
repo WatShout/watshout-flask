@@ -2,6 +2,8 @@ import requests
 from flask import Flask, render_template, request, redirect, url_for, abort, Blueprint
 from config import ref, storageRef, strava_client, access_token, DEBUG, BASE_ENDPOINT_URL
 from helper_functions import get_cookies, get_user_entry, check_user_exists
+import datetime
+import time
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -23,12 +25,24 @@ def main_page():
         has_info = "yes"
         my_email = my_user_entry["email"]
 
+        # Make API call to /api/newsfeed/<uid>/
+
+        url = "https://watshout.run/api/newsfeed/" + my_uid + "/"
+
+        activities = requests.get(url).json()["activities"]
+
+        for activity in activities:
+            activity["formatted_date"] = datetime.datetime.fromtimestamp(
+                activity["time"] / 1000
+            ).strftime('%Y-%m-%d %H:%M')
+
     else:
         has_info = "no"
         my_email = ""
+        activities = []
 
     return render_template('main-app.html', uid=my_uid, my_email=my_email, has_info=has_info,
-                           lat=lat, lng=lng)
+                           lat=lat, lng=lng, activities=activities)
 
 
 @web_app.route('/privacy/')
