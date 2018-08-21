@@ -4,6 +4,7 @@ from config import ref, storageRef, strava_client, access_token, DEBUG, BASE_END
 from helper_functions import get_cookies, get_user_entry, check_user_exists
 import datetime
 import time
+from operator import itemgetter
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -31,10 +32,14 @@ def main_page():
 
         activities = requests.get(url).json()["activities"]
 
+        activities = sorted(activities, key=itemgetter('time'))
+        activities.reverse()
+
         for activity in activities:
             activity["formatted_date"] = datetime.datetime.fromtimestamp(
                 activity["time"] / 1000
             ).strftime('%Y-%m-%d %H:%M')
+
 
     else:
         has_info = "no"
