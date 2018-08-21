@@ -132,6 +132,7 @@ button:focus {outline: none;}
 	color: #E8E8E8;
 	font-family: "proxima-nova", sans-serif;
 	font-size: 30px;
+	text-decoration: none;
 }
 
 /* horizontally flips arrow */
