@@ -18,7 +18,8 @@ def get_weather(lat, lon):
     lat = str(lat)
     lon = str(lon)
 
-    url = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&APPID=3808ef19b97a332963fc43804d1fa93e"
+    url = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + \
+          "&APPID=3808ef19b97a332963fc43804d1fa93e"
     request = requests.get(url)
 
     weather_type = request.json()["weather"][0]["main"]
@@ -89,7 +90,8 @@ def get_location_from_latlng(lat, lng):
 
     latlng = str(lat) + "," + str(lng)
 
-    url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlng + "&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s"
+    url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlng + \
+          "&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s"
     request = requests.get(url)
 
     try:
@@ -171,9 +173,9 @@ def parse_activity_snapshot(snapshot, their_uid, their_name, their_url):
             pace = None
 
         try:
-            temp_celcius = value['temp_celcius']
+            temp_celsius = value['temp_celsius']
         except KeyError:
-            temp_celcius = None
+            temp_celsius = None
 
         try:
             weather_type = value['weather_type']
@@ -186,7 +188,7 @@ def parse_activity_snapshot(snapshot, their_uid, their_name, their_url):
             weather_id = None
 
         activities_dict[activity_id] = [their_uid, time, map_link, their_name, event_name, distance, time_elapsed, pace,
-                                        activity_id, their_url, temp_celcius, weather_type, weather_id]
+                                        activity_id, their_url, temp_celsius, weather_type, weather_id]
 
     return activities_dict
 
@@ -203,7 +205,7 @@ def create_json_activities_list(activities_dict):
     pace = 7
     activity_id = 8
     their_url = 9
-    temp_celcius = 10
+    temp_celsius = 10
     weather_type = 11
     weather_id = 12
 
@@ -223,7 +225,7 @@ def create_json_activities_list(activities_dict):
                     "pace": value[pace],
                     "activity_id": key,
                     "profile_pic_url": value[their_url],
-                    "temp_celcius": value[temp_celcius],
+                    "temp_celsius": value[temp_celsius],
                     "weather_type": value[weather_type],
                     "weather_id": value[weather_id]
                 }

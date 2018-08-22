@@ -141,7 +141,7 @@ def add_activity():
         city_name = get_location_from_latlng(first_lat, first_lon)
         event_name = city_name + " run"
 
-        weather_id, weather_type, temp_celcius = get_weather(first_lat, first_lon)
+        weather_id, weather_type, temp_celsius = get_weather(first_lat, first_lon)
 
         ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("weather_type").set(
             weather_type)
@@ -149,8 +149,8 @@ def add_activity():
             weather_id)
         ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
             event_name)
-        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("temp_celcius").set(
-            temp_celcius)
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("temp_celsius").set(
+            temp_celsius)
 
         return json.dumps({'success': True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
@@ -287,7 +287,7 @@ def get_calendar_json(uid=None):
             current_data = {"time": value['time']}
 
             attributes_list = ["map_link", "event_name", "distance", "time_elapsed", "pace",
-                               "temp_celcius", "weather_type", "weather_id"]
+                               "temp_celsius", "weather_type", "weather_id"]
 
             for attrib in attributes_list:
                 try:
