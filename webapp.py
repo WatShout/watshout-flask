@@ -34,14 +34,6 @@ def main_page():
 
         activities = requests.get(url).json()["activities"]
 
-        activities = sorted(activities, key=itemgetter('time'))
-        activities.reverse()
-
-        for activity in activities:
-            activity["formatted_date"] = datetime.datetime.fromtimestamp(
-                activity["time"] / 1000
-            ).strftime('%Y-%m-%d %H:%M')
-
     else:
         has_info = "no"
         my_email = ""

@@ -8,6 +8,8 @@ import xmltodict
 import polyline
 from config import BASE_CREATE_MAP_URL
 from haversine import haversine
+from operator import itemgetter
+import datetime
 
 JSON_SUCCESS = json.dumps({"success": True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 JSON_FAIL = json.dumps({"success": False}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
@@ -227,7 +229,10 @@ def create_json_activities_list(activities_dict):
                     "profile_pic_url": value[their_url],
                     "temp_celsius": value[temp_celsius],
                     "weather_type": value[weather_type],
-                    "weather_id": value[weather_id]
+                    "weather_id": value[weather_id],
+                    "formatted_date": datetime.datetime.fromtimestamp(
+                            value[time] / 1000
+                        ).strftime('%Y-%m-%d %H:%M')
                 }
             )
 

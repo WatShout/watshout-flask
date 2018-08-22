@@ -267,15 +267,7 @@ def get_news_feed(uid=None):
 
     json_data = create_json_activities_list(activities_dict)
 
-    for activity in json_data:
-        activity["formatted_date"] = datetime.datetime.fromtimestamp(
-            activity["time"] / 1000
-        ).strftime('%Y-%m-%d %H:%M')
-
-    sorted_json_data = sorted(json_data, key=itemgetter('time'))
-    sorted_json_data.reverse()
-
-    return sorted_json_data, 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+    return json_data, 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
 # Gets every activity completed by the user as JSON
