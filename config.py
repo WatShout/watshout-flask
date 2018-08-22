@@ -3,7 +3,9 @@ from stravalib.client import Client
 from pyfcm import FCMNotification
 import googlemaps
 
-push_service = FCMNotification(api_key="AAAAGQJsXYU:APA91bHTafwGlu-1hBUBCS3mLLdntk_i2YwnSWXxU7eiU-7O7k05BauiApptdd-ENFeOHGL62tOx57USNw2WAvSsYg-hwqnuY3r73MOyMBB3fa-VBvqoIcRM-ZJNnvachiOM5f96SoUeFlxp6UM5xRD3mKIGJvW9CA")
+push_service = FCMNotification(api_key="AAAAGQJsXYU:APA91bHTafwGlu-1hBUBCS3mLLdntk_i2YwnSWXxU7eiU-7O7k05Baui" +
+                                       "Apptdd-ENFeOHGL62tOx57USNw2WAvSsYg-hwqnuY3r73MOyMBB3fa-VBvqoIcRM-ZJN" +
+                                       "nvachiOM5f96SoUeFlxp6UM5xRD3mKIGJvW9CA")
 
 gmaps = googlemaps.Client(key="AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s")
 
@@ -32,6 +34,6 @@ DEBUG = True
 
 BASE_ENDPOINT_URL = "https://watshout-cloud.appspot.com"
 
-BASE_CREATE_MAP_URL = "https://maps.googleapis.com/maps/api/staticmap?&size=600x300&maptype=roadmap&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s&sensor=true&path=color:0xff0000ff|enc:"
-
-
+BASE_CREATE_MAP_URL = \
+    "https://maps.googleapis.com/maps/api/staticmap?&size=600x300" + \
+    "&maptype=roadmap&key=AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s&sensor=true&path=color:0xff0000ff|enc:"

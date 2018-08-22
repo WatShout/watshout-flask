@@ -23,11 +23,11 @@ def get_weather(lat, lon):
     request = requests.get(url)
 
     weather_type = request.json()["weather"][0]["main"]
-    id = request.json()["weather"][0]["id"]
+    weather_id = request.json()["weather"][0]["id"]
 
-    temp_celcius = request.json()["main"]["temp"] - 273.15
+    temp_celsius = request.json()["main"]["temp"] - 273.15
 
-    return id, weather_type, int(temp_celcius)
+    return weather_id, weather_type, int(temp_celsius)
 
 
 def get_km_from_coord_string(coord_string):
@@ -55,7 +55,7 @@ def get_friend_uid_list(my_uid):
         return []
 
 
-def create_map_url(gpx_url, uid):
+def create_map_url(gpx_url):
     url_response = urllib.request.urlopen(gpx_url)
     data = url_response.read()
     parsed_data = data.decode('utf-8')
@@ -82,7 +82,7 @@ def create_map_url(gpx_url, uid):
 
         return return_data
 
-    except Exception as e:
+    except Exception:
         return "String"
 
 
@@ -223,7 +223,7 @@ def create_json_activities_list(activities_dict):
                     "distance": value[distance],
                     "time_elapsed": value[time_elapsed],
                     "pace": value[pace],
-                    "activity_id": key,
+                    "activity_id": value[activity_id],
                     "profile_pic_url": value[their_url],
                     "temp_celsius": value[temp_celsius],
                     "weather_type": value[weather_type],
@@ -232,4 +232,3 @@ def create_json_activities_list(activities_dict):
             )
 
     return json.dumps(data)
-

@@ -3,6 +3,8 @@ import urllib.request
 
 from flask import request, Blueprint
 import polyline
+from operator import itemgetter
+import datetime
 
 from config import ref, storageRef, strava_client, push_service, gmaps, BASE_CREATE_MAP_URL
 from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng, \
@@ -97,7 +99,7 @@ def send_activity_start_notification():
         result = push_service.notify_multiple_devices(registration_ids=friend_fcm_tokens, message_title=message_title,
                                                       message_body=message_body)
         return json.dumps({'result': result}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
-    except Exception as e:
+    except Exception:
         return json.dumps({'success': False}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
@@ -166,12 +168,10 @@ def add_activity():
 def upload_activity(uid=None, file_name=None):
     try:
 
-        id = file_name
-
         strava_token = ref.child("users").child(uid).child("strava_token").get().val()
         strava_client.access_token = strava_token
 
-        file_name = file_name + ".gpx"
+        file_name += ".gpx"
 
         url = storageRef.child("users").child(uid).child("gpx").child(file_name).get_url(None)
 
@@ -242,7 +242,8 @@ def get_friends_list(uid=None):
 
 # Retrieves some number (TBD) of recent activities completed by friends
 @api.route('/api/newsfeed/<string:uid>/', methods=['GET'])
-def send_json(uid=None):
+def get_news_feed(uid=None):
+
     try:
         friends = get_friend_uid_list(uid)
     except AttributeError:
@@ -264,11 +265,17 @@ def send_json(uid=None):
         if snapshot is not None:
             activities_dict.update(parse_activity_snapshot(snapshot, their_uid, their_name, profile_pic_url))
 
-    # TODO: Sort activities_dict
-
     json_data = create_json_activities_list(activities_dict)
 
-    return json_data, 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+    for activity in json_data:
+        activity["formatted_date"] = datetime.datetime.fromtimestamp(
+            activity["time"] / 1000
+        ).strftime('%Y-%m-%d %H:%M')
+
+    sorted_json_data = sorted(json_data, key=itemgetter('time'))
+    sorted_json_data.reverse()
+
+    return sorted_json_data, 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
 # Gets every activity completed by the user as JSON

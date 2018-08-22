@@ -286,6 +286,7 @@ dropdown.addEventListener("click", function() {
     }
 });
 
+
 let expandButton = document.getElementById("contacts-toggle");
 expandButton.addEventListener("click", function() {
     //adds class "active" every other click for CSS (currently unused)

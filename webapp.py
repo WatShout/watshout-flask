@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, redirect, url_for, abort, Blu
 from config import ref, storageRef, strava_client, access_token, DEBUG, BASE_ENDPOINT_URL
 from helper_functions import get_cookies, get_user_entry, check_user_exists
 import datetime
-import time
 from operator import itemgetter
 
 app = Flask(__name__, static_url_path="/static")
@@ -16,6 +15,9 @@ web_app = Blueprint('web_app', __name__)
 def main_page():
     my_uid, verified = get_cookies(request)
     redirect_link = check_user_exists(my_uid, verified)
+
+    if redirect_link is not None:
+        return redirect_link
 
     my_user_entry = get_user_entry(my_uid)
 
@@ -39,7 +41,6 @@ def main_page():
             activity["formatted_date"] = datetime.datetime.fromtimestamp(
                 activity["time"] / 1000
             ).strftime('%Y-%m-%d %H:%M')
-
 
     else:
         has_info = "no"
