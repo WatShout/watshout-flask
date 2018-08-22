@@ -17,50 +17,14 @@ let config = {
     storageBucket: "watshout-cloud.appspot.com",
     messagingSenderId: "107414838661"
   };
+
 firebase.initializeApp(config);
 
 const database = firebase.database();
 const ref = database.ref();
 const storageRef = firebase.storage().ref();
-const messaging = firebase.messaging();
-messaging.usePublicVapidKey("BA1r_pl_s49QFivnrBTaOURnlpzPMsjUQUYei50wRrAEH9mirdgnb3AMPKodzov7lRKVn1DkxygfGV1yLABCQtA");
-
-messaging.requestPermission().then(function() {
-  console.log('Notification permission granted.');
-  // TODO(developer): Retrieve an Instance ID token for use with FCM.
-  // ...
-}).catch(function(err) {
-  console.log('Unable to get permission to notify.', err);
-});
-
-messaging.getToken().then(function(currentToken) {
-  if (currentToken) {
-    console.log(currentToken);
-  } else {
-    // Show permission request.
-    console.log('No Instance ID token available. Request permission to generate one.');
-
-  }
-}).catch(function(err) {
-  console.log('An error occurred while retrieving token. ', err);
-});
-
-// Callback fired if Instance ID token is updated.
-messaging.onTokenRefresh(function() {
-  messaging.getToken().then(function(refreshedToken) {
-    console.log('Token refreshed.');
-    console.log(refreshedToken);
-
-  }).catch(function(err) {
-    console.log('Unable to retrieve refreshed token ', err);
-  });
-});
-
-
 
 let signOut = () => {
-
-    //console.log(firebase.auth().currentUser.uid);
 
     let uid;
 

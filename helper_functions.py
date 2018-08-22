@@ -124,13 +124,13 @@ def check_user_exists(uid, verified):
     user_entry = ref.child("users").child(uid).get().val()
 
     if uid is None:
-        return redirect(url_for('web_app.login'))
-
-    elif user_entry is None:
-        return redirect(url_for('web_app.main_page'))
+        return redirect(url_for('web_app.login')), "uid"
 
     elif verified is None:
-        return render_template('email-verify.html', uid=uid)
+        return render_template('email-verify.html', uid=uid), "verify"
+
+    elif user_entry is None:
+        return redirect(url_for('web_app.initialize_account')), "user_entry"
 
     else:
         return None

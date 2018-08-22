@@ -106,7 +106,7 @@ let initApp = () => {
 
                                 'success' : function() {
                                     console.log(`success`);
-                                    window.location.replace(`/`);
+                                    window.location.replace(`/initialize/`);
                                 },
                                 'error' : function() {
                                     console.log(`Created UID cookie only`)

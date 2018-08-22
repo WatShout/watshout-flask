@@ -28,3 +28,37 @@ firebase.auth().onAuthStateChanged(function(user) {
         }
     }
 });
+
+// Sketchy log-out solution
+document.getElementById(`logout`).addEventListener(`click`, function() {
+
+    let uid;
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user){
+            uid = user.uid
+        }
+    });
+
+    firebase.auth().signOut().then(function() {
+
+        $.ajax({
+
+            'url' : '/cookies/delete/' + uid,
+            'type' : 'GET',
+
+            'success' : function(response, status, xhr) {
+                window.location.replace(`/login/`);
+            },
+            'error' : function(request,error)
+            {
+                console.log(`error`)
+            }
+        });
+
+    }, function(error) {
+      // An error happened.
+    });
+
+
+});

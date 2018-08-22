@@ -56,10 +56,13 @@ def privacy_policy():
     return "WatShout will not misuse your data"
 
 
-@web_app.route('/new/')
+@web_app.route('/initialize/')
 def initialize_account():
     my_uid, verified = get_cookies(request)
-    check_user_exists(my_uid, verified)
+    redirect_link = check_user_exists(my_uid, verified)
+
+    if redirect_link is not None and redirect_link[1] != "user_entry":
+        return redirect_link
 
     return render_template('initialize-account.html', uid=my_uid)
 

@@ -20,13 +20,15 @@
 </head>
 <body>
 
-        {% if uid %}
-            <meta id="uid" content="{{ uid }}">
-        {% endif %}
+{% if uid %}
+    <meta id="uid" content="{{ uid }}">
+{% endif %}
 
-        <h1>Please verify your email!</h1>
+<h1>Please verify your email!</h1>
 
-        <h3>Then you can refresh this page</h3>
+<h3>Then you can refresh this page</h3>
+
+<input type="button" id="logout" value="Sign Out"/>
 
 </body>
 </html>

@@ -6,7 +6,6 @@
 
     <!-- The order in which these load is important -->
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-messaging.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
@@ -71,6 +70,7 @@
             <tr class="nav-menu-row" data-href="/"><td><a class="nav-menu-item" id="home">Home</a></td></tr>
             <tr class="nav-menu-row" data-href="/me/"><td><a class="nav-menu-item" id="profile">Profile</a></td></tr>
             <tr class="nav-menu-row" data-href="/me/friends/"><td><a class="nav-menu-item" id="friends">Friends</a></td></tr>
+            <tr class="nav-menu-row" data-href="#"><td><a onclick="signOut()" class="nav-menu-item" id="signout">Sign Out</a></td></tr>
         </table>
     </nav>
 
