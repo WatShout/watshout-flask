@@ -175,7 +175,7 @@ let createLine = (coordList, theirUID, map) => {
         });
 
         currentLine.setMap(map);
-        polyLineDict[theirUID] = currentLine;
+        polyLineDict[theirUID].push(currentLine);
 
     }
 
@@ -183,14 +183,19 @@ let createLine = (coordList, theirUID, map) => {
 
 let removeMarker = (theirUID) => {
 
-    console.log(`Marker: ` + markerDict[theirUID]);
-    console.log(`Polyline: ` + polyLineDict[theirUID]);
-
     let markerLength = markerDict[theirUID].length;
 
-    markerDict[theirUID][markerLength - 1].setVisible(false);
+    // Set last marker to blank (all other markers have already
+    // been made blank
+    markerDict[theirUID][markerLength - 1].setMap(null);
 
-    polyLineDict[theirUID].setMap(null);
+    // Iterate through list of polylines, set map null
+    for (let i = 0; i < polyLineDict[theirUID].length; i++){
+        polyLineDict[theirUID][i].setMap(null);
+    }
+
+    // Reset polyline dict
+    polyLineDict[theirUID] = [];
 
 };
 

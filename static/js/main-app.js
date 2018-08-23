@@ -102,6 +102,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                     let theirDevice = snapshot.val()[`device`];
                     let theirColor = getRandomColor();
                     colorsDict[theirUID] = theirColor;
+                    polyLineDict[theirUID] = [];
 
                     if (theirDevice != null) {
 
@@ -119,34 +120,21 @@ firebase.auth().onAuthStateChanged(function (user) {
                             addPoint(snapshot, theirUID, map, theirName);
                             createLine(coordDict[theirUID], theirUID, map);
 
-
-                            /*
-                            // This should fail when the user is currently tracking
-                            try {
-                                document.getElementById(`not-tracking` + theirUID).innerHTML = theirName;
-                            } catch (TypeError) {
-
-                            }
-                            */
-
-
                         });
 
                         // Set listener for when activity is over
                         ref.child(`users`).child(theirUID).child(`device`)
                             .on(`child_removed`, function (snapshot) {
 
-                                console.log(`outside loop`);
-
                                 if (snapshot.key === `current`){
 
-                                    console.log(`inside loop`);
-
-                                    // TODO: Implement this
                                     removeMarker(theirUID);
 
-                                    // Set name card to say 'is not tracking right now'
-                                    document.getElementById(`panTo` + theirUID).innerHTML = ``;
+                                    let cond = document.getElementById(theirUID + `cond-link`);
+                                    cond.parentNode.removeChild(cond);
+
+                                    let exp = document.getElementById(theirUID + `exp-link`);
+                                    exp.parentNode.removeChild(exp);
 
                                 }
 
