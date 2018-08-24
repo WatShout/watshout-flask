@@ -124,6 +124,21 @@ def my_page():
 
     user_info["total_distance"] = distance
 
+    # Get latest activity image
+    latest_activity = ref.child("users").child(my_uid).child("device").child(
+        "past").order_by_child("time").limit_to_last(1).get().val()
+
+    for i in latest_activity:
+        map_link = latest_activity[i]["map_link"]
+
+    # 47 is the index in which attributes start being defined
+    url_front = map_link[:47]
+    url_back = map_link[47:]
+
+    new_url = url_front + "&size=2000x300" + url_back
+
+    user_info["latest_activity"] = new_url
+
     # Try to build a list of user's activities
     try:
         device = ref.child("users").child(my_uid).get().val()['device']['past']

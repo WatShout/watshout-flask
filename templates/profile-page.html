@@ -45,7 +45,6 @@
 
     {% else %}
     <p>Something went wrong</p>
-
     {% endif %}
 
     <script>
@@ -55,7 +54,10 @@
             });
         });
     </script>
-    <img id="most-recent-activity" src="/images/finished.png">
+
+    {% if user_info %}
+    <img id="most-recent-activity" src="{{ user_info["latest_activity"] }}">
+    {% endif %}
 </body>
 <footer>
 =
