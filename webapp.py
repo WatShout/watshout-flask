@@ -16,8 +16,11 @@ def main_page():
     my_uid, verified = get_cookies(request)
     redirect_link = check_user_exists(my_uid, verified)
 
+    # redirect_link[0] is the actual redirect,
+    # redirect_link[1] is the label
+
     if redirect_link is not None:
-        return redirect_link
+        return redirect_link[0]
 
     my_user_entry = get_user_entry(my_uid)
 
@@ -53,7 +56,7 @@ def initialize_account():
     my_uid, verified = get_cookies(request)
     redirect_link = check_user_exists(my_uid, verified)
 
-    if redirect_link is not None and redirect_link[1] != "user_entry":
+    if redirect_link[0] is not None and redirect_link[1] != "user_entry":
         return redirect_link
 
     return render_template('initialize-account.html', uid=my_uid)
@@ -100,6 +103,27 @@ def my_page():
     profile_pic_format = my_user_entry['profile_pic_format']
     profile_pic = storageRef.child('users/' + my_uid + '/profile.' + profile_pic_format).get_url(None)
 
+    user_info = {
+        "email": email,
+        "name": name,
+        "profile_pic_url": profile_pic
+    }
+
+    # Get friend count
+    friends = ref.child("friend_data").child(my_uid).get().val()
+    user_info["friend_count"] = len(friends)
+
+    # Get activity count
+    activities = ref.child("users").child(my_uid).child("device").child("past").get().val()
+    user_info["activity_count"] = len(activities)
+
+    # Get total distance
+    distance = 0
+    for i in activities:
+        distance += float(activities[i]["distance"])
+
+    user_info["total_distance"] = distance
+
     # Try to build a list of user's activities
     try:
         device = ref.child("users").child(my_uid).get().val()['device']['past']
@@ -125,9 +149,8 @@ def my_page():
         strava_token = "no"
         print("User '" + email + "' is not connected with Strava")
 
-    return render_template('profile-page.html', email=email, my_email=email, name=name, birthday=birthday, uid=my_uid,
-                           activity_ids=activity_ids, strava_token=strava_token,
-                           profile_pic=profile_pic)
+    return render_template('profile-page.html', uid=my_uid, user_info=user_info,
+                           strava_token=strava_token)
 
 
 # User viewing their own friends list

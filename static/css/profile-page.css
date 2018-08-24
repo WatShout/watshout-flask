@@ -1,0 +1,79 @@
+html, body {
+	width: 100%;
+}
+ body {padding-top: 20px;}
+ .profile-header {
+	width: 60%;
+	background-color: #D8D8D8;
+	height: 120px;
+	position: absolute;
+	left: 250px;
+	min-width: 600px;
+}
+ .prof-picture {
+	width: 96px;
+	height: 96px;
+	border-radius: 50%;
+	position: absolute;
+	top: 10%;
+	left: 3%;
+	display: table-cell;
+	text-align: center;
+}
+ .prof-name, .prof-email {
+	width: 175px;
+	height: 24px;
+	position: relative;
+	left: 25%;
+}
+ .prof-name {
+	top: 10%;
+}
+ .prof-email {
+	top: 20%;
+}
+ .prof-edit {
+	cursor: pointer;
+	width: 80px;
+	height: 24px;
+	position: relative;
+	left: 25%;
+	top: 30%;
+}
+ .edit-prof-button:hover {
+	text-decoration: none;
+	color: inherit;
+}
+ .edit-prof-button {
+	color: inherit;
+}
+ .prof-friends, .prof-distance, .total-activity {
+	width: 80px;
+	height: 50%;
+	position: absolute;
+	bottom: 25%;
+}
+ .prof-friends {
+	right: 175px;
+}
+ .prof-distance {
+	right: 90px;
+}
+ .total-activity {
+	right: 5px;
+}
+ .prof-data {
+	text-align: center;
+}
+ .placeholder { background-color: #E8E8E8;}
+ #most-recent-activity {
+	width: 60%;
+	position: relative;
+	top: 120px;
+	left: 250px;
+	min-width: 600px;
+}
+ footer {
+	position: absolute;
+	bottom: 0;
+}

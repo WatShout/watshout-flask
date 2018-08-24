@@ -258,34 +258,3 @@ let imageIsLoaded = (e) => {
     document.getElementById(`myImg`).src = e.target.result;
 
 };
-
-// w3schools dropdown for nav menu
-let dropdown = document.getElementById("nav-toggle");
-dropdown.addEventListener("click", function() {
-    var runnerDivs = document.getElementsByClassName("all-runners");
-    for (var i = 0; i < runnerDivs.length; i++) {
-        runnerDivs[i].classList.toggle("down-shift");
-    }
-    var dropdownContent = document.getElementsByClassName("nav-menu")[0];
-    if (dropdownContent.style.display === "table") {
-        dropdownContent.style.display = "none";
-    } else {
-        dropdownContent.style.display = "table";
-    }
-});
-
-
-let expandButton = document.getElementById("contacts-toggle");
-expandButton.addEventListener("click", function() {
-    //adds class "active" every other click for CSS (currently unused)
-    expandButton.classList.toggle("active");
-    var condensed = document.getElementById("active-runners-cond");
-    var expanded = document.getElementById("active-runners-exp");
-    if (condensed.style.display === "block") {
-        condensed.style.display = "none";
-        expanded.style.display = "block";
-    } else {
-        condensed.style.display = "block";
-        expanded.style.display = "none";
-    }
-});

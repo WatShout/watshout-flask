@@ -39,6 +39,35 @@ const map = new google.maps.Map(document.getElementById(`map`), {
     clickableIcons: false,
     disableDefaultUI: true,
     gestureHandling: 'cooperative',
+    styles: [
+        {
+            "featureType": "administrative.land_parcel",
+            "elementType": "labels",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "poi",
+            "elementType": "labels.text",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "road.local",
+            "elementType": "labels",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        }
+    ]
 });
 
 // Takes a snapshot and returns a dictionary of values

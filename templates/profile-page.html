@@ -1,128 +1,63 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-    <!-- The order in which these load is important -->
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <!-- The order in which these load is important -->
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
-
-    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyP50TBSm5yugoczwXY4tXpJ_KMtP5Djo"></script>
-
-    <script defer src="/static/js/config.js"></script>
-    <script defer src="/static/js/profile-page.js"></script>
-
-    <script defer src="/static/js/friends-functions.js"></script>
-
-    <link rel="stylesheet" href="/static/css/profile.css">
+     <script defer src="/static/js/config.js"></script>
+     <link rel="stylesheet" href="/static/css/profile.css">
     <link rel="stylesheet" href="/static/css/pills.min.css">
+     <link rel="stylesheet" href="/static/css/profile-page.css">
+     <!-- navigation menu import -->
+    <link rel="stylesheet" href="/static/css/nav-menu.css">
+    <script src="/static/js/nav-menu.js"></script>
+     <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+     <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+     <link rel="icon" href="/static/res/favicon.png" type="image/gif">
+    <title>profile | watshout</title>
+ </head>
+ <body>
+    <!-- import nav content here -->
+    <link rel="import" href="/static/nav-menu.html" id="import-doc">
+    <div id="nav-wrapper"></div>
+    <!-- end -->
 
-    <!-- drawer.css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.min.css">
-    <!-- jquery & iScroll -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js"></script>
-    <!-- drawer.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js"></script>
+    {% if user_info %}
 
-    <link rel="icon" href="/static/res/favicon.png" type="image/gif">
-    <title>{{ name }} | watshout</title>
-
-</head>
-
-<body>
-
-<!-- Stores UID for easy access by profile-page.js -->
-{% if uid %}
-    <meta id="uid" content="{{ uid }}">
-{% endif %}
-
-{% if their_uid %}
-    <meta id="their_uid" content="{{ their_uid }}">
-{% endif %}
-
-{% if activity_ids %}
-    <meta id="activity_ids" content="{{ activity_ids }}">
-{% endif %}
-
-
-<body class="drawer drawer--left">
-<header role="banner">
-    <button type="button" class="drawer-toggle drawer-hamburger">
-        <span class="sr-only">toggle navigation</span>
-        <span class="drawer-hamburger-icon"></span>
-    </button>
-    <nav class="drawer-nav" role="navigation">
-        <ul class="drawer-menu">
-
-            <li><a class="drawer-brand" href="#">watshout</a></li>
-            <li><a class="drawer-menu-item" href="/" id="home">Home</a></li>
-            <li><a class="drawer-menu-item" href="/feed/" id="feed">Feed</a></li>
-            <li><a class="drawer-menu-item" href="/me/" id="profile">Profile</a></li>
-            <li><a class="drawer-menu-item" href="/me/friends/" id="friends">Friends</a></li>
-
-
-        </ul>
-    </nav>
-</header>
-<main role="main">
-
-    <div id="main-row">
-
-        <div id="personalinfo">
-
-            {% if name %}
-                <h1>{{ name }}</h1>
-            {% endif %}
-
-            {% if email %}
-                <h3>{{ email }}</h3>
-            {% endif %}
-
-            {% if profile_pic %}
-                <img id="profile" src="{{ profile_pic }}">
-            {% endif %}
-
-
-            <a href="/me/settings">Edit Profile</a>
-
-
-            {% if strava_token %}
-                {% if strava_token == 'no' %}
-
-                    <div id="strava_info">
-
-                        <a href="strava/login" ><img src="/static/res/small_strava_button.png"></a>
-
-                    </div>
-
-                {% else %}
-
-                    <div id="strava_info">
-
-                        <a id="unlink" href="#" onclick="unlinkStrava()">Un-link Strava account</a>
-
-                    </div>
-
-                {% endif %}
-            {% endif %}
-
-
+    <div class="profile-header">
+        <div class="prof-image-container placeholder">
+            <img class="prof-picture" src="{{ user_info["profile_pic_url"] }}">
         </div>
-
-
+        <div class="prof-name placeholder">{{ user_info["name"] }}</div>
+        <div class="prof-email placeholder">{{ user_info["email"] }}</div>
+        <div class="prof-edit placeholder"><a href="/me/edit" class="edit-prof-button">Edit Profile</a></div>
+        <div class="prof-friends placeholder prof-data">{{ user_info["friend_count"] }}</div>
+        <div class="prof-distance placeholder prof-data">{{ user_info["total_distance"] }}km</div>
+        <div class="total-activity placeholder prof-data">{{ user_info["activity_count"] }}</div>
     </div>
-</main>
+
+    {% else %}
+    <p>Something went wrong</p>
+
+    {% endif %}
+
+    <script>
+        jQuery(document).ready(function($) {
+            $(".edit-prof-button").click(function() {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
+    <img id="most-recent-activity" src="/images/finished.png">
 </body>
-
-<script>
-    $(document).ready(function() {
-        $('.drawer').drawer();
-    });
-</script>
-
-</body>
-
+<footer>
+=
+</footer>
 </html>

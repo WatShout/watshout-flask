@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>nav menu | watshout</title>
+ </head>
+<body>
+    <!-- nav menu content starts here -->
+    <div id="nav-container">
+        <div id="nav-header">
+            <button id="nav-toggle">
+            <div class="hamburger"></div><div class="hamburger"></div><div class="hamburger"></div>
+            </button>
+            <img id="nav-logo" src="/static/res/favicon.png">
+        </div>
+        <nav id="drawer-nav" role="navigation">
+            <table class="nav-menu">
+                <tr class="nav-menu-row" data-href="/"><td><a class="nav-menu-item" id="home">Home</a></td></tr>
+                <tr class="nav-menu-row" data-href="/feed/"><td><a class="nav-menu-item" id="feed">Feed</a></td></tr>
+                <tr class="nav-menu-row" data-href="/me/"><td><a class="nav-menu-item" id="profile">Profile</a></td></tr>
+                <tr class="nav-menu-row" data-href="/me/friends/"><td><a class="nav-menu-item" id="friends">Friends</a></td></tr>
+                <tr class="nav-menu-row" data-href="#"><td><a class="nav-menu-item" onclick="signOut()">Log Out</a></td></tr>
+            </table>
+        </nav>
+    </div>
+</body>

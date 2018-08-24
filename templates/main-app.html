@@ -21,6 +21,10 @@
 
     <script defer src="/static/js/friends-functions.js"></script>
 
+    <!-- navigation menu import -->
+    <link rel="stylesheet" href="/static/css/nav-menu.css">
+    <script src="/static/js/nav-menu.js"></script>
+
     <link rel="stylesheet" href="/static/css/pills.min.css">
     <link rel="stylesheet" href="/static/css/newsfeed.css">
 
@@ -58,21 +62,10 @@
     <!-- Google Map -->
     <div id="map" style="width:100%;height:100%;"></div>
 
-    <div id="nav-header">
-        <button id="nav-toggle">
-        <div class="hamburger"></div><div class="hamburger"></div><div class="hamburger"></div>
-        </button>
-        <img id="nav-logo" src="/static/res/favicon.png">
-        <button id="contacts-toggle"><img id="triangle-icon" src="/static/res/triangle-1.png"></button>
-    </div>
-    <nav id="drawer-nav" role="navigation">
-        <table class="nav-menu">
-            <tr class="nav-menu-row" data-href="/"><td><a class="nav-menu-item" id="home">Home</a></td></tr>
-            <tr class="nav-menu-row" data-href="/me/"><td><a class="nav-menu-item" id="profile">Profile</a></td></tr>
-            <tr class="nav-menu-row" data-href="/me/friends/"><td><a class="nav-menu-item" id="friends">Friends</a></td></tr>
-            <tr class="nav-menu-row" data-href="#"><td><a onclick="signOut()" class="nav-menu-item" id="signout">Sign Out</a></td></tr>
-        </table>
-    </nav>
+    <!-- import nav content here -->
+    <link rel="import" href="/static/nav-menu.html" id="import-doc">
+    <div id="nav-wrapper"></div>
+    <!-- end -->
 
     <!-- current runners (expanded); hardcoded -->
     <div id="active-runners-exp" class="all-runners">

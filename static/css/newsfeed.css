@@ -3,6 +3,10 @@ html, body {
 	font-family: "proxima-nova", sans-serif;
 }
 
+a {
+	text-decoration: none;
+}
+
 #nav-header, .nav-menu, .runner-block, .runner-circ {
 	width: 200px;
 	margin-top: 15px;

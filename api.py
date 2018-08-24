@@ -160,7 +160,7 @@ def add_activity():
         print(e)
         ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
             "Run")
-        return json.dumps({'success': False, 'error': e}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
+        return json.dumps({'success': False}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
 # URL for uploading a Strava activity

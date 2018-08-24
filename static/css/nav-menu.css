@@ -1,0 +1,85 @@
+html, body {
+	height: 100%;
+	font-family: "proxima-nova", sans-serif;
+}
+ #nav-header, .nav-menu {
+	width: 200px;
+}
+ #nav-header {
+	position: fixed;
+	top: 0;
+	z-index: 1;
+}
+ .nav-menu {
+	position: fixed;
+	top: 60px;
+	z-index: 1;
+}
+ #nav-header {
+	background-color: #D8D8D8;
+	height: 40px;
+	margin-left: 20px;
+	margin-top: 20px;
+}
+ #contacts-toggle {
+	float: right;
+	height: 100%;
+	border: none;
+	background-color: #D8D8D8;
+	padding: 0;
+}
+ .hamburger {
+	width: 20px;
+	height: 4px;
+	background-color: black;
+	margin-bottom: 3px;
+	margin-top: 3px;
+	border-radius: 5px;
+}
+ #nav-toggle {
+	float: left;
+	margin-top: 5px;
+	margin-left: 5px;
+	border: none;
+	background-color: #D8D8D8;
+}
+ #nav-toggle:hover {cursor: pointer;}
+ button:focus {outline: none;}
+ #nav-toggle:active {transform: translateY(2px)}
+ #nav-logo {
+	height: 100%;
+}
+ #triangle-icon {
+	height: 100%;
+	background-color: darkgrey;
+}
+ #triangle-icon:hover {
+	cursor: pointer;
+}
+ /* pretty sure this doesn't do anything */
+#drawer-nav {
+	visibility: visible;
+}
+ .nav-menu-row {
+	height: 45px;
+	background-color: #D8D8D8;
+	border-top: 1px solid #B8B8B8;
+}
+ .nav-menu {
+	margin-left: 20px;
+	border-collapse: collapse;
+	display: none;
+}
+ .nav-menu-item {
+	text-decoration: none;
+	color: black;
+	padding-left: 10px;
+}
+ .nav-menu-item:hover {
+	text-decoration: none;
+	color: black;
+}
+ .nav-menu-row:hover {
+	background-color: #E8E8E8;
+	cursor: pointer;
+}
