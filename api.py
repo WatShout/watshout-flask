@@ -136,7 +136,7 @@ def add_activity():
 
     # Note: Map URL creation has been offloaded to the Android app
     try:
-        map_data = create_map_url(gpx_url, uid)
+        map_data = create_map_url(gpx_url)
         first_lat = map_data["first_lat"]
         first_lon = map_data["first_lon"]
 
