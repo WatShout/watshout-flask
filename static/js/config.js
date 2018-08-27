@@ -63,4 +63,3 @@ let checkIfCookieAltered = (browser, server) => {
     }
 
 };
-
