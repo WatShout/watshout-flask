@@ -22,6 +22,10 @@ def check_user():
     email = request.form['email']
     email = email.lower()
 
+    return JSON_SUCCESS
+
+    """
+    For now this always returns true (for testing)
     if email[-4:] == ".edu" or email[-12:] == "watshout.com":
         return JSON_SUCCESS
     else:
@@ -35,6 +39,7 @@ def check_user():
 
         except IndexError:
             return JSON_FAIL
+    """
 
 
 # Not in use right now
