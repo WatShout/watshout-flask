@@ -154,15 +154,21 @@ def add_activity():
             weather_type)
         ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("weather_id").set(
             weather_id)
-        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
-            event_name)
         ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("temp_celsius").set(
             temp_celsius)
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
+            event_name)
 
         return json.dumps({'success': True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
     except Exception as e:
         print(e)
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("weather_type").set(
+            None)
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("weather_id").set(
+            None)
+        ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("temp_celsius").set(
+            None)
         ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
             "Run")
         return json.dumps({'success': False}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
