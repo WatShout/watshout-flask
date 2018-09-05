@@ -111,11 +111,18 @@ def my_page():
 
     # Get friend count
     friends = ref.child("friend_data").child(my_uid).get().val()
-    user_info["friend_count"] = len(friends)
+
+    if friends is None:
+        user_info["friend_count"] = 0
+    else:
+        user_info["friend_count"] = len(friends)
 
     # Get activity count
     activities = ref.child("users").child(my_uid).child("device").child("past").get().val()
-    user_info["activity_count"] = len(activities)
+    if activities is None:
+        user_info["activity_count"] = 0
+    else:
+        user_info["activity_count"] = len(activities)
 
     # Get total distance
     distance = 0
