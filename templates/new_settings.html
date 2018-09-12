@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- navigation menu import -->
+    <link rel="stylesheet" href="/static/css/nav-menu.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- The order in which these load is important -->
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
+
+    <script defer src="/static/js/nav-menu.js"></script>
+
+    <script defer src="/static/js/config.js"></script>
+    <script defer src="/static/js/settings.js"></script>
+
+    <link rel="stylesheet" href="/static/new_settings.css"/>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+
+    <style>
+
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'proxima-nova', sans-serif;
+        }
+
+
+        #wrapper {
+            padding-top: 100px;
+            text-align: center;
+        }
+
+        #yourdiv {
+            display: inline-block;
+            border: 0.1px solid white;
+            width: 80%;
+        }
+
+        .content {
+            margin: 0 auto;
+            width:70%;
+            float: right;
+            position:relative;
+            box-sizing:border-box;
+            padding-left: 40px;
+            display: inline-block;
+            height: 1000px;
+        }
+
+        .sidebar {
+            margin: 0 auto;
+            width:30%;
+            float: left;
+            position:relative;
+            box-sizing:border-box;
+        }
+
+        #settingsButton {
+            border-top: 1px solid white;
+            height: 40px;
+            vertical-align: middle;
+            display: table-cell;
+            font-size: 14px;
+
+        }
+
+        th, td {
+            border-bottom: 1px solid white;
+            border-left: 1px solid white;
+            border-right: 1px solid white;
+            display: block;
+            padding: 0;
+            vertical-align: top;
+        }
+
+        td {
+            font-size: 14px;
+            height: 40px;
+            text-align: left;
+            vertical-align: middle;
+            display: table-cell;
+            padding-left: 30px;
+        }
+
+        #settings-pane {
+            border-collapse: collapse;
+        }
+
+        td:hover {
+            background-color: rgb(100, 85, 30);
+        }
+
+        #personal-info-text {
+            font-size: 30px;
+            text-align: left;;
+        }
+
+
+        #pfp {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+        }
+
+        #change-email {
+            padding-top: 20px;
+            float: left;
+            display: inline-block;
+            height: 20px;
+            line-height: 20px;
+        }
+
+        #email-label {
+            color: grey;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        input, label {
+            display:block;
+            border: 0;
+            border-radius: 2px;
+            color: rgb(157, 157, 157);
+        }
+
+        #email-input {
+            padding: 0;
+            width: 250px;
+            height: 30px;
+            font-size: 14px;
+            background-color: rgb(219, 214, 81);
+            float: left;
+            color: #000;
+        }
+
+        .info-label {
+            font-size: 12px;
+            text-align: left;
+            color: rgb(157, 157, 157);
+        }
+
+        .info-input {
+            width: 250px;
+            height: 30px;
+            font-size: 14px;
+            float: left;
+            background-color: black;
+            border: 1px solid grey;
+            color: grey;
+        }
+
+        #change-email-link {
+            color: rgb(219, 214, 81);
+            float: left;
+            padding-left: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            vertical-align: middle;
+            display: table-cell;
+        }
+
+        span {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        #reset-password {
+            color: rgb(219, 214, 81);
+            text-decoration: none;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+
+
+        .child {
+            height: 50px;
+            padding: 10px;
+        }
+
+        select {
+  width: 150px;
+  font-size: 14px;
+  border: 1px solid grey;
+  height: 34px;
+  color: grey;
+  background: black;
+}
+
+        .birthday {
+            width: 100px;
+            height: 30px;
+            font-size: 14px;
+            float: left;
+            background-color: black;
+            border: 1px solid grey;
+            color: grey;
+            margin-right: 75px;
+        }
+
+        #month-input {
+            width: 100px;
+            margin-right: 75px;
+        }
+
+        #day-input {
+            width: 100px;
+        }
+
+        .blank-label {
+            visibility: hidden;
+            font-size: 12px;
+        }
+
+        #country-input {
+            width: 250px;
+            height: 30px;
+            font-size: 14px;
+            float: left;
+            background-color: black;
+            border: 1px solid grey;
+            color: grey;
+        }
+
+        #about-me-input {
+            height: 120px;
+            width: 300px;
+            font-size: 14px;
+            float: left;
+            background-color: black;
+            border: 1px solid grey;
+            color: grey;
+            resize: none;
+        }
+
+        #bottom-row {
+            padding-top: 120px;
+        }
+
+        #delete-account {
+            text-decoration: none;
+            color: red;
+            font-size: 11px;
+        }
+
+        #save-button {
+            height: 30px;
+            width: 200px;
+            margin-right: 150px;
+            background-color: rgb(219, 214, 81);
+            color: black;
+            font-size: 16px;
+        }
+
+        #top-of-panel {
+            border-right: 1px white solid;
+            border-left: 1px white solid;
+        }
+
+        #small-pfp {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+{% if user_data %}
+    <meta id="birth-year" content="{{ user_data['birthday_year'] }}">
+    <meta id="birth-month" content="{{ user_data['birthday_month'] }}">
+    <meta id="birth-day" content="{{ user_data['birthday_day'] }}">
+{% endif %}
+
+{% if height_feet %}
+    <meta id="height-feet" content="{{ height_feet }}">
+{% endif %}
+
+{% if height_inches %}
+    <meta id="height-inches" content="{{ height_inches }}">
+{% endif %}
+
+{% if weight %}
+    <meta id="weight" content="{{ weight }}">
+{% endif %}
+
+{% if gender %}
+    <meta id="gender" content="{{ gender }}">
+{% endif %}
+
+
+<!-- import nav content here -->
+    <link rel="import" href="/static/nav-menu.html" id="import-doc">
+    <div id="nav-wrapper"></div>
+<!-- end -->
+
+<div id="wrapper">
+    <div id="yourdiv">
+
+        <div class="sidebar">
+
+            <table id="settings-pane" style="width:100%">
+                <tr id="top-of-panel">
+                    <th>
+                        {% if user_data %}
+                            <img id="small-pfp" style="float: left;" src="{{ user_data['profile_pic'] }}">
+                        <p id="my-name" style="font-style:normal; margin-left: 10px;float: left;"></p>
+                        {% endif %}
+
+                    </th>
+                </tr>
+                <tr>
+                    <th id="settingsButton">SETTINGS</th>
+                </tr>
+                <tr>
+                    <td>Personal Info</td>
+                </tr>
+                <tr>
+                    <td>Advanced Settings</td>
+                </tr>
+                <tr>
+                    <td>Notifications</td>
+                </tr>
+                <tr>
+                    <td>Privacy</td>
+                </tr>
+            </table>
+
+        </div>
+        <div class="content">
+
+            <div>
+                <h1 id="personal-info-text">Personal Info</h1>
+            </div>
+
+            <div class="child">
+
+                {% if user_data %}
+                <img id="pfp" style="float: left;" src="{{ user_data['profile_pic'] }}">
+                {% endif %}
+                <a onclick="changeProfilePic()" style="color: rgb(219, 214, 81); float: left; padding-left: 20px;">Change Profile Picture</a>
+
+            </div>
+
+            <div class="child">
+
+                <div id="change-email">
+                    <label id="email-label" for="email-input">EMAIL ADDRESS</label>
+                    {% if user_data %}
+                    <input id="email-input" title="email" disabled=disabled type="text" value="{{ user_data['email'] }}"/>
+                    {% endif %}
+
+                    <span><a href="#" onclick="changeEmail()" id="change-email-link">Change Email Address</a></span>
+
+                </div>
+            </div>
+
+            <div class="child">
+                    <a id="reset-password" onclick="resetPassword()" href="#" style="float: left;">Reset Password</a>
+            </div>
+
+            <div class="child">
+
+                <div style="float: left">
+                    <label class="info-label" id="first-name-label" for="first-name-input">NAME</label>
+                    <input class="info-input" id="first-name-input" title="first-name" type="text" value="First Name"/>
+                </div>
+
+                <div style="float:left; padding-left: 60px;">
+                    <label class="info-label" id="first-name-label" for="gender-input">GENDER</label>
+                    <select id="gender-input">
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option selected>Other</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="child">
+
+                <input class="info-input" id="last-name-input" title="last-name" type="text" value="Last Name"/>
+
+            </div>
+
+            <div class="child">
+
+                <div style="float: left">
+                    <label class="info-label" id="first-name-label" for="birthday-year-input">BIRTHDAY</label>
+                    <input class="birthday" id="birthday-year-input" title="first-name" type="text" value="Year"/>
+                </div>
+                
+                <div style="float: left;">
+                    <label class="blank-label" id="first-name-label" for="birthday-month-input">_</label>
+                    <select id="month-input">
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
+                        <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>August</option>
+                        <option>September</option>
+                        <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
+                    </select>
+                </div>
+                
+                <div style="float: left">
+                    <label class="blank-label" id="first-name-label" for="birthday-day-input">_</label>
+                    <select id="day-input">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                        <option>16</option>
+                        <option>17</option>
+                        <option>18</option>
+                        <option>19</option>
+                        <option>20</option>
+                        <option>21</option>
+                        <option>22</option>
+                        <option>23</option>
+                        <option>24</option>
+                        <option>25</option>
+                        <option>26</option>
+                        <option>27</option>
+                        <option>28</option>
+                        <option>29</option>
+                        <option>30</option>
+                        <option>31</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="child">
+
+                <div style="float: left">
+                    <label class="info-label" id="first-name-label" for="first-name-input">COUNTRY</label>
+                    <select id="country-input">
+                        <option value="US">United States</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="child">
+
+                <div style="float: left">
+                    <label class="info-label" id="first-name-label" for="height-foot-input">HEIGHT</label>
+                    <input class="birthday" id="height-foot-input" type="number" placeholder="ft"/>
+                </div>
+
+                <div style="float: left">
+                    <label class="blank-label" id="first-name-label" for="height-inch-input">HEIGHT</label>
+                    <input class="birthday" id="height-inch-input" type="number" placeholder="in"/>
+                </div>
+
+            </div>
+
+            <div class="child">
+
+                <label class="info-label" id="weight-label">WEIGHT</label>
+                    <input id="weight-input" class="info-input" type="number" placeholder="lbs"/>
+
+            </div>
+
+            <div class="child">
+
+                <label class="info-label" id="about-me-label">ABOUT ME</label>
+                    <textarea id="about-me-input" name="about-me" cols="40" rows="5"></textarea>
+
+            </div>
+
+            <div id="bottom-row" class="child">
+                <a id="delete-account" style="float: left;" href="#">Delete Account</a>
+                <input onclick="saveData()" id="save-button" type="button" value="SAVE" style="float: right"/>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

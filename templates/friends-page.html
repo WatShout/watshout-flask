@@ -1,5 +1,5 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -8,94 +8,128 @@
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
-
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-storage.js"></script>
 
     <script defer src="/static/js/config.js"></script>
-
-    <script defer src="/static/js/friends-functions.js"></script>
+    <script defer src="/static/js/news-feed.js"></script>
 
     <link rel="stylesheet" href="/static/css/profile.css">
     <link rel="stylesheet" href="/static/css/pills.min.css">
+    <link rel="stylesheet" href="/static/css/friends-page.css">
 
-    <!-- drawer.css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.min.css">
-    <!-- jquery & iScroll -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js"></script>
-    <!-- drawer.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js"></script>
+    <!-- navigation menu import -->
+    <link rel="stylesheet" href="/static/css/nav-menu.css">
+    <script src="/static/js/nav-menu.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <link rel="icon" href="/static/res/favicon.png" type="image/gif">
-    <title>friends | watshout</title>
+    <title>friends page | watshout</title>
 
 </head>
 
-
 <body>
-
-{% if uid %}
-    <meta id="uid" content="{{ uid }}">
-{% endif %}
-
-<body class="drawer drawer--left">
-<header role="banner">
-    <button type="button" class="drawer-toggle drawer-hamburger">
-        <span class="sr-only">toggle navigation</span>
-        <span class="drawer-hamburger-icon"></span>
-    </button>
-    <nav class="drawer-nav" role="navigation">
-        <ul class="drawer-menu">
-
-            <li><a class="drawer-brand" href="#">watshout</a></li>
-            <li><a class="drawer-menu-item" href="/" id="home">Home</a></li>
-            <li><a class="drawer-menu-item" href="/feed/" id="feed">Feed</a></li>
-            <li><a class="drawer-menu-item" href="/me/" id="profile">Profile</a></li>
-            <li><a class="drawer-menu-item" href="/me/friends/" id="friends">Friends</a></li>
-
-
-        </ul>
-    </nav>
-</header>
-<main role="main">
-
-    <input type="text" id="search"/>
-    <input value="Add friend" type="button" onclick="askFriend()"/>
-
-
-    <div id="main-row">
-
-        <div id="accepted">
-            Current Friends
-            <br />
-
-            <div id="friendreplace">
-
-                <!--
-
-                {% for item in friend_links %}
-                 {{ item|safe }}
-                {% endfor %}
-                -->
-
-            </div>
-
-        </div>
-
-        <div id="pending">
-            Pending Friend Requests
-            <br />
-        </div>
-
+    <!-- import nav content here -->
+        <link rel="import" href="/static/nav-menu.html" id="import-doc">
+        <div id="nav-wrapper"></div>
+    <!-- end -->
+    <div class="friend-search-bar">
+        <input id="friend-search-input" type="text" placeholder="Search">
     </div>
-</main>
+    <div class="frequest-container">
+        <h5>Friend Requests</h5>
+        <!-- for each friend: -->
+        <div class="friend-request">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="add-friend-button">+</button>
+        </div>
+        <div class="friend-request">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="add-friend-button">+</button>
+        </div>
+        <div class="friend-request">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="add-friend-button">+</button>
+        </div>
+    </div>
+    <div class="fav-list-container">
+        <h5>Favorites</h5>
+        <!-- for each friend: -->
+        <div class="fav-friend">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="rem-fav-button">v</button>
+        </div>
+        <div class="fav-friend">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="rem-fav-button">v</button>
+        </div>
+        <div class="fav-friend">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="rem-fav-button">v</button>
+        </div>
+        <div class="fav-friend-2">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="rem-fav-button">v</button>
+        </div>
+        <div class="fav-friend-2">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="rem-fav-button">v</button>
+        </div>
+        <div class="fav-friend-2">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="rem-fav-button">v</button>
+        </div>
+    </div>
+
+    <div class="friend-list-container">
+        <h5>Friends</h5>
+        <div class="fav-friend">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="add-fav-button">^</button>
+        </div>
+        <div class="fav-friend">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="add-fav-button">^</button>
+        </div>
+        <div class="fav-friend">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="add-fav-button">^</button>
+        </div>
+        <div class="fav-friend-2">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="add-fav-button">^</button>
+        </div>
+        <div class="fav-friend-2">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="add-fav-button">^</button>
+        </div>
+        <div class="fav-friend-2">
+            <img class="fr-image" src="images/default-prof.jpg">
+            <div class="fr-name"><a id="name-link" href="/friends-profile/">Friend's Name</a></div>
+            <button class="add-fav-button">^</button>
+        </div>
+    </div>
+
 </body>
-
-<script>
-    $(document).ready(function() {
-        $('.drawer').drawer();
-    });
-</script>
-
-
-</body>
-
 </html>

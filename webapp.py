@@ -126,8 +126,9 @@ def my_page():
 
     # Get total distance
     distance = 0
-    for i in activities:
-        distance += float(activities[i]["distance"])
+    if activities is not None:
+        for i in activities:
+            distance += float(activities[i]["distance"])
 
     user_info["total_distance"] = distance
 
@@ -135,14 +136,16 @@ def my_page():
     latest_activity = ref.child("users").child(my_uid).child("device").child(
         "past").order_by_child("time").limit_to_last(1).get().val()
 
-    for i in latest_activity:
-        map_link = latest_activity[i]["map_link"]
+    if latest_activity is not None:
+        for i in latest_activity:
+            map_link = latest_activity[i]["map_link"]
+            # 47 is the index in which attributes start being defined
+            url_front = map_link[:47]
+            url_back = map_link[47:]
 
-    # 47 is the index in which attributes start being defined
-    url_front = map_link[:47]
-    url_back = map_link[47:]
-
-    new_url = url_front + "&size=2000x300" + url_back
+            new_url = url_front + "&size=2000x300" + url_back
+    else:
+        new_url = ""
 
     user_info["latest_activity"] = new_url
 
@@ -188,7 +191,7 @@ def my_friends():
 
     my_email = my_user_entry['email']
 
-    return render_template('friends-page.html', uid=my_uid, my_email=my_email)
+    return render_template('old-friends-page.html', uid=my_uid, my_email=my_email)
 
 
 # News feed
@@ -218,13 +221,42 @@ def my_settings():
 
     my_user_entry = get_user_entry(my_uid)
 
-    email = my_user_entry['email']
+    send_user_data = {
+        'email': my_user_entry['email'],
+        'birthday_month': my_user_entry['birthday'][0:2],
+        'birthday_day': my_user_entry['birthday'][3:5],
+        'birthday_year': my_user_entry['birthday'][6:10]
+    }
+
+    try:
+        height_feet = my_user_entry['height-feet']
+    except KeyError:
+        height_feet = None
+
+    try:
+        height_inches = my_user_entry['height-inches']
+    except KeyError:
+        height_inches = None
+
+    try:
+        weight = my_user_entry['weight']
+    except KeyError:
+        weight = None
+
+    try:
+        gender = my_user_entry['gender']
+        print(gender)
+    except KeyError:
+        gender = None
 
     profile_pic_format = my_user_entry['profile_pic_format']
     profile_pic = storageRef.child('users/' + my_uid + '/profile.' + profile_pic_format).get_url(None)
 
-    return render_template('settings.html', uid=my_uid,
-                           email=email, profile_pic=profile_pic)
+    send_user_data['profile_pic'] = profile_pic
+
+    return render_template('new_settings.html', uid=my_uid, user_data=send_user_data,
+                           height_feet=height_feet, height_inches=height_inches,
+                           weight=weight, gender=gender)
 
 
 # Redirects to Strava callback URL

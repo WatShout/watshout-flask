@@ -1,0 +1,116 @@
+<html>
+
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- The order in which these load is important -->
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/5.0.2/firebase-database.js"></script>
+
+     <!-- navigation menu import -->
+    <link rel="stylesheet" href="/static/css/nav-menu.css">
+
+    <script defer src="/static/js/config.js"></script>
+
+    <script defer src="/static/js/friends-functions.js"></script>
+    <script defer src="/static/js/nav-menu.js"></script>
+
+    <link rel="stylesheet" href="/static/css/profile.css">
+    <link rel="stylesheet" href="/static/css/pills.min.css">
+
+    <!-- drawer.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.min.css">
+    <!-- jquery & iScroll -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js"></script>
+    <!-- drawer.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js"></script>
+
+    <link rel="icon" href="/static/res/favicon.png" type="image/gif">
+    <title>friends | watshout</title>
+
+    <style>
+
+        #search {
+            height: 45px;
+            width: 300px;
+            background-color: darkgrey;
+            float: left;
+            font-size: 18px;
+        }
+        
+        #add-button {
+                background-color: darkgrey;
+                border: none;
+                color: black;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+            float: left;
+        }
+
+        #add-friend {
+            display: inline-block;
+            padding-top: 100px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+{% if uid %}
+    <meta id="uid" content="{{ uid }}">
+{% endif %}
+
+<body>
+
+<!-- import nav content here -->
+    <link rel="import" href="/static/nav-menu.html" id="import-doc">
+    <div id="nav-wrapper"></div>
+<!-- end -->
+
+    <div id="add-friend">
+        <input type="text" id="search"/>
+        <input id="add-button" value="Add friend by email" type="button" onclick="askFriend()"/> 
+    </div>
+
+    <div id="main-row">
+
+        <div id="accepted">
+            Current Friends
+            <br />
+
+            <div id="friendreplace">
+
+                <!--
+
+                {% for item in friend_links %}
+                 {{ item|safe }}
+                {% endfor %}
+                -->
+
+            </div>
+
+        </div>
+
+        <div id="pending">
+            Friend Requests (click to accept)
+            <br />
+        </div>
+
+    </div>
+
+</body>
+
+
+</body>
+
+</html>
