@@ -1,0 +1,4 @@
+cron:
+- description: "Clear idle runs"
+  url: /api/deleteidleruns/
+  schedule: every 30 minutes

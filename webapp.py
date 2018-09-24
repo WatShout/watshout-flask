@@ -56,8 +56,8 @@ def initialize_account():
     my_uid, verified = get_cookies(request)
     redirect_link = check_user_exists(my_uid, verified)
 
-    if redirect_link[0] is not None and redirect_link[1] != "user_entry":
-        return redirect_link
+    #if redirect_link[0] is not None and redirect_link[1] != "user_entry":
+    #    return redirect_link
 
     return render_template('initialize-account.html', uid=my_uid)
 

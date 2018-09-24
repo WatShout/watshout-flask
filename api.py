@@ -1,11 +1,14 @@
 import json
 import urllib.request
-
+import gpxpy
+import gpxpy.gpx
 from flask import request, Blueprint
 import polyline
 from operator import itemgetter
 import datetime
+import time
 
+from tempfile import NamedTemporaryFile
 from config import ref, storageRef, strava_client, push_service, gmaps, BASE_CREATE_MAP_URL
 from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng, \
      create_map_url, get_friend_uid_list, get_km_from_coord_string, JSON_SUCCESS, JSON_FAIL, get_weather
@@ -42,42 +45,11 @@ def check_user():
     """
 
 
-# Not in use right now
-@api.route('/api/createroadsnap/', methods=['GET', 'POST'])
-def create_road_snap():
-    coordinate_string = request.form['coordinates']
-    coordinate_list = coordinate_string.split("|")
-
-    distance = get_km_from_coord_string(coordinate_string)
-
-    result = gmaps.snap_to_roads(path=coordinate_list, interpolate=True)
-
-    lats = []
-    lons = []
-
-    if len(result) > 0:
-
-        try:
-
-            for location in result:
-                lats.append(float(location['location']['latitude']))
-                lons.append(float(location['location']['longitude']))
-
-            # Figure out how this works
-            coords = [[lat, lon] for lat, lon in zip(lats, lons)]
-
-            return_data = {
-                "map_url": BASE_CREATE_MAP_URL + polyline.encode(coords, 5),
-                "distance_km": distance
-            }
-
-            return return_data
-
-        except Exception as e:
-            return json.dumps({"error": str(e)}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
-
-    else:
-        return json.dumps({"success": False}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+# TODO: Implement this
+# Iterate through all current runs and delete those who haven't moved in the past 30 minutes
+@api.route('/api/deleteidleruns/', methods=['GET'])
+def delete_idle_runs():
+    return "Finish this"
 
 
 # Send notification to friends when user starts running
@@ -135,9 +107,34 @@ def send_friend_request():
 def add_activity():
     uid = request.form['uid']
     time_stamp = request.form['time_stamp']
-    file_name = time_stamp + ".gpx"
 
-    gpx_url = storageRef.child("users").child(uid).child("gpx").child(file_name).get_url(None)
+    gpx = gpxpy.gpx.GPX()
+
+    # Create first track in our GPX:
+    gpx_track = gpxpy.gpx.GPXTrack()
+    gpx.tracks.append(gpx_track)
+
+    # Create first segment in our GPX track:
+    gpx_segment = gpxpy.gpx.GPXTrackSegment()
+    gpx_track.segments.append(gpx_segment)
+
+    data = ref.child("users").child(uid).child("device").child("current").get().val()
+
+    # Build GPX
+    for key, value in data.items():
+        formatted_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(value["time"] / 1000))
+        datetime_object = datetime.strptime(formatted_time, '%Y-%m-%d %H:%M:%S')
+        gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(latitude=value["lat"], longitude=value["lon"],
+                                                          elevation=value["altitude"], time=datetime_object))
+
+    with NamedTemporaryFile() as temp:
+        temp.write(gpx.to_xml().encode())
+        temp.fileinfo = {'type': 'text/xml',
+                         'Content-Type': 'text/xml'}
+        temp.seek(0)
+
+        storageRef.child("users").child(uid).child("gpx").child(time_stamp + ".gpx").put(temp)
+        gpx_url = storageRef.child("users").child(uid).child("gpx").child(time_stamp + ".gpx").get_url(None)
 
     # Note: Map URL creation has been offloaded to the Android app
     try:
