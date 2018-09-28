@@ -3,9 +3,7 @@ import urllib.request
 import gpxpy
 import gpxpy.gpx
 from flask import request, Blueprint
-import polyline
-from operator import itemgetter
-import datetime
+from datetime import datetime
 import time
 
 from tempfile import NamedTemporaryFile
@@ -47,9 +45,9 @@ def check_user():
 
 # TODO: Implement this
 # Iterate through all current runs and delete those who haven't moved in the past 30 minutes
-@api.route('/api/deleteidleruns/', methods=['GET'])
+@api.route('/api/deleteidleruns/', methods=['GET', 'POST'])
 def delete_idle_runs():
-    return "Finish this"
+    return json.dumps({'result': 'success'}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
 # Send notification to friends when user starts running
@@ -106,7 +104,12 @@ def send_friend_request():
 @api.route('/api/addactivity/', methods=['GET', 'POST'])
 def add_activity():
     uid = request.form['uid']
+    upload_time = float(request.form['time'])
     time_stamp = request.form['time_stamp']
+    time_elapsed = float(request.form['time_elapsed'])
+    pace = request.form['pace']
+    map_url = request.form['map_url']
+    distance = float(request.form['distance'])
 
     gpx = gpxpy.gpx.GPX()
 
@@ -126,6 +129,18 @@ def add_activity():
         datetime_object = datetime.strptime(formatted_time, '%Y-%m-%d %H:%M:%S')
         gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(latitude=value["lat"], longitude=value["lon"],
                                                           elevation=value["altitude"], time=datetime_object))
+
+    # Move database entry to 'past'
+    ref.child("users").child(uid).child("device").child("past").child(time_stamp).set({
+        "distance": distance,
+        "map_link": map_url,
+        "time": upload_time,
+        "time_elapsed": time_elapsed,
+        "type": "run",
+        "pace": pace
+    })
+
+    ref.child("users").child(uid).child("device").child("current").remove()
 
     with NamedTemporaryFile() as temp:
         temp.write(gpx.to_xml().encode())

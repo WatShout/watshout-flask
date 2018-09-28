@@ -11,3 +11,4 @@ flask_sslify==0.1.5
 google-api-python-client
 googlemaps
 haversine
+gpxpy

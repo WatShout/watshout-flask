@@ -5,3 +5,4 @@ handlers:
 # We only need one handler because everything Flask Blueprints manage all routing
 - url: .*
   script: main.app
+  secure: always
