@@ -50,6 +50,34 @@ def delete_idle_runs():
     return json.dumps({'result': 'success'}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
+# Run this to send a FCM to every device currently in an activity
+@api.route('/api/wakedevices/', methods=['GET'])
+def wake_devices():
+    data = ref.child("users").get().val()
+
+    reg_ids = []
+
+    for key, value in data.items():
+        try:
+            current = value['device']['current']
+            reg_ids.append(value['fcm_token'])
+
+        except KeyError:
+            pass
+
+    print(reg_ids)
+
+    data_message = {
+        "wake": True
+    }
+    try:
+        result = push_service.multiple_devices_data_message(registration_ids=reg_ids, data_message=data_message,
+                                                            collapse_key="wake")
+        return json.dumps({'result': result}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
+    except Exception:
+        return json.dumps({'success': False}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
+
+
 # Send notification to friends when user starts running
 @api.route('/api/activitystartnotification/', methods=['GET', 'POST'])
 def send_activity_start_notification():

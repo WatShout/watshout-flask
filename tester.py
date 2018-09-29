@@ -1,6 +1,6 @@
 import requests
 from flask import Flask, render_template, request, redirect, url_for, abort, Blueprint
-from config import ref, storageRef, strava_client, access_token, DEBUG, BASE_ENDPOINT_URL
+from config import ref, storageRef, strava_client, access_token, DEBUG, BASE_ENDPOINT_URL, push_service
 from helper_functions import get_cookies, get_user_entry, check_user_exists, get_weather, get_location_from_latlng
 import time
 import gpxpy
@@ -20,11 +20,23 @@ gpx.tracks.append(gpx_track)
 gpx_segment = gpxpy.gpx.GPXTrackSegment()
 gpx_track.segments.append(gpx_segment)
 
-data = ref.child("users").child("E187uGxH7kVVfPLZykO0Lm5NLFk2").child("device").child("current").get().val()
+data = ref.child("users").get().val()
+
+reg_ids = []
 
 for key, value in data.items():
-    formatted_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(value["time"]))
-    datetime_object = datetime.strptime(formatted_time, '%Y-%m-%d %H:%M:%S')
-    gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(latitude=value["lat"], longitude=value["lon"], time=datetime_object))
+    try:
+        current = value['device']['current']
+        reg_ids.append(value['fcm_token'])
 
-print("Cretaed GPX: " , gpx.to_xml())
+    except KeyError:
+        pass
+
+print(reg_ids)
+
+
+data_message = {
+    "wake": True
+}
+result = push_service.multiple_devices_data_message(registration_ids=reg_ids, data_message=data_message,
+                                                    collapse_key="wake")
