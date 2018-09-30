@@ -34,9 +34,11 @@ for key, value in data.items():
 
 print(reg_ids)
 
-
 data_message = {
     "wake": True
 }
-result = push_service.multiple_devices_data_message(registration_ids=reg_ids, data_message=data_message,
-                                                    collapse_key="wake")
+
+result = push_service.notify_multiple_devices(registration_ids=reg_ids,
+                                              message_title="Currently Tracking Activity",
+                                              message_body="Location tracking enabled",
+                                              collapse_key="wake")
