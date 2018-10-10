@@ -7,3 +7,4 @@ cron:
 - description: "Wake up devices"
   url: /api/wakedevices/
   schedule: every 1 minutes
+
