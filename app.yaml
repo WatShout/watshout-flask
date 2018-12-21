@@ -1,8 +1,8 @@
 runtime: python37
-api_version: 1
+# api_version: 1
 
 handlers:
 # We only need one handler because everything Flask Blueprints manage all routing
 - url: .*
-  script: main.app
+  script: auto
   secure: always

@@ -65,8 +65,6 @@ def wake_devices():
         except KeyError:
             pass
 
-    print(reg_ids)
-
     data_message = {
         "wake": True
     }
@@ -211,7 +209,7 @@ def add_activity():
             None)
         ref.child("users").child(uid).child("device").child("past").child(time_stamp).child("event_name").set(
             "Run")
-        return json.dumps({'success': False}), 500, {'Content-Type': 'text/javascript; charset=utf-8'}
+        return json.dumps({'success': True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
 
 # URL for uploading a Strava activity

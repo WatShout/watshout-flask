@@ -2,8 +2,3 @@ cron:
 - description: "Clear idle runs"
   url: /api/deleteidleruns/
   schedule: every 30 minutes
-
-# We probably don't need the wake up cron-job for now
-- description: "Wake up devices"
-  url: /api/wakedevices/
-  schedule: every 1 minutes
