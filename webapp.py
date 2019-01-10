@@ -1,10 +1,8 @@
 import requests
-from flask import Flask, render_template, request, redirect, url_for, abort, Blueprint
-from config import ref, storageRef, strava_client, access_token, DEBUG, BASE_ENDPOINT_URL
+from flask import Flask, render_template, request, abort, Blueprint
+
+from config import ref, storageRef, BASE_ENDPOINT_URL
 from helper_functions import get_cookies, get_user_entry, check_user_exists
-import datetime
-from operator import itemgetter
-from stravalib.client import Client as main_strava_client
 
 app = Flask(__name__, static_url_path="/static")
 

@@ -1,5 +1,4 @@
 import pyrebase
-from stravalib.client import Client
 from pyfcm import FCMNotification
 import googlemaps
 
