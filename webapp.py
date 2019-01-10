@@ -4,6 +4,7 @@ from config import ref, storageRef, strava_client, access_token, DEBUG, BASE_END
 from helper_functions import get_cookies, get_user_entry, check_user_exists
 import datetime
 from operator import itemgetter
+from stravalib.client import Client as main_strava_client
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -257,62 +258,6 @@ def my_settings():
     return render_template('new_settings.html', uid=my_uid, user_data=send_user_data,
                            height_feet=height_feet, height_inches=height_inches,
                            weight=weight, gender=gender)
-
-
-# Redirects to Strava callback URL
-@web_app.route('/me/strava/login/')
-def strava_login():
-
-    my_uid = request.cookies.get('uid')
-    if my_uid is None:
-        return redirect(url_for('web_app.login'))
-
-    verified = request.cookies.get('verified')
-    if verified is None:
-        return render_template('email-verify.html', uid=my_uid)
-
-    if not DEBUG:
-        uri = BASE_ENDPOINT_URL + '/me/strava/authorized/'
-    else:
-        uri = 'http://127.0.0.1:5000/me/strava/authorized/'
-
-    authorize_url = None
-
-    if not access_token:
-        authorize_url = strava_client.authorization_url(
-            client_id=26116,
-            redirect_uri=uri,
-            approval_prompt='auto',
-            scope='view_private,write'
-        )
-        return redirect(authorize_url, code=302)
-
-
-# Loads a page that makes Firebase updates and then redirects to user page
-@web_app.route('/me/strava/authorized/')
-def strava_authorized():
-    code = request.args.get('code')
-
-    my_uid = request.cookies.get('uid')
-    if my_uid is None:
-        return redirect(url_for('web_app.login'))
-
-    verified = request.cookies.get('verified')
-    if verified is None:
-        return render_template('email-verify.html', uid=my_uid)
-
-    access_token = strava_client.exchange_code_for_token(
-        client_id=26116,
-        client_secret='04ba9a4ac548cdc94c375baf65ceb95eca3af533',
-        code=code)
-
-    strava_client.access_token = access_token
-
-    # client.upload_activity(test_run, 'gpx')
-
-    return render_template('strava-authorized.html',
-                           token=access_token,
-                           uid=my_uid)
 
 
 # Viewing another user's profile page

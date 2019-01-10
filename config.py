@@ -27,8 +27,7 @@ firebase = pyrebase.initialize_app(config)
 ref = firebase.database()
 storageRef = firebase.storage()
 
-strava_client = Client()
-access_token = "9060508203575f2d01595d8723b1f87cff39706a"
+# access_token = "9060508203575f2d01595d8723b1f87cff39706a"
 
 DEBUG = False
 

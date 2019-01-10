@@ -1,15 +1,18 @@
 import json
+import ssl
+import time
 import urllib.request
+from datetime import datetime
+from tempfile import NamedTemporaryFile
+
 import gpxpy
 import gpxpy.gpx
 from flask import request, Blueprint
-from datetime import datetime
-import time
+from stravalib.client import Client as StravaClient
 
-from tempfile import NamedTemporaryFile
-from config import ref, storageRef, strava_client, push_service, gmaps, BASE_CREATE_MAP_URL
+from config import ref, storageRef, push_service
 from helper_functions import create_json_activities_list, parse_activity_snapshot, get_location_from_latlng, \
-     create_map_url, get_friend_uid_list, get_km_from_coord_string, JSON_SUCCESS, JSON_FAIL, get_weather
+    create_map_url, get_friend_uid_list, JSON_SUCCESS, get_weather
 
 api = Blueprint('api', __name__)
 
@@ -216,19 +219,20 @@ def add_activity():
 @api.route('/api/strava/upload/<string:uid>/<string:file_name>/', methods=['GET'])
 def upload_activity(uid=None, file_name=None):
     try:
-
         strava_token = ref.child("users").child(uid).child("strava_token").get().val()
-        strava_client.access_token = strava_token
+        print(strava_token)
+
+        c = StravaClient(access_token=strava_token)
 
         file_name += ".gpx"
 
         url = storageRef.child("users").child(uid).child("gpx").child(file_name).get_url(None)
-
-        url_response = urllib.request.urlopen(url)
+        gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)  # Only for gangstars
+        url_response = urllib.request.urlopen(url, context=gcontext)
         data = url_response.read()
         parsed_data = data.decode('utf-8')
 
-        strava_client.upload_activity(parsed_data, 'gpx')
+        c.upload_activity(parsed_data, 'gpx')
 
         return json.dumps({'locationSuccess': True}), 200, {'Content-Type': 'text/javascript; charset=utf-8'}
 
