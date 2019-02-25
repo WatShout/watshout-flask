@@ -4,6 +4,7 @@ import time
 import urllib.request
 from datetime import datetime
 from tempfile import NamedTemporaryFile
+import requests
 
 import gpxpy
 import gpxpy.gpx
@@ -15,6 +16,11 @@ from helper_functions import create_json_activities_list, parse_activity_snapsho
     create_map_url, get_friend_uid_list, JSON_SUCCESS, get_weather
 
 api = Blueprint('api', __name__)
+
+@api.route('/api/testme/', methods=['GET', 'POST'])
+def testme():
+    data = ref.child("users").get().val()
+    return str(data)
 
 
 # Performs the three email checks
@@ -244,8 +250,13 @@ def upload_activity(uid=None, file_name=None):
 @api.route('/api/friendrequests/<string:uid>/', methods=['GET'])
 def get_friend_requests_list(uid=None):
     try:
-        friend_request_uid_list = list(
-            ref.child("friend_requests").child(uid).order_by_child("request_type").equal_to("received").get().val())
+        # exists = ref.child("friend_requests").child(uid).get().val()
+        # if exists is not None:
+        test = "https://watshout-cloud.firebaseio.com/friend_requests/{0}.json?orderBy=%22request_type%22&equalTo=%22received%22".format(uid)
+        friend_request_uid_list = list(requests.get(test).json())
+        print(friend_request_uid_list)
+        #friend_request_uid_list = list(
+            #ref.child("friend_requests").child(uid).order_by_child("request_type").equal_to("received").get().val())
 
     except IndexError:
         friend_request_uid_list = []

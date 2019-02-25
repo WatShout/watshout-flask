@@ -8,10 +8,10 @@ from flask_sslify import SSLify
 
 app = Flask(__name__, static_url_path="/static")
 
-#if not DEBUG:
-    #sslify = SSLify(app, skips=['/api/deleteidleruns/'])
+# if not DEBUG:
+    # sslify = SSLify(app, skips=['/api/deleteidleruns/'])
 
 app.register_blueprint(web_app)
-#app.register_blueprint(cookies)
+# app.register_blueprint(cookies)
 app.register_blueprint(coming_soon)
 app.register_blueprint(api)

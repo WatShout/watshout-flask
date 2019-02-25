@@ -10,7 +10,7 @@ gmaps = googlemaps.Client(key="AIzaSyAxkvxOLITaJbTjnNXxDzDAwRyZaWD0D4s")
 
 # Note: Everything is authenticated because of the service account
 config = {
-    "apiKey": "AIzaSyDgoFIn4pMSsadqDj5adc8V58Ct_MeNjmU",
+    "apiKey": "AAAAGQJsXYU:APA91bHTafwGlu-1hBUBCS3mLLdntk_i2YwnSWXxU7eiU-7O7k05BauiApptdd-ENFeOHGL62tOx57USNw2WAvSsYg-hwqnuY3r73MOyMBB3fa-VBvqoIcRM-ZJNnvachiOM5f96SoUeFlxp6UM5xRD3mKIGJvW9CA",
     "authDomain": "watshout-cloud.firebaseapp.com",
     "databaseURL": "https://watshout-cloud.firebaseio.com",
     "projectId": "watshout-cloud",
